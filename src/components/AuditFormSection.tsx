@@ -3,75 +3,100 @@
 import React, { useState } from 'react';
 import { CheckCircle, Loader2 } from 'lucide-react';
 
+// Interfaz para el manejo de tipos (Buenas prácticas)
+interface FormData {
+  name: string;
+  email: string;
+  url: string;
+  crmType: string;
+}
+
 export default function AuditFormSection() {
-  // Estados para controlar la interfaz
+  // Estados para el manejo de UI/feedback
+  const [formData, setFormData] = useState<FormData>({ name: '', email: '', url: '', crmType: 'Salesforce' });
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Función que simula el envío
+  // Manejo de cambios en el formulario
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Evita que la página se recargue
+    e.preventDefault();
     setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('/api/contact-audit', { // <-- Llama a la nueva ruta de API
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    // Simulamos un retraso de red (como si fuera a Salesforce)
-    setTimeout(() => {
-      setIsLoading(false);
+      if (!response.ok) {
+        throw new Error('El servidor falló al procesar la solicitud.');
+      }
+
+      // Éxito:
       setIsSuccess(true);
-      // Aquí iría la conexión real a Salesforce en la Fase 2
-    }, 1500);
+      setFormData({ name: '', email: '', url: '', crmType: 'Salesforce' }); // Limpia formulario
+      
+    } catch (err) {
+      console.error(err);
+      setError('Hubo un error de conexión. Intenta más tarde.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <section id="auditoria" className="py-24 px-6 bg-gradient-to-b from-gris-piedra to-black border-t border-white/10">
       <div className="max-w-3xl mx-auto bg-zinc-900/80 border border-oro-antiguo/30 p-8 md:p-12 rounded-2xl shadow-2xl relative overflow-hidden">
         
-        <div className="absolute top-0 right-0 w-64 h-64 bg-oro-antiguo/10 blur-[100px] rounded-full pointer-events-none"></div>
-
+        {/* ... (Brillos de fondo y encabezados) ... */}
+        
         <div className="text-center mb-10 relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold font-serif text-white mb-4">
             Diagnóstico de Claridad del Ecosistema
           </h2>
           <p className="text-gray-300">
-            No te daremos un reporte genérico. Analizamos tu web y tu CRM <strong>manualmente</strong> para encontrar las "grietas digitales".
+            Analizamos tu web y tu CRM <strong>manualmente</strong> para encontrar las "grietas digitales" por donde se escapan tus ingresos.
           </p>
         </div>
 
         {/* Lógica de visualización: Formulario vs Mensaje de Éxito */}
         {!isSuccess ? (
           <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
+            
+            {error && <div className="p-3 bg-rojo-lacre/20 border border-rojo-lacre text-red-300 rounded text-sm">{error}</div>}
+
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm text-oro-antiguo font-medium mb-2">Nombre</label>
-                <input required type="text" className="w-full bg-black/50 border border-white/10 rounded p-4 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all" />
+                <input required name="name" type="text" value={formData.name} onChange={handleChange} className="w-full bg-black/50 border border-white/10 rounded p-4 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all" />
               </div>
               <div>
                 <label className="block text-sm text-oro-antiguo font-medium mb-2">Correo Corporativo</label>
-                <input required type="email" className="w-full bg-black/50 border border-white/10 rounded p-4 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all" />
+                <input required name="email" type="email" value={formData.email} onChange={handleChange} className="w-full bg-black/50 border border-white/10 rounded p-4 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all" />
               </div>
             </div>
             
             <div>
               <label className="block text-sm text-oro-antiguo font-medium mb-2">URL del Sitio Web</label>
-              <input required type="url" className="w-full bg-black/50 border border-white/10 rounded p-4 text-white focus:border-oro-antiguo outline-none transition-all" placeholder="https://" />
+              <input required name="url" type="url" value={formData.url} onChange={handleChange} className="w-full bg-black/50 border border-white/10 rounded p-4 text-white focus:border-oro-antiguo outline-none transition-all" placeholder="https://" />
             </div>
 
             <div>
               <label className="block text-sm text-oro-antiguo font-medium mb-3">¿Qué CRM utilizas?</label>
-              <div className="space-y-3">
-                {/* Inputs radio nativos para simplicidad */}
-                <label className="flex items-center gap-3 p-3 border border-white/5 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
-                  <input type="radio" name="crm" value="Salesforce" className="accent-oro-antiguo" />
-                  <span className="text-gray-300">Salesforce</span>
-                </label>
-                <label className="flex items-center gap-3 p-3 border border-white/5 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
-                  <input type="radio" name="crm" value="HubSpot" className="accent-oro-antiguo" />
-                  <span className="text-gray-300">HubSpot</span>
-                </label>
-                <label className="flex items-center gap-3 p-3 border border-white/5 rounded-lg hover:bg-white/5 cursor-pointer transition-colors">
-                  <input type="radio" name="crm" value="Excel" className="accent-oro-antiguo" />
-                  <span className="text-gray-300">Aún operamos con Excel (Sin juicios)</span>
-                </label>
-              </div>
+              <select required name="crmType" value={formData.crmType} onChange={handleChange} className="w-full bg-black/40 border border-white/10 rounded p-3 focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all appearance-none text-gray-300">
+                <option value="Salesforce" className="bg-zinc-900">Salesforce (El Gigante)</option>
+                <option value="HubSpot" className="bg-zinc-900">HubSpot (El Ágil)</option>
+                <option value="Zoho/Others" className="bg-zinc-900">Zoho / Otros</option>
+                <option value="Excel" className="bg-zinc-900">Aún operamos con Excel (Sin juicios)</option>
+              </select>
             </div>
 
             <button 
@@ -81,7 +106,7 @@ export default function AuditFormSection() {
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="animate-spin" /> Procesando...
+                  <Loader2 className="animate-spin" /> Enviando...
                 </>
               ) : (
                 ">> Solicitar mi Auditoría Forense Gratuita <<"
@@ -98,9 +123,9 @@ export default function AuditFormSection() {
             <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="text-green-400 w-10 h-10" />
             </div>
-            <h3 className="text-3xl font-serif font-bold text-white mb-4">¡Solicitud Recibida!</h3>
+            <h3 className="text-3xl font-serif font-bold text-white mb-4">¡Éxito! Solicitud Enviada</h3>
             <p className="text-lg text-gray-300 mb-8">
-              Edgar y Abdiel han recibido tu solicitud. Analizaremos tu ecosistema y te contactaremos en menos de 24 horas.
+              Edgar y Abdiel han sido notificados. Analizaremos tu ecosistema y nos pondremos en contacto en menos de 24 horas. ¡Gracias por confiar en Acclaro Labs!
             </p>
             <button 
               onClick={() => setIsSuccess(false)}
