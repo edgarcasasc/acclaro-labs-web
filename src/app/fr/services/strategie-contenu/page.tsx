@@ -5,15 +5,15 @@ import ContentProblem from '@/components/content-ux/ContentProblem';
 import ContentSolution from '@/components/content-ux/ContentSolution';
 import AuditFormSection from '@/components/AuditFormSection'; 
 
-export default function EstrategiaContenidoPage() {
+export default function FrContentStrategyPage() {
   return (
     <>
       <DigitalUniverse />
       <main className="relative z-10 font-sans text-blanco-pergamino selection:bg-oro-antiguo selection:text-black">
-        <ContentHero lang="es"/>
-        <ContentProblem lang="es"/>
-        <ContentSolution lang="es"/>
-        <AuditFormSection lang="es"/>
+        <ContentHero lang="fr"/>
+        <ContentProblem lang="fr"/>
+        <ContentSolution lang="fr"/>
+        <AuditFormSection lang="fr"/>
       </main>
     </>
   );

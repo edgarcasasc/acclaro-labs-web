@@ -15,17 +15,17 @@ import InformesCTA from '@/components/InformesCTA';
  * Página de Activación de Informes Inteligentes (Página de Conversión / BoFu)
  * Utiliza la arquitectura de capas del proyecto AcclaroLabs.
  */
-export default function InformesPage() {
+export default function EnInformesPage() {
   return (
     <>
       <DigitalUniverse />
       <main className="relative z-10">
-        <InformesHero lang="es" />
-        <InformesProblem lang="es" />
-        <InformesSolution lang="es" />
-        <InformesDiferenciadores lang="es" />
-        <SocialProof lang="es" />
-        <InformesCTA lang="es" />
+        <InformesHero lang="en" />
+        <InformesProblem lang="en" />
+        <InformesSolution lang="en" />
+        <InformesDiferenciadores lang="en" />
+        <SocialProof lang="en" />
+        <InformesCTA lang="en" />
       </main>
     </>
   );

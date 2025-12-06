@@ -17,19 +17,19 @@ export default function DesarrolloWebPage() {
       <main className="relative z-10 font-sans text-blanco-pergamino selection:bg-azul-zafiro selection:text-white">
         
         {/* 1. EL GANCHO: Vendedor vs Folleto */}
-        <WebDevHero lang="es"/>
+        <WebDevHero lang="en"  />
 
         {/* 2. EL CONFLICTO: La Web Isla */}
-        <WebDevProblem lang="es" />
+        <WebDevProblem lang="en" />
 
         {/* 3. LA GUÍA: Ingeniería de Precisión */}
-        <WebDevSolution lang="es"/>
+        <WebDevSolution lang="en"  />
 
         {/* 4. ETHOS: Full-Stack + UX */}
-        <WebDevAuthority lang="es"/>
+        <WebDevAuthority lang="en" />
 
         {/* 5. CIERRE: Auditoría Técnica */}
-        <WebDevFinalCTA lang="es" />
+        <WebDevFinalCTA lang="en" />
 
       </main>
     </>

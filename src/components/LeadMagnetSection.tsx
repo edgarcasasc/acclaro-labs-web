@@ -3,10 +3,40 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link'; // <-- Importante
+import Link from 'next/link';
+// import Image from 'next/image'; // Descomentar cuando tengas la imagen real
 
-export default function LeadMagnetSection() {
+// --- 1. DICCIONARIO DE CONTENIDO (i18n) ---
+const CONTENT = {
+  es: {
+    title: "¿Dónde estás perdiendo dinero hoy?",
+    desc: "Lee el análisis que nuestros competidores no quieren que veas. Te mostramos cómo los datos de Service Cloud pueden convertirse en tu mejor estrategia de SEO.",
+    cta: "Obtén tu Auditoría Gratuita",
+    subtext: "Incluye el Blueprint de Estrategia completo."
+  },
+  en: {
+    title: "Where are you losing money today?",
+    desc: "Read the analysis our competitors don't want you to see. We show you how Service Cloud data can become your best SEO strategy.",
+    cta: "Get Your Free Audit",
+    subtext: "Includes the full Strategy Blueprint."
+  },
+  fr: {
+    title: "Où perdez-vous de l'argent aujourd'hui ?",
+    desc: "Lisez l'analyse que nos concurrents ne veulent pas que vous voyiez. Nous vous montrons comment les données de Service Cloud peuvent devenir votre meilleure stratégie SEO.",
+    cta: "Obtenez votre Audit Gratuit",
+    subtext: "Inclut le Blueprint Stratégique complet."
+  }
+};
+
+// --- INTERFAZ DE PROPS ---
+interface LeadMagnetSectionProps {
+  lang?: 'es' | 'en' | 'fr';
+}
+
+export default function LeadMagnetSection({ lang = 'es' }: LeadMagnetSectionProps) {
+  // Seleccionamos el contenido
+  const t = CONTENT[lang];
+
   return (
     <section className="relative z-10 w-full bg-gris-piedra py-24 sm:py-32 px-4 sm:px-6 lg:px-8 border-y border-white/5">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -49,25 +79,25 @@ export default function LeadMagnetSection() {
         {/* Contenido y CTA */}
         <div className="text-left">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-blanco-pergamino mb-4">
-            ¿Dónde estás perdiendo dinero hoy?
+            {t.title}
           </h2>
           <p className="text-lg text-blanco-pergamino/80 mb-8 leading-relaxed">
-            Lee el análisis que nuestros competidores no quieren que veas. Te mostramos cómo los datos de Service Cloud pueden convertirse en tu mejor estrategia de SEO.
+            {t.desc}
           </p>
           
-          {/* --- CORRECCIÓN: Botón que lleva a la Auditoría --- */}
-          <Link href="/servicios/estrategia-contenido#auditoria"> {/* Cambio de ruta con ancla */}
+          {/* --- CTA que lleva a la Auditoría --- */}
+          <Link href="/servicios/estrategia-contenido#auditoria">
             <motion.button
               className="bg-oro-antiguo text-gris-piedra font-bold py-4 px-8 rounded-lg text-lg hover:bg-white transition-colors duration-300 shadow-lg hover:shadow-glow-blue"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Obtén tu Auditoría Gratuita
+              {t.cta}
             </motion.button>
           </Link>
 
           <p className="mt-4 text-sm text-gray-500">
-            Incluye el Blueprint de Estrategia completo.
+            {t.subtext}
           </p>
         </div>
 
