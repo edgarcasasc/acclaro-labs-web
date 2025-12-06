@@ -1,7 +1,17 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+const config: NextConfig = {
+  // --- AÑADIMOS ESTE BLOQUE 'images' ---
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos', // <-- Aquí autorizamos el dominio
+        port: '',
+        pathname: '/**', // Permitimos cualquier ruta dentro de ese dominio
+      },
+    ],
+  },
+}
 
-export default nextConfig;
+export default config

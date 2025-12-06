@@ -1,26 +1,99 @@
+/* src/app/globals.css */
+
+/* 1. Importa la base de Tailwind */
 @import "tailwindcss";
 
+/* 2. Definimos nuestras variables de color de Acclaro Labs */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-rojo-lacre: #9A2A2A;
+  --color-azul-zafiro: #0D3A61;
+  --color-oro-antiguo: #B59A6A;
+  --color-gris-piedra: #2B2B2B;
+  --color-blanco-pergamino: #F8F6F0;
+
+  /* --- NUEVO: Valores RGB (para opacidad en glows) --- */
+  /* Necesitamos los valores RGB de tus colores para usarlos con 'rgba()' */
+  --color-rojo-lacre-rgb: 154, 42, 42;     /* Para #9A2A2A */
+  --color-azul-zafiro-rgb: 13, 58, 97;     /* Para #0D3A61 */
+
+  /* Definimos las fuentes que cargamos en layout.tsx */
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
 }
 
+/* 3. Le decimos a Tailwind que use nuestras variables */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-rojo-lacre: var(--color-rojo-lacre);
+  --color-azul-zafiro: var(--color-azul-zafiro);
+  --color-oro-antiguo: var(--color-oro-antiguo);
+  --color-gris-piedra: var(--color-gris-piedra);
+  --color-blanco-pergamino: var(--color-blanco-pergamino);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
 }
 
+/* 4. Definimos el fondo oscuro por defecto */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--color-gris-piedra); /* #2B2B2B */
+    --foreground: var(--color-blanco-pergamino); /* #F8F6F0 */
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background, var(--color-gris-piedra));
+  color: var(--foreground, var(--color-blanco-pergamino));
+  font-family: var(--font-sans);
 }
+
+/* --- 5. NUEVO: Clases de Interacción (Calidad 2025) --- */
+@layer utilities {
+  
+  /* Fondo de cuadrícula tecnológica */
+  .bg-tech-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  }
+
+  /* Efectos de Glow (Resplandor) - USANDO TUS COLORES */
+  .shadow-glow-red-sm {
+    box-shadow: 0 0 15px 0px rgba(var(--color-rojo-lacre-rgb), 0.6);
+  }
+  .shadow-glow-red {
+    box-shadow: 0 0 30px 5px rgba(var(--color-rojo-lacre-rgb), 0.4);
+  }
+  .shadow-glow-blue-sm {
+    box-shadow: 0 0 15px 0px rgba(var(--color-azul-zafiro-rgb), 0.6);
+  }
+  .shadow-glow-blue {
+    box-shadow: 0 0 30px 5px rgba(var(--color-azul-zafiro-rgb), 0.4);
+  }
+
+  /* Utilidad para perspectiva 3D */
+  .perspective-\[1200px\] {
+    perspective: 1200px;
+  }
+}
+
+.footer-glow-text {
+  /* Color de texto base */
+  color: var(--color-blanco-pergamino);
+  /* Sombra/glow azul (el mismo que usamos en la animación) */
+  text-shadow: 0 0 8px rgba(0, 225, 255, 0.7), 
+               0 0 12px rgba(0, 225, 255, 0.5);
+  animation: subtle-pulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes subtle-pulse {
+  from {
+    text-shadow: 0 0 8px rgba(0, 225, 255, 0.7), 
+                 0 0 12px rgba(0, 225, 255, 0.5);
+  }
+  to {
+    text-shadow: 0 0 12px rgba(0, 225, 255, 1), 
+                 0 0 18px rgba(0, 225, 255, 0.7);
+  }
+}
+
