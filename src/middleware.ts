@@ -1,58 +1,65 @@
-// middleware.ts
+// src/middleware.ts
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Idiomas soportados
 const LOCALES = ['es', 'en', 'fr'];
 const DEFAULT_LOCALE = 'es';
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // 1. Ignorar archivos estáticos, imágenes, API y archivos de sistema
+  // 1. Ignorar archivos internos y estáticos
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/logos') ||
-    pathname.includes('.') // Archivos con extensión (jpg, css, svg)
+    pathname.includes('.')
   ) {
     return NextResponse.next();
   }
 
-  // 2. Revisar si ya existe una cookie de preferencia
+  // 2. Leer cookie de preferencia (La "Memoria" del usuario)
   const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
 
-  // 3. Detectar si la URL actual ya tiene un idioma explícito (/en o /fr)
+  // 3. Verificar si la URL actual NO tiene idioma (ej: / o /servicios...)
   const pathnameIsMissingLocale = LOCALES.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
-  // Si la URL no tiene idioma (es decir, estamos en la raíz o subrutas base)...
   if (pathnameIsMissingLocale) {
-    // Si el usuario ya eligió idioma antes, lo respetamos
-    if (cookieLocale && cookieLocale !== DEFAULT_LOCALE) {
-       // Si prefiere inglés y entra a '/', lo mandamos a '/en'
-       return NextResponse.redirect(new URL(`/${cookieLocale}${pathname}`, request.url));
-    }
-
-    // Si no hay cookie, intentamos detectar el navegador (básico)
-    const acceptLanguage = request.headers.get('accept-language') || '';
+    // --- LÓGICA DE REDIRECCIÓN ---
     
-    if (!cookieLocale) {
-        if (acceptLanguage.includes('en')) {
-            return NextResponse.redirect(new URL(`/en${pathname}`, request.url));
-        }
-        if (acceptLanguage.includes('fr')) {
-            return NextResponse.redirect(new URL(`/fr${pathname}`, request.url));
-        }
+    // A. Si el usuario YA eligió idioma (tiene cookie)
+    if (cookieLocale) {
+      // Si prefiere inglés/francés, lo mandamos allá
+      if (cookieLocale !== DEFAULT_LOCALE) {
+        const url = new URL(`/${cookieLocale}${pathname}`, request.url);
+        // Importante: Usamos redirect 307 (Temporal) para que no se cachee permanentemente
+        return NextResponse.redirect(url);
+      }
+      // Si prefiere español (default), DEJAMOS PASAR a la raíz.
+    } 
+    
+    // B. Si NO hay cookie (Primera visita), detectamos navegador
+    else {
+      const acceptLanguage = request.headers.get('accept-language') || '';
+      
+      if (acceptLanguage.includes('en')) {
+        return NextResponse.redirect(new URL(`/en${pathname}`, request.url));
+      }
+      if (acceptLanguage.includes('fr')) {
+        return NextResponse.redirect(new URL(`/fr${pathname}`, request.url));
+      }
     }
   }
 
-  // Si ya está en el idioma correcto o es español (default), dejamos pasar
-  return NextResponse.next();
+  // 4. RESPUESTA FINAL
+  // Añadimos headers para evitar que el navegador cachee las redirecciones agresivamente
+  const response = NextResponse.next();
+  response.headers.set('Cache-Control', 'no-store, must-revalidate');
+  return response;
 }
 
 export const config = {
-  // Aplicar a todas las rutas excepto las excluidas arriba
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }
