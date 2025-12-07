@@ -24,7 +24,7 @@ const NAV_CONTENT = {
     link_web: "/servicios/desarrollo-web",
     link_strategy: "/servicios/estrategia-contenido",
     link_bi: "/servicios/informes-ia",
-    link_contact: "/contacto", // <-- Ruta ES
+    link_contact: "/contacto",
     lang_label: "Idioma"
   },
   en: {
@@ -41,7 +41,7 @@ const NAV_CONTENT = {
     link_web: "/en/services/web-development",
     link_strategy: "/en/services/content-strategy",
     link_bi: "/en/services/bi-ai-reporting",
-    link_contact: "/en/contact", // <-- Ruta EN
+    link_contact: "/en/contact",
     lang_label: "Language"
   },
   fr: {
@@ -58,7 +58,7 @@ const NAV_CONTENT = {
     link_web: "/fr/services/developpement-web",
     link_strategy: "/fr/services/strategie-contenu",
     link_bi: "/fr/services/rapports-bi-ia",
-    link_contact: "/fr/contact", // <-- Ruta FR
+    link_contact: "/fr/contact",
     lang_label: "Langue"
   }
 };
@@ -77,9 +77,14 @@ export function GlobalNav() {
 
   const ctaButtonClasses = "rounded-md bg-oro-antiguo px-5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-oro-antiguo/80 transition-colors";
 
-  // Función para guardar cookie
-  const setLanguageCookie = (lang: string) => {
+  // --- CORRECCIÓN: Definición de la función handleLanguageChange ---
+  const handleLanguageChange = (lang: string) => {
+    // 1. Guardar Cookie
     document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+    // 2. Determinar ruta destino
+    const targetUrl = lang === 'es' ? '/' : `/${lang}`;
+    // 3. Forzar navegación "dura" para que el Middleware lea la cookie nueva
+    window.location.href = targetUrl;
   };
 
   return (
@@ -142,7 +147,6 @@ export function GlobalNav() {
             </Link>
           </div>
           
-          {/* CORRECCIÓN: Enlace de Contacto dinámico */}
           <Link href={t.link_contact} className="text-2xl font-semibold hover:text-oro-antiguo" onClick={() => setIsMenuOpen(false)}>
             {t.contact}
           </Link>

@@ -7,11 +7,11 @@ import { usePathname } from 'next/navigation';
 import { ChevronDown, Globe } from 'lucide-react'; 
 import * as Popover from '@radix-ui/react-popover'; 
 
-// --- Iconos SVG (Sin cambios, mantenlos igual) ---
+// --- Iconos SVG (Sin cambios) ---
 const CrmIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A9.065 9.065 0 0 1 12 3c2.17 0 4.207.576 5.963 1.584a9.065 9.065 0 0 1-5.963 16.416Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 12.75a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" /></svg>);
 const WebIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5 0-4.5 16.5" /></svg>);
 const BiIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 9.75 19.875V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0 1 9.75 19.875V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>);
-const DataIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0 1 9.75 19.875V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>);
+const DataIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 9.75 19.875V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>);
 
 // --- DICCIONARIO CON RUTAS LOCALIZADAS ---
 const MENU_CONTENT = {
@@ -40,7 +40,7 @@ const MENU_CONTENT = {
       desc: "Active sus datos con dashboards de Tableau y Power BI.",
       href: "/servicios/informes-ia"
     },
-    link_contact: "/contacto" // <-- Ruta ES
+    link_contact: "/contacto"
   },
   en: {
     home: "Home",
@@ -67,7 +67,7 @@ const MENU_CONTENT = {
       desc: "Activate your data with Tableau and Power BI dashboards.",
       href: "/en/services/bi-ai-reporting"
     },
-    link_contact: "/en/contact" // <-- Ruta EN
+    link_contact: "/en/contact"
   },
   fr: {
     home: "Accueil",
@@ -94,7 +94,7 @@ const MENU_CONTENT = {
       desc: "Activez vos données avec des tableaux de bord Tableau et Power BI.",
       href: "/fr/services/rapports-bi-ia"
     },
-    link_contact: "/fr/contact" // <-- Ruta FR
+    link_contact: "/fr/contact"
   }
 };
 
@@ -103,10 +103,17 @@ export function MegaMenu() {
   
   type LangCode = 'es' | 'en' | 'fr';
   const currentLangCode: LangCode = pathname.startsWith('/en') ? 'en' : pathname.startsWith('/fr') ? 'fr' : 'es';
+  
   const t = MENU_CONTENT[currentLangCode];
 
-  const setLanguageCookie = (lang: string) => {
+  // --- CORRECCIÓN: Función robusta para cambio de idioma ---
+  const handleLanguageChange = (lang: string) => {
+    // 1. Guardar Cookie
     document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+    // 2. Determinar ruta destino
+    const targetUrl = lang === 'es' ? '/' : `/${lang}`;
+    // 3. Forzar navegación "dura"
+    window.location.href = targetUrl;
   };
 
   const languages = [
@@ -187,12 +194,12 @@ export function MegaMenu() {
         </Popover.Portal>
       </Popover.Root>
       
-      {/* CORRECCIÓN: Link de contacto dinámico */}
+      {/* Link de Contacto dinámico */}
       <Link href={t.link_contact} className="text-sm font-medium text-blanco-pergamino/80 hover:text-blanco-pergamino transition-colors">
         {t.contact}
       </Link>
 
-      {/* Popover de Idioma */}
+      {/* Popover de Idioma (CORREGIDO) */}
       <Popover.Root>
         <Popover.Trigger asChild>
           <button className="group flex items-center gap-1 text-sm font-medium text-blanco-pergamino/80 hover:text-blanco-pergamino transition-colors focus:outline-none">
@@ -212,14 +219,13 @@ export function MegaMenu() {
             <div className="p-2">
               <ul className="flex flex-col gap-1">
                 {languages.map((lang) => {
-                  const href = lang.code === 'es' ? '/' : `/${lang.code}/`; 
                   const isActive = lang.code === currentLangCode;
 
                   return (
                     <li key={lang.code}>
-                      <Link 
-                        href={href} 
-                        onClick={() => setLanguageCookie(lang.code)}
+                      {/* Usamos button para ejecutar la lógica de cookie + recarga */}
+                      <button 
+                        onClick={() => handleLanguageChange(lang.code)}
                         className={`
                           block w-full p-2 text-left text-sm rounded-md transition-colors 
                           ${isActive 
@@ -229,7 +235,7 @@ export function MegaMenu() {
                         `}
                       >
                         {lang.name}
-                      </Link>
+                      </button>
                     </li>
                   );
                 })}
