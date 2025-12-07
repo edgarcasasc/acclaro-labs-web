@@ -163,27 +163,25 @@ export function GlobalNav() {
               <Globe size={14} /> {t.lang_label}
             </span>
             <div className="flex gap-4">
-              <Link 
-                href="/" 
-                onClick={() => { setLanguageCookie('es'); setIsMenuOpen(false); }}
-                className={`px-4 py-2 rounded-full border ${currentLangCode === 'es' ? 'bg-white text-black border-white' : 'border-white/30 text-white/70'}`}
+              {/* Usamos button en lugar de Link para controlar la navegación */}
+              <button 
+                onClick={() => handleLanguageChange('es')}
+                className={`px-4 py-2 rounded-full border transition-all ${currentLangCode === 'es' ? 'bg-white text-black border-white font-bold' : 'border-white/30 text-white/70 hover:border-white'}`}
               >
                 ES
-              </Link>
-              <Link 
-                href="/en" 
-                onClick={() => { setLanguageCookie('en'); setIsMenuOpen(false); }}
-                className={`px-4 py-2 rounded-full border ${currentLangCode === 'en' ? 'bg-white text-black border-white' : 'border-white/30 text-white/70'}`}
+              </button>
+              <button 
+                onClick={() => handleLanguageChange('en')}
+                className={`px-4 py-2 rounded-full border transition-all ${currentLangCode === 'en' ? 'bg-white text-black border-white font-bold' : 'border-white/30 text-white/70 hover:border-white'}`}
               >
                 EN
-              </Link>
-              <Link 
-                href="/fr" 
-                onClick={() => { setLanguageCookie('fr'); setIsMenuOpen(false); }}
-                className={`px-4 py-2 rounded-full border ${currentLangCode === 'fr' ? 'bg-white text-black border-white' : 'border-white/30 text-white/70'}`}
+              </button>
+              <button 
+                onClick={() => handleLanguageChange('fr')}
+                className={`px-4 py-2 rounded-full border transition-all ${currentLangCode === 'fr' ? 'bg-white text-black border-white font-bold' : 'border-white/30 text-white/70 hover:border-white'}`}
               >
                 FR
-              </Link>
+              </button>
             </div>
           </div>
 
