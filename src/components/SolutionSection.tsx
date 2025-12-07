@@ -9,15 +9,15 @@ import BlueprintSvgVertical from './BlueprintSvgVertical';
 const CONTENT = {
   es: {
     title: "Dejamos de adivinar. Empezamos a unificar.",
-    desc: "No ponemos parches. Construimos puentes. Fusionamos la inteligencia de negocio (CRM) con la ejecución técnica (Web) para que tus datos fluyan sin fricción."
+    desc: "No ponemos parches. Construimos puentes. Fusionamos la inteligencia de negocio (Datos) con la ejecución técnica (Web) para que tu información fluya sin fricción."
   },
   en: {
-    title: "Stop guessing. Start unifying.",
-    desc: "We don't apply patches. We build bridges. We fuse business intelligence (CRM) with technical execution (Web) so your data flows without friction."
+    title: "We stop guessing. We start unifying.",
+    desc: "We don't apply band-aids. We build bridges. We fuse business intelligence (Data) with technical execution (Web) so your information flows without friction."
   },
   fr: {
     title: "Cessez de deviner. Commencez à unifier.",
-    desc: "Nous ne posons pas de pansements. Nous construisons des ponts. Nous fusionnons l'intelligence d'affaires (CRM) avec l'exécution technique (Web) pour que vos données circulent sans friction."
+    desc: "Nous ne posons pas de pansements. Nous construisons des ponts. Nous fusionnons l'intelligence d'affaires (Données) avec l'exécution technique (Web) pour que vos informations circulent sans friction."
   }
 };
 

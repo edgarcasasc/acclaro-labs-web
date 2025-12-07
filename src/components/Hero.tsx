@@ -17,7 +17,7 @@ extend(THREE as any);
 const CONTENT = {
   es: {
     title: "DEL CAOS A LA CLARIDAD.",
-    desc: "Tu CRM no habla con tu sitio web. Tu marketing crea a ciegas. Nosotros construimos el puente que unifica tus datos (vengan de Salesforce, HubSpot o cualquier Data Lake), tu plataforma y tu contenido.",
+    desc: "Tus datos no se hablan con tu sitio web. Tu marketing navega a ciegas. Nosotros construimos el puente que unifica tu inteligencia de negocio (venga de Excel, HubSpot, Salesforce o cualquier ERP), tu plataforma y tu contenido.",
     ctaPrimary: "Obtén tu Auditoría Gratuita de Claridad",
     ctaSecondary: "Ver nuestro blueprint de 3 pasos",
     linkPrimary: "/servicios/estrategia-contenido#auditoria",
@@ -25,15 +25,15 @@ const CONTENT = {
   },
   en: {
     title: "FROM CHAOS TO CLARITY.",
-    desc: "Your CRM isn't talking to your website. Your marketing is flying blind. We build the bridge that unifies your data (whether from Salesforce, HubSpot, or any Data Lake), your platform, and your content.",
+    desc: "Your data isn't talking to your website. Your marketing is flying blind. We build the bridge that unifies your business intelligence (whether from Excel, HubSpot, Salesforce, or any ERP), your platform, and your content.",
     ctaPrimary: "Get Your Free Clarity Audit",
     ctaSecondary: "View our 3-Step Blueprint",
-    linkPrimary: "/servicios/estrategia-contenido#auditoria", // Podrías cambiar esto a rutas /en/ si existieran
+    linkPrimary: "/servicios/estrategia-contenido#auditoria",
     linkSecondary: "/servicios/desarrollo-web"
   },
   fr: {
     title: "DU CHAOS À LA CLARTÉ.",
-    desc: "Votre CRM ne communique pas avec votre site web. Votre marketing navigue à l'aveugle. Nous construisons la passerelle qui unifie vos données (qu'elles proviennent de Salesforce, HubSpot ou de tout Data Lake), votre plateforme et votre contenu.",
+    desc: "Vos données ne communiquent pas avec votre site web. Votre marketing navigue à l'aveugle. Nous construisons la passerelle qui unifie votre intelligence d'affaires (qu'elle vienne d'Excel, HubSpot, Salesforce ou de tout ERP), votre plateforme et votre contenu.",
     ctaPrimary: "Obtenez votre Audit de Clarté Gratuit",
     ctaSecondary: "Voir notre Blueprint en 3 étapes",
     linkPrimary: "/servicios/estrategia-contenido#auditoria",

@@ -9,17 +9,17 @@ import Link from 'next/link';
 const CONTENT = {
   es: {
     title: "Deja de adivinar. Empieza a unificar.",
-    desc: "Estás a una auditoría de convertir tu mayor gasto tecnológico (Salesforce) en tu mayor activo de marketing.",
+    desc: "Estás a una auditoría de convertir tus datos dispersos (incluso tus Excels) en tu mayor activo de marketing.",
     cta: "Agenda tu Auditoría de Claridad"
   },
   en: {
     title: "Stop guessing. Start unifying.",
-    desc: "You are one audit away from turning your biggest tech expense (Salesforce) into your greatest marketing asset.",
+    desc: "You are one audit away from turning your scattered data (even your Excels) into your greatest marketing asset.",
     cta: "Schedule your Clarity Audit"
   },
   fr: {
     title: "Cessez de deviner. Commencez à unifier.",
-    desc: "Vous n'êtes qu'à un audit de transformer votre plus grande dépense technologique (Salesforce) en votre plus grand atout marketing.",
+    desc: "Vous n'êtes qu'à un audit de transformer vos données dispersées (même vos fichiers Excel) en votre plus grand atout marketing.",
     cta: "Planifiez votre Audit de Clarté"
   }
 };

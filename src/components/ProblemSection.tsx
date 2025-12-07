@@ -10,16 +10,16 @@ const CONTENT = {
     heading: "Tu Ecosistema Roto Te Cuesta Más Que Dinero",
     cards: [
       {
-        title: "Tu CRM está ciego.",
-        desc: "Tus datos de ventas y soporte son oro puro, pero mueren aislados sin que marketing o tu web los vean."
+        title: "Tus Datos están Atrapados.",
+        desc: "Tus insights de venta y soporte son oro puro, pero mueren en hojas de cálculo o CRMs aislados sin que marketing o tu web los vean jamás."
       },
       {
-        title: "Tu Web es estática.",
-        desc: "Trata a tus clientes VIP igual que a un extraño. No está conectada a tus datos, por lo que no puede personalizar la experiencia."
+        title: "Tu Web es Estática.",
+        desc: "Trata a tus clientes VIP igual que a un extraño. No está conectada a tus datos en tiempo real, por lo que no puede personalizar la experiencia ni automatizar ventas."
       },
       {
-        title: "Tu Contenido no conecta.",
-        desc: "Tu equipo adivina qué quieren los clientes, en lugar de saberlo analizando los datos de soporte que ya posees."
+        title: "Tu Contenido no Conecta.",
+        desc: "Tu equipo adivina qué quieren los clientes, en lugar de saberlo analizando las bitácoras de soporte y las preguntas frecuentes (FAQs) que ya posees."
       }
     ]
   },
@@ -27,16 +27,16 @@ const CONTENT = {
     heading: "Your Broken Ecosystem Costs You More Than Money",
     cards: [
       {
-        title: "Your CRM is blind.",
-        desc: "Your sales and support data is pure gold, but it dies in isolation without marketing or your website ever seeing it."
+        title: "Your Data is Trapped.",
+        desc: "Your sales and support insights are pure gold, but they die in spreadsheets or isolated CRMs without marketing or your website ever seeing them."
       },
       {
-        title: "Your Website is static.",
-        desc: "It treats your VIP customers just like strangers. It isn't connected to your data, so it can't personalize the experience."
+        title: "Your Website is Static.",
+        desc: "It treats your VIP customers just like strangers. It isn't connected to your real-time data, so it can't personalize the experience or automate sales."
       },
       {
-        title: "Your Content doesn't connect.",
-        desc: "Your team guesses what customers want, instead of knowing it by analyzing the support data you already own."
+        title: "Your Content Doesn't Connect.",
+        desc: "Your team guesses what customers want, instead of knowing it by analyzing the support logs and FAQs you already own."
       }
     ]
   },
@@ -44,16 +44,16 @@ const CONTENT = {
     heading: "Votre Écosystème Brisé Vous Coûte Plus que de l'Argent",
     cards: [
       {
-        title: "Votre CRM est aveugle.",
-        desc: "Vos données de vente et de support valent de l'or, mais elles meurent isolées sans que le marketing ou votre site web ne puissent les voir."
+        title: "Vos Données sont Piégées.",
+        desc: "Vos insights de vente et de support valent de l'or, mais ils meurent dans des feuilles de calcul ou des CRM isolés sans que le marketing ou votre site web ne puissent les voir."
       },
       {
-        title: "Votre Site Web est statique.",
-        desc: "Il traite vos clients VIP comme des inconnus. Il n'est pas connecté à vos données, il ne peut donc pas personnaliser l'expérience."
+        title: "Votre Site Web est Statique.",
+        desc: "Il traite vos clients VIP comme des inconnus. Il n'est pas connecté à vos données en temps réel, il ne peut donc pas personnaliser l'expérience ni automatiser les ventes."
       },
       {
-        title: "Votre Contenu ne connecte pas.",
-        desc: "Votre équipe devine ce que veulent les clients, au lieu de le savoir en analysant les données de support que vous possédez déjà."
+        title: "Votre Contenu ne Connecte Pas.",
+        desc: "Votre équipe devine ce que veulent les clients, au lieu de le savoir en analysant les journaux de support et les FAQ que vous possédez déjà."
       }
     ]
   }

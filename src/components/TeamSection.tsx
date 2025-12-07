@@ -18,11 +18,11 @@ const CONTENT = {
       ]
     },
     abdiel: {
-      title: "El Arquitecto Técnico (Salesforce & IA)",
+      title: "El Arquitecto Técnico (Datos & IA)", // <-- CAMBIO
       desc: "Abdiel es el motor de ingeniería. Se especializa en construir los 'puentes' (APIs) que hacen que los sistemas complejos trabajen al unísono.",
       points: [
         "Visión y certificación de Nivel MIT.",
-        "Experto híbrido en Salesforce y Desarrollo (React).",
+        "Experto híbrido en Arquitectura CRM y Desarrollo (React).", // <-- CAMBIO
         "Constructor de IA Generativa aplicada a negocio."
       ]
     }
@@ -39,11 +39,11 @@ const CONTENT = {
       ]
     },
     abdiel: {
-      title: "The Technical Architect (Salesforce & AI)",
+      title: "The Technical Architect (Data & AI)", // <-- CAMBIO
       desc: "Abdiel is the engineering powerhouse. He specializes in building the 'bridges' (APIs) that make complex systems work in unison.",
       points: [
         "MIT-level vision and certification.",
-        "Hybrid expert in Salesforce and Development (React).",
+        "Hybrid expert in CRM Architecture and Development (React).", // <-- CAMBIO
         "Builder of Generative AI applied to business."
       ]
     }
@@ -60,11 +60,11 @@ const CONTENT = {
       ]
     },
     abdiel: {
-      title: "L'Architecte Technique (Salesforce & IA)",
+      title: "L'Architecte Technique (Données & IA)", // <-- CAMBIO
       desc: "Abdiel est le moteur d'ingénierie. Il se spécialise dans la construction des « passerelles » (API) qui permettent aux systèmes complexes de travailler à l'unisson.",
       points: [
         "Vision et certification de niveau MIT.",
-        "Expert hybride en Salesforce et Développement (React).",
+        "Expert hybride en Architecture CRM et Développement (React).", // <-- CAMBIO
         "Bâtisseur d'IA Générative appliquée aux affaires."
       ]
     }

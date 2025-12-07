@@ -2,7 +2,8 @@
 'use client';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, MapPin, Send, MessageSquare, CheckCircle, Loader2 } from 'lucide-react';
+// Agregamos el icono 'Bot' para la sección de IA
+import { Mail, MapPin, Send, MessageSquare, CheckCircle, Loader2, Bot } from 'lucide-react';
 
 // --- 1. DICCIONARIO DE CONTENIDO (i18n) ---
 const CONTENT = {
@@ -14,6 +15,9 @@ const CONTENT = {
     write_us: "Escribe Directo",
     base: "Base de Operaciones",
     location: "Monterrey, N.L., México <span class='text-gray-500 text-sm'>(Trabajando globalmente)</span>",
+    // --- NUEVA SECCIÓN: AI Disclaimer ---
+    ai_title: "Comunicación Sin Fronteras (AI-Powered)",
+    ai_desc: "Creemos que el talento no tiene código postal. Usamos IA para comunicarnos fluidamente en tu idioma nativo. Escríbenos como prefieras: la tecnología nos conecta.",
     form: {
       name: "Nombre",
       email: "Correo Corporativo",
@@ -47,6 +51,9 @@ const CONTENT = {
     write_us: "Write Directly",
     base: "Base of Operations",
     location: "Monterrey, N.L., Mexico <span class='text-gray-500 text-sm'>(Working globally)</span>",
+    // --- NUEVA SECCIÓN: AI Disclaimer ---
+    ai_title: "Borderless Communication (AI-Powered)",
+    ai_desc: "We believe talent has no zip code. We use AI to communicate fluently in your native language. Write to us as you prefer: technology connects us.",
     form: {
       name: "Name",
       email: "Corporate Email",
@@ -80,6 +87,9 @@ const CONTENT = {
     write_us: "Écrivez-nous directement",
     base: "Base d'Opérations",
     location: "Monterrey, N.L., Mexique <span class='text-gray-500 text-sm'>(Opérant à l'échelle mondiale)</span>",
+    // --- NUEVA SECCIÓN: AI Disclaimer ---
+    ai_title: "Communication Sans Frontières (via IA)",
+    ai_desc: "Nous croyons que le talent n'a pas de code postal. Nous utilisons l'IA pour communiquer couramment dans votre langue. Écrivez comme vous préférez : la technologie nous connecte.",
     form: {
       name: "Nom",
       email: "Email Professionnel",
@@ -158,7 +168,6 @@ export default function ContactSection({ lang = 'es' }: ContactSectionProps) {
         transition={{ duration: 0.8 }}
         className="pt-4"
       >
-        {/* Badge con contraste corregido */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-400/30 mb-6">
           <MessageSquare size={14} className="text-sky-400" />
           <span className="text-sky-400 text-xs font-bold uppercase tracking-wider">{t.badge}</span>
@@ -172,7 +181,7 @@ export default function ContactSection({ lang = 'es' }: ContactSectionProps) {
         
         <p className="text-gray-400 mb-10 border-l-2 border-oro-antiguo/50 pl-4 italic" dangerouslySetInnerHTML={{ __html: t.quote }} />
 
-        <div className="space-y-6">
+        <div className="space-y-8"> {/* Aumentado espaciado vertical */}
           <div className="flex items-start gap-4 group">
             <div className="p-3 rounded-lg bg-white/5 border border-white/10 group-hover:border-oro-antiguo/30 transition-colors">
               <Mail className="text-oro-antiguo" size={24} />
@@ -194,6 +203,20 @@ export default function ContactSection({ lang = 'es' }: ContactSectionProps) {
               <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: t.location }} />
             </div>
           </div>
+
+          {/* --- NUEVO BLOQUE: AI Disclaimer --- */}
+          <div className="flex items-start gap-4 group">
+            <div className="p-3 rounded-lg bg-white/5 border border-white/10 group-hover:border-violet-400/30 transition-colors">
+              <Bot className="text-violet-400" size={24} />
+            </div>
+            <div>
+              <h3 className="font-bold text-white text-sm uppercase tracking-wide">{t.ai_title}</h3>
+              <p className="text-gray-300 text-sm leading-relaxed mt-1">
+                {t.ai_desc}
+              </p>
+            </div>
+          </div>
+          
         </div>
       </motion.div>
 
