@@ -10,7 +10,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
       {/* 1. NAVEGACIÓN GLOBAL 
           Le pasamos lang="es" para que muestre los textos en español
       */}
-      <GlobalNav lang="es" />
+      <GlobalNav  />
 
       {/* 2. FONDO DE PARTÍCULAS
           Lo mantenemos fijo al fondo para consistencia con la Home
