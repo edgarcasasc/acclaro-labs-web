@@ -12,7 +12,7 @@ export const contentType = 'image/png';
 export default async function Image({ params }: { params: { slug: string } }) {
   const { slug } = await params;
 // Busca francés
-const post = await getPostBySlug(slug, 'fr');
+const post = await getPostBySlug(slug);
 
   // Si no hay post, título por defecto
   const title = post?.meta.title || 'Acclaro Labs';

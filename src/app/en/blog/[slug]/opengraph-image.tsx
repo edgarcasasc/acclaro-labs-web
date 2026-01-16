@@ -11,7 +11,7 @@ export const contentType = 'image/png';
 // Generación de la imagen
 export default async function Image({ params }: { params: { slug: string } }) {
   const { slug } = await params;
- const post = await getPostBySlug(slug, 'en');
+ const post = await getPostBySlug(slug);
 
   // Si no hay post, título por defecto
   const title = post?.meta.title || 'Acclaro Labs';
