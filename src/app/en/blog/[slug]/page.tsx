@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostEn(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-const post = await getPostBySlug(params.slug, 'en');
+const post = await getPostBySlug(params.slug);
   if (!post) {
     notFound();
   }

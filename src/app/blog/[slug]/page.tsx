@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPost(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-const post = await getPostBySlug(params.slug, 'es');
+const post = await getPostBySlug(params.slug);
   if (!post) {
     notFound();
   }
