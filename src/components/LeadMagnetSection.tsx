@@ -3,119 +3,70 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image'; 
+// Asegúrate de que la ruta sea correcta según donde guardaste el archivo anterior
+import ConversationalForm from './ConversationalForm'; 
 
-// --- 1. DICCIONARIO DE CONTENIDO (i18n + Assets Reales) ---
-const CONTENT = {
-  es: {
-    title: "¿Dónde estás perdiendo dinero hoy?",
-    desc: "Lee el análisis que nuestros competidores no quieren que veas. Te mostramos cómo tus registros de soporte al cliente y notas de venta pueden convertirse en tu mejor estrategia de SEO.",
-    cta: "Obtén tu Auditoría Gratuita",
-    subtext: "Incluye el Blueprint de Estrategia completo.",
-    // Rutas de Archivos en Español
-    imageSrc: "/downloads/blueprint_acclarolabs.webp", 
-    pdfHref: "/downloads/blueprint_acclarolabs.pdf"
-  },
-  en: {
-    title: "Where are you losing money today?",
-    desc: "Read the analysis our competitors don't want you to see. We show you how your customer support logs and sales notes can become your best SEO strategy.",
-    cta: "Get Your Free Audit",
-    subtext: "Includes the full Strategy Blueprint.",
-    // Rutas de Archivos en Inglés
-    imageSrc: "/downloads/blueprint_acclarolabs_en.webp",
-    pdfHref: "/downloads/blueprint_acclarolabs_en.pdf"
-  },
-  fr: {
-    title: "Où perdez-vous de l'argent aujourd'hui ?",
-    desc: "Lisez l'analyse que nos concurrents ne veulent pas que vous voyiez. Nous vous montrons comment vos journaux de support client et vos notes de vente peuvent devenir votre meilleure stratégie SEO.",
-    cta: "Obtenez votre Audit Gratuit",
-    subtext: "Inclut le Blueprint Stratégique complet.",
-    // Rutas de Archivos en Francés
-    imageSrc: "/downloads/blueprint_acclarolabs_fr.webp",
-    pdfHref: "/downloads/blueprint_acclarolabs_fr.pdf"
-  }
-};
-
-interface LeadMagnetSectionProps {
-  lang?: 'es' | 'en' | 'fr';
-}
-
-export default function LeadMagnetSection({ lang = 'es' }: LeadMagnetSectionProps) {
-  const t = CONTENT[lang];
-
+export default function LeadMagnetSection() {
   return (
-    <section className="relative z-10 w-full bg-gris-piedra py-24 sm:py-32 px-4 sm:px-6 lg:px-8 border-y border-white/5">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+    <section className="relative w-full py-24 px-6 overflow-hidden bg-gray-900 border-t border-gray-800">
+      
+      {/* Fondo Sutil (Grid Pattern) */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
         
-        {/* Imagen del Lead Magnet */}
-        <div className="flex justify-center items-center">
-          <motion.div
-            className="relative w-full max-w-sm h-auto rounded-lg"
-            style={{ perspective: 1000 }}
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          >
-            <motion.div
-              className="rounded-lg shadow-2xl shadow-oro-antiguo/10 relative overflow-hidden"
-              style={{ transformStyle: "preserve-3d" }}
-              whileHover={{
-                rotateY: 5,
-                rotateX: -5,
-                boxShadow: "0px 20px 40px rgba(181, 154, 106, 0.3)",
-              }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              {/* --- IMAGEN DINÁMICA (Carga la portada del idioma correcto) --- */}
-              <Image
-                src={t.imageSrc}
-                alt="Blueprint Acclaro Labs Cover"
-                width={600} 
-                height={800}
-                className="w-full h-auto rounded-lg object-cover border border-white/10"
-                priority // Carga prioritaria para mejor rendimiento visual
-              />
-              
-              {/* Brillo superpuesto para efecto premium */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none rounded-lg"></div>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Contenido y CTA */}
-        <div className="text-left">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-blanco-pergamino mb-4">
-            {t.title}
-          </h2>
-          <p className="text-lg text-blanco-pergamino/80 mb-8 leading-relaxed">
-            {t.desc}
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4">
-            {/* OPCIÓN A: El botón principal lleva a la Auditoría (Estrategia recomendada) */}
-            <Link href="/servicios/estrategia-contenido#auditoria">
-              <motion.button
-                className="bg-oro-antiguo text-gris-piedra font-bold py-4 px-8 rounded-lg text-lg hover:bg-white transition-colors duration-300 shadow-lg hover:shadow-glow-blue"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {t.cta}
-              </motion.button>
-            </Link>
-
-            {/* OPCIÓN B: Botón secundario para descargar el PDF directo (Opcional, descomentar si lo quieres) */}
-            {/* <a href={t.pdfHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
-               <button className="text-oro-antiguo font-semibold py-4 px-6 hover:text-white transition-colors border border-oro-antiguo/30 rounded-lg hover:bg-white/5">
-                 Descargar Preview
-               </button>
-            </a> 
-            */}
+        {/* COLUMNA IZQUIERDA: Copywriting Persuasivo */}
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="space-y-6 text-left"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-500/50 text-blue-400 text-xs font-mono uppercase tracking-wider">
+            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"/>
+            Lead Magnet v2.0
           </div>
-
-          <p className="mt-4 text-sm text-gray-500">
-            {t.subtext}
+          
+          <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+            No llenes formularios. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+              Inicia una Auditoría.
+            </span>
+          </h2>
+          
+          <p className="text-lg text-gray-400 max-w-md">
+            Nuestra IA analizará la arquitectura de tu sitio web en tiempo real. 
+            Danos tu URL y recibe un pre-diagnóstico de UX y conversión instantáneo.
           </p>
-        </div>
+
+          {/* Social Proof micro */}
+          <div className="flex items-center gap-4 pt-4 opacity-70">
+            <div className="flex -space-x-3">
+               {/* Simulación de avatares con div */}
+               <div className="w-8 h-8 rounded-full bg-gray-700 border-2 border-gray-900 flex items-center justify-center text-[10px] text-white">A</div>
+               <div className="w-8 h-8 rounded-full bg-gray-600 border-2 border-gray-900 flex items-center justify-center text-[10px] text-white">B</div>
+               <div className="w-8 h-8 rounded-full bg-gray-500 border-2 border-gray-900 flex items-center justify-center text-[10px] text-white">C</div>
+            </div>
+            <p className="text-sm text-gray-500">Más de 50 startups auditadas este mes.</p>
+          </div>
+        </motion.div>
+
+        {/* COLUMNA DERECHA: El Chatbot (La Ejecución) */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative w-full"
+        >
+            {/* Efecto de 'Glow' detrás del chat */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-20 animate-pulse transition duration-1000"></div>
+            
+            {/* Componente del Chat */}
+            <ConversationalForm />
+            
+        </motion.div>
 
       </div>
     </section>

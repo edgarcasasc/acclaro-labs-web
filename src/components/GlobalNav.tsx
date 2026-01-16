@@ -14,12 +14,14 @@ const NAV_CONTENT = {
     cta: "Solicita tu Auditoría",
     home: "Inicio",
     services: "Servicios",
+    portfolio: "Portafolio",
     contact: "Contacto",
     menu_crm: "CRM & Datos",
     menu_web: "Desarrollo Web",
     menu_strategy: "Estrategia & UX",
     menu_bi: "Informes BI & IA",
     // Rutas localizadas
+    link_portfolio: "/blog",
     link_crm: "/servicios/consultoria-crm",
     link_web: "/servicios/desarrollo-web",
     link_strategy: "/servicios/estrategia-contenido",
@@ -31,12 +33,14 @@ const NAV_CONTENT = {
     cta: "Request your Audit",
     home: "Home",
     services: "Services",
+    portfolio: "Portfolio",
     contact: "Contact",
     menu_crm: "CRM & Data",
     menu_web: "Web Development",
     menu_strategy: "Strategy & UX",
     menu_bi: "BI & AI Reporting",
     // Rutas localizadas
+    link_portfolio: "/en/blog",
     link_crm: "/en/services/crm-consulting",
     link_web: "/en/services/web-development",
     link_strategy: "/en/services/content-strategy",
@@ -48,12 +52,14 @@ const NAV_CONTENT = {
     cta: "Demandez votre Audit",
     home: "Accueil",
     services: "Services",
+    portfolio: "Portfolio",
     contact: "Contact",
     menu_crm: "CRM & Données",
     menu_web: "Dév. Web",
     menu_strategy: "Stratégie & UX",
     menu_bi: "Rapports BI & IA",
     // Rutas localizadas
+    link_portfolio: "/fr/blog",
     link_crm: "/fr/services/conseil-crm",
     link_web: "/fr/services/developpement-web",
     link_strategy: "/fr/services/strategie-contenu",
@@ -77,13 +83,9 @@ export function GlobalNav() {
 
   const ctaButtonClasses = "rounded-md bg-oro-antiguo px-5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-oro-antiguo/80 transition-colors";
 
-  // --- CORRECCIÓN: Definición de la función handleLanguageChange ---
   const handleLanguageChange = (lang: string) => {
-    // 1. Guardar Cookie
     document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax`;
-    // 2. Determinar ruta destino
     const targetUrl = lang === 'es' ? '/' : `/${lang}`;
-    // 3. Forzar navegación "dura" para que el Middleware lea la cookie nueva
     window.location.href = targetUrl;
   };
 
@@ -91,12 +93,31 @@ export function GlobalNav() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 md:p-6 
                       bg-gris-piedra/80 backdrop-blur-md ring-1 ring-blanco-pergamino/10">        
+        
+        {/* IZQUIERDA: LOGO */}
         <div className="flex items-center gap-4">
           <Link href={homeLink} aria-label="Volver al Inicio">
             <LogoAcclaro className="h-10 w-auto text-blanco-pergamino" />
           </Link>
         </div>
 
+        {/* CENTRO: MENÚ DE ESCRITORIO (Corregido) */}
+        {/* Quitamos los enlaces explícitos de Inicio y Contacto para evitar duplicados con MegaMenu */}
+        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-6">
+            
+            {/* El MegaMenu ya trae 'Inicio' y 'Servicios' por dentro */}
+            <MegaMenu /> 
+
+            {/* Agregamos SOLO Portafolio aquí */}
+            <Link 
+              href={t.link_portfolio}
+              className="text-sm font-medium text-blanco-pergamino/80 hover:text-blanco-pergamino transition-colors"
+            >
+              {t.portfolio}
+            </Link>
+        </div>
+
+        {/* DERECHA: CTA + MÓVIL */}
         <div className="flex items-center gap-4">
           {/* CTA DESKTOP */}
           <Link 
@@ -113,10 +134,6 @@ export function GlobalNav() {
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-        </div>
-        
-        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <MegaMenu /> 
         </div>
       </nav>
 
@@ -146,6 +163,11 @@ export function GlobalNav() {
               {t.menu_bi}
             </Link>
           </div>
+
+          {/* NUEVO: Enlace Portafolio Móvil */}
+          <Link href={t.link_portfolio} className="text-2xl font-semibold hover:text-oro-antiguo" onClick={() => setIsMenuOpen(false)}>
+            {t.portfolio}
+          </Link>
           
           <Link href={t.link_contact} className="text-2xl font-semibold hover:text-oro-antiguo" onClick={() => setIsMenuOpen(false)}>
             {t.contact}
@@ -167,7 +189,6 @@ export function GlobalNav() {
               <Globe size={14} /> {t.lang_label}
             </span>
             <div className="flex gap-4">
-              {/* Usamos button en lugar de Link para controlar la navegación */}
               <button 
                 onClick={() => handleLanguageChange('es')}
                 className={`px-4 py-2 rounded-full border transition-all ${currentLangCode === 'es' ? 'bg-white text-black border-white font-bold' : 'border-white/30 text-white/70 hover:border-white'}`}

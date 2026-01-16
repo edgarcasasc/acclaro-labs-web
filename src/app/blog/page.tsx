@@ -1,50 +1,49 @@
-import React from 'react';
-import DigitalUniverse from '@/components/DigitalUniverse';
+import Link from 'next/link';
+import { getAllPosts } from '@/lib/mdx'; // Importamos tu motor
 
-export default function BlogPage() {
-  const posts = [
-    {
-      title: "¿Por qué tu Salesforce odia tu página web?",
-      excerpt: "La desconexión entre ventas y marketing te está costando millones. Aquí explicamos cómo arreglarlo.",
-      date: "05 Dic, 2025",
-      category: "Estrategia"
-    },
-    {
-      title: "El fin de las agencias tradicionales",
-      excerpt: "Por qué el modelo de silos (una agencia para SEO, otra para Dev) está muerto.",
-      date: "01 Dic, 2025",
-      category: "Opinión"
-    },
-    {
-      title: "Next.js 15: ¿Vale la pena la migración?",
-      excerpt: "Analizamos el impacto en rendimiento y SEO de la última versión del framework de React.",
-      date: "28 Nov, 2025",
-      category: "Tecnología"
-    }
-  ];
+export default async function BlogIndex() {
+  const posts = await getAllPosts();
 
   return (
-    <>
-      <DigitalUniverse />
-      <main className="relative z-10 text-blanco-pergamino min-h-screen">
-        <section className="pt-32 pb-12 px-6 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Bitácora del Arquitecto</h1>
-          <p className="text-gray-400">Pensamientos sobre tecnología, negocios y el caos digital.</p>
-        </section>
+    <section>
+      <div className="text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 mb-4">
+          Bitácora de Ingeniería
+        </h1>
+        <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+          Explorando la intersección entre Inteligencia Artificial, Datos y Negocios.
+        </p>
+      </div>
 
-        <section className="py-10 px-6 max-w-5xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post, i) => (
-            <article key={i} className="bg-gris-piedra/60 border border-white/10 p-6 rounded-lg hover:border-oro-antiguo/50 transition-colors cursor-pointer">
-              <span className="text-xs font-bold text-azul-zafiro bg-azul-zafiro/10 px-2 py-1 rounded mb-3 inline-block">
-                {post.category}
-              </span>
-              <h3 className="text-xl font-bold mb-2 hover:text-oro-antiguo transition-colors">{post.title}</h3>
-              <p className="text-sm text-gray-400 mb-4">{post.excerpt}</p>
-              <span className="text-xs text-gray-500">{post.date}</span>
+      <div className="grid gap-8 md:grid-cols-2">
+        {posts.map((post) => (
+          <Link 
+            key={post.slug} 
+            href={`/blog/${post.slug}`}
+            className="group block p-6 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 transition-all hover:border-blue-500/50"
+          >
+            <article>
+              <div className="flex items-center gap-2 text-sm text-slate-500 mb-3">
+                <time>{post.date}</time>
+                <span>•</span>
+                <span>{post.author}</span>
+              </div>
+              
+              <h2 className="text-2xl font-bold text-slate-100 group-hover:text-blue-400 transition-colors mb-3">
+                {post.title}
+              </h2>
+              
+              <p className="text-slate-400 leading-relaxed line-clamp-3">
+                {post.excerpt}
+              </p>
+              
+              <div className="mt-4 text-blue-400 text-sm font-medium group-hover:underline">
+                Leer artículo →
+              </div>
             </article>
-          ))}
-        </section>
-      </main>
-    </>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
