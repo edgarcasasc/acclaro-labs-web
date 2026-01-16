@@ -9,7 +9,7 @@ export default async function BlogIndexFr() {
 
   return (
     <div className="relative min-h-screen text-slate-100 font-sans">
-      <GlobalNav lang="fr" /> {/* Menú en Francés */}
+      <GlobalNav  /> {/* Menú en Francés */}
       
       <div className="fixed inset-0 z-[-10]">
          <DigitalUniverse />

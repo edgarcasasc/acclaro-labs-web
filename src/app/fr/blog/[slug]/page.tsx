@@ -63,7 +63,7 @@ export default async function BlogPostFr(props: { params: Promise<{ slug: string
 
   return (
     <div className="relative min-h-screen text-slate-100 font-sans">
-      <GlobalNav lang="fr" /> 
+      <GlobalNav /> 
       
       <div className="fixed inset-0 z-[-10]">
          <DigitalUniverse />

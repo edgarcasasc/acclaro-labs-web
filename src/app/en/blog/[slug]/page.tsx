@@ -68,7 +68,7 @@ const post = await getPostBySlug(params.slug);
   return (
     <div className="relative min-h-screen text-slate-100 font-sans">
       {/* Navegación en Inglés */}
-      <GlobalNav lang="en" /> 
+      <GlobalNav /> 
       
       <div className="fixed inset-0 z-[-10]">
          <DigitalUniverse />
