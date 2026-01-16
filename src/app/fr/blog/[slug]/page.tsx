@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug, 'fr'); // Importante: 'fr'
+const post = await getPostBySlug(slug);
   if (!post) return {};
   return {
     title: `${post.meta.title} | Acclaro Labs`,
