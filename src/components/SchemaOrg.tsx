@@ -21,7 +21,7 @@ export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }
     },
     "sameAs": [
       "https://www.linkedin.com/company/acclarolabs",
-      "https://twitter.com/acclarolabs"
+      "https://twitter.com/Acclarolabs"
     ],
     "contactPoint": {
       "@type": "ContactPoint",

@@ -120,9 +120,9 @@ export default function Footer({ lang = 'es' }: FooterProps) {
 
             {/* Redes Sociales */}
             <div className="flex gap-5">
-              <SocialLink href="https://github.com" icon={<Github className="h-5 w-5" />} label="GitHub" />
-              <SocialLink href="https://linkedin.com" icon={<Linkedin className="h-5 w-5" />} label="LinkedIn" />
-              <SocialLink href="https://twitter.com" icon={<Twitter className="h-5 w-5" />} label="Twitter" />
+              <SocialLink href="https://github.com/acclarolabs" icon={<Github className="h-5 w-5" />} label="GitHub" />
+              <SocialLink href="https://www.linkedin.com/company/acclarolabs/" icon={<Linkedin className="h-5 w-5" />} label="LinkedIn" />
+              <SocialLink href="https://x.com/Acclarolabs" icon={<Twitter className="h-5 w-5" />} label="Twitter" />
             </div>
           </div>
 
