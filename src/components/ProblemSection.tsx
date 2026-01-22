@@ -3,6 +3,7 @@
 
 import { motion, useMotionValue, useTransform, useSpring, useMotionTemplate } from 'framer-motion';
 import React, { ReactNode } from 'react';
+import { LucideIcon } from 'lucide-react';
 
 // --- 1. DICCIONARIO DE CONTENIDO (i18n) ---
 const CONTENT = {
@@ -103,7 +104,7 @@ const IconContenidoNoConecta = () => (
 
 // --- Componente de Tarjeta 3D Interactivo + Glow ---
 interface CardProps {
-  icon: ReactNode;
+  icon: LucideIcon; // <--- Cambia ReactNode por LucideIcon
   title: string;
   children: React.ReactNode;
 }

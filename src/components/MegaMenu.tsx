@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { ChevronDown, Globe, Database, Laptop, PenTool, BarChart3, Search, Zap, LayoutTemplate, Cable } from 'lucide-react'; 
 import * as Popover from '@radix-ui/react-popover'; 
 import { motion, AnimatePresence } from 'framer-motion';
+import { LucideIcon } from 'lucide-react';
 
 // --- DICCIONARIO CON RUTAS LOCALIZADAS ---
 const MENU_CONTENT = {
@@ -260,7 +261,7 @@ interface ServiceItemProps {
   href: string;
   title: string;
   desc: string;
-  icon: React.ElementType;
+icon: LucideIcon; // <--- CAMBIA React.ElementType por LucideIcon
   colorClass: string;
   bgClass: string;
 }

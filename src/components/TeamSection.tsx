@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Cpu, Check, Palette } from 'lucide-react';
 import React, { useState } from 'react';
-
+import { LucideIcon } from 'lucide-react';
 // --- 1. DICCIONARIO DE CONTENIDO (i18n) ---
 const CONTENT = {
   es: {
@@ -166,7 +166,7 @@ interface FounderCardProps {
   desc: string;
   points: string[];
   theme: 'purple' | 'cyan';
-  icon: React.ReactNode;
+  icon: LucideIcon; // <--- Cambia ReactNode por LucideIcon
   hoveredCard: string | null;
   setHoveredCard: (id: string | null) => void;
 }
