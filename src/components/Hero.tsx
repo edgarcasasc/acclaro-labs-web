@@ -1,4 +1,3 @@
-// src/components/Hero.tsx
 'use client'
 
 import React, { Suspense, useRef, useState } from 'react';
@@ -10,10 +9,8 @@ import { ArrowRight } from 'lucide-react';
 import LogoAnimado from './LogoAnimado';
 import Link from 'next/link';
 
-// Extendemos THREE para JSX
 extend(THREE as any);
 
-// --- DICCIONARIO DE TRADUCCIÓN (TEXTOS) ---
 const CONTENT = {
   es: {
     title: "Acelera el negocio digital de tu empresa.",
@@ -41,11 +38,10 @@ const CONTENT = {
   }
 };
 
-// Variantes de animación
+// MODIFICACIÓN SEO: Opacity 1 por defecto para que los bots lean el H1 de inmediato
 const glitchVariants: Variants = {
-  initial: { opacity: 0 },
+  initial: { opacity: 1, y: 0 }, 
   animate: {
-    opacity: 1,
     textShadow: [
       '2px 2px 0px #0D3A61, -2px -2px 0px #B59A6A', 
       '-1px 0px 0px #0D3A61, 1px 0px 0px #B59A6A',
@@ -53,8 +49,8 @@ const glitchVariants: Variants = {
       '1px -1px 0px #0D3A61, -1px 1px 0px #B59A6A',
       '0px 0px 0px #0D3A61, 0px 0px 0px #B59A6A'
     ],
-    x: [2, -2, 0, 1, 0],
-    y: [-1, 1, 0, -1, 0],
+    x: [1, -1, 0, 0.5, 0],
+    y: [-0.5, 0.5, 0, -0.5, 0],
     transition: {
       duration: 1.5,
       times: [0, 0.25, 0.5, 0.75, 1],
@@ -62,7 +58,6 @@ const glitchVariants: Variants = {
   },
 };
 
-// Componente de Partículas (Sin cambios)
 const Particles = () => {
   const ref = useRef<THREE.Points>(null);
   const { viewport, mouse } = useThree();
@@ -93,30 +88,26 @@ const Particles = () => {
   );
 };
 
-// --- INTERFAZ DE PROPS ---
 interface HeroProps {
-  lang?: 'es' | 'en' | 'fr'; // Prop opcional para el idioma
+  lang?: 'es' | 'en' | 'fr';
 }
 
-// --- Componente Principal HERO ---
 export default function Hero({ lang = 'es' }: HeroProps) {
-  // Seleccionamos el contenido basado en el idioma
   const t = CONTENT[lang];
 
   return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950">
       
-      {/* Fondo 3D */}
+      {/* Fondo 3D: Envuelto en Suspense para evitar el Bailout de renderizado */}
       <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <Suspense fallback={null}>
-            <ambientLight intensity={0.2} />
-            <Particles />
-          </Suspense>
-        </Canvas>
+        <Suspense fallback={<div className="w-full h-full bg-slate-950" />}>
+          <Canvas camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
+              <ambientLight intensity={0.2} />
+              <Particles />
+          </Canvas>
+        </Suspense>
       </div>
       
-      {/* Contenido de Texto */}
       <div className="relative z-10 flex flex-col items-center text-center p-4">
         
         <LogoAnimado className="w-40 h-40 mb-4" />
@@ -130,19 +121,21 @@ export default function Hero({ lang = 'es' }: HeroProps) {
           {t.title}
         </motion.h1>
 
+        {/* MODIFICACIÓN SEO: Eliminamos opacity 0 inicial. 
+            El usuario verá un suave "asentamiento" (y: 10 -> 0) pero el bot leerá el texto siempre. */}
         <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.6, duration: 0.8 }}
+          initial={{ y: 10, opacity: 1 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
           className="max-w-2xl mt-8 text-lg md:text-xl text-blanco-pergamino/80"
         >
           {t.desc}
         </motion.p>
         
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.9, duration: 0.8 }}
+          initial={{ y: 10, opacity: 1 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-8 flex flex-col sm:flex-row items-center gap-6"
         >
           <Link href={t.linkPrimary}>
@@ -155,9 +148,9 @@ export default function Hero({ lang = 'es' }: HeroProps) {
             </motion.button>
           </Link>
           
-          <Link href={t.linkSecondary} className="flex items-center gap-2 text-oro-antiguo font-semibold hover:underline cursor-pointer">
+          <Link href={t.linkSecondary} className="flex items-center gap-2 text-oro-antiguo font-semibold hover:underline cursor-pointer group">
             {t.ctaSecondary}
-            <ArrowRight size={20} />
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
       </div>
