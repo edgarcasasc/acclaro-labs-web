@@ -111,14 +111,15 @@ export default function SolutionSection({ lang = 'es' }: SolutionSectionProps) {
           >
             {t.title}
           </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, delay: 0.1 }}
-            className="text-lg md:text-xl text-blanco-pergamino/70 max-w-3xl mx-auto leading-relaxed"
-          >
-            {t.desc}
-          </motion.p>
+          <motion.p
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}           // ✅ Aquí solo va la config del scroll
+  transition={{ delay: 0.1 }}         // ✅ El retraso va en transition
+  className="text-lg md:text-xl text-blanco-pergamino/70 max-w-3xl mx-auto leading-relaxed"
+>
+  {t.desc}
+</motion.p>
         </div>
 
         {/* --- BLUEPRINT INTERACTIVO (Reemplazo del SVG) --- */}

@@ -104,27 +104,22 @@ const IconContenidoNoConecta = () => (
 
 // --- Componente de Tarjeta 3D Interactivo + Glow ---
 interface CardProps {
-  icon: LucideIcon; // <--- Cambia ReactNode por LucideIcon
+  icon: React.ReactNode; 
   title: string;
   children: React.ReactNode;
 }
 
 const ProblemCard = ({ icon, title, children }: CardProps) => {
-  // Variables para Tilt 3D
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-
-  // Variables para el Glow (Mouse Position)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Transformaciones 3D
   const rotateX = useTransform(y, [-30, 30], [8, -8]); 
   const rotateY = useTransform(x, [-30, 30], [-8, 8]);
   const springRotateX = useSpring(rotateX, { stiffness: 300, damping: 20 });
   const springRotateY = useSpring(rotateY, { stiffness: 300, damping: 20 });
 
-  // Template para el gradiente dinámico (Evita re-renders de React)
   const background = useMotionTemplate`radial-gradient(
     600px circle at ${mouseX}px ${mouseY}px,
     rgba(168, 26, 26, 0.15),
@@ -133,14 +128,10 @@ const ProblemCard = ({ icon, title, children }: CardProps) => {
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = event.currentTarget.getBoundingClientRect();
-    
-    // Cálculos para Tilt (Centro de la tarjeta = 0)
     const centerX = event.clientX - rect.left - rect.width / 2;
     const centerY = event.clientY - rect.top - rect.height / 2;
     x.set(centerX / 10);
     y.set(centerY / 10);
-
-    // Cálculos para Glow (Top-Left = 0)
     mouseX.set(event.clientX - rect.left);
     mouseY.set(event.clientY - rect.top);
   };
@@ -148,7 +139,6 @@ const ProblemCard = ({ icon, title, children }: CardProps) => {
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
-    // Opcional: desvanecer el glow al salir, pero opacity-0 group-hover lo maneja mejor en CSS
   };
 
   return (
@@ -164,25 +154,20 @@ const ProblemCard = ({ icon, title, children }: CardProps) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* 1. Fondo de Rejilla Tecnológica */}
       <div 
         className="absolute inset-0 bg-tech-grid opacity-30" 
         style={{ backgroundSize: '30px 30px' }}
       />
 
-      {/* 2. EL NUEVO GLOW DINÁMICO (Aceternity Style) */}
       <motion.div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
-        style={{
-          background: background
-        }}
+        style={{ background: background }}
       />
       
-      {/* 3. Contenido de la Tarjeta */}
       <div className="relative z-10 flex flex-col" style={{ transform: 'translateZ(20px)' }}>
         <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rojo-lacre shadow-glow-red-sm animate-pulse">
           <div className="text-blanco-pergamino">
-            {icon}
+            {icon} 
           </div>
         </div>
         <h3 className="mt-4 mb-2 text-xl font-serif font-bold text-blanco-pergamino">
@@ -196,7 +181,7 @@ const ProblemCard = ({ icon, title, children }: CardProps) => {
   );
 };
 
-// --- INTERFAZ DE PROPS ---
+// --- INTERFAZ DE PROPS (Agregada para solucionar el error de compilación) ---
 interface ProblemSectionProps {
   lang?: 'es' | 'en' | 'fr';
 }
@@ -204,7 +189,12 @@ interface ProblemSectionProps {
 // --- Componente Principal ---
 export default function ProblemSection({ lang = 'es' }: ProblemSectionProps) {
   const t = CONTENT[lang];
-  const icons = [<IconCrmCiego key="1"/>, <IconWebEstatica key="2"/>, <IconContenidoNoConecta key="3"/>];
+  
+  const icons = [
+    <IconCrmCiego key="1"/>, 
+    <IconWebEstatica key="2"/>, 
+    <IconContenidoNoConecta key="3"/>
+  ];
 
   return (
     <section className="relative z-10 w-full bg-gris-piedra py-24 md:py-32 perspective-[1200px]">
@@ -236,7 +226,6 @@ export default function ProblemSection({ lang = 'es' }: ProblemSectionProps) {
               {card.desc}
             </ProblemCard>
           ))}
-
         </motion.div>
       </div>
     </section>

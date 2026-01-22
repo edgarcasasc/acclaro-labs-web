@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Cpu, Check, Palette } from 'lucide-react';
 import React, { useState } from 'react';
-import { LucideIcon } from 'lucide-react';
+
 // --- 1. DICCIONARIO DE CONTENIDO (i18n) ---
 const CONTENT = {
   es: {
@@ -71,7 +71,7 @@ const CONTENT = {
       title: "Architecte Technique (Données, Intégration & IA Appliquée)",
       desc: "Abdiel conçoit la base technique pour mesurer et passer à l'échelle : instrumentation, intégrations et architecture entre CRM/ERP et le canal numérique. Il met en œuvre l'automatisation et l'IA appliquée pour améliorer l'efficacité opérationnelle.",
       points: [
-        "Formation et approche technique de haut niveau (MIT).",
+        "Formation et approche técnica de haut niveau (MIT).",
         "Architecture CRM + développement (React) et intégration API.",
         "IA générative appliquée aux processus, avec gouvernance."
       ]
@@ -80,7 +80,6 @@ const CONTENT = {
   }
 };
 
-// --- INTERFAZ DE PROPS ---
 interface TeamSectionProps {
   lang?: 'es' | 'en' | 'fr';
 }
@@ -91,14 +90,10 @@ export default function TeamSection({ lang = 'es' }: TeamSectionProps) {
 
   return (
     <section className="relative z-10 w-full bg-slate-950 py-24 md:py-32 overflow-hidden">
-      
-      {/* Fondo Ambiental (Glows separados) */}
       <div className="absolute top-0 left-0 w-1/2 h-full bg-purple-900/10 blur-[100px] pointer-events-none" />
       <div className="absolute top-0 right-0 w-1/2 h-full bg-cyan-900/10 blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto max-w-6xl px-4 relative z-10">
-        
-        {/* Encabezado */}
         <motion.h2 
           className="mb-20 text-center text-3xl md:text-5xl font-serif font-bold text-white tracking-tight"
           initial={{ opacity: 0, y: 20 }}
@@ -109,10 +104,7 @@ export default function TeamSection({ lang = 'es' }: TeamSectionProps) {
           {t.heading}
         </motion.h2>
 
-        {/* Grid de Fundadores */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-stretch">
-
-          {/* --- EDGAR (Creativo) --- */}
           <FounderCard 
             id="edgar"
             name={t.edgar.name}
@@ -125,7 +117,6 @@ export default function TeamSection({ lang = 'es' }: TeamSectionProps) {
             setHoveredCard={setHoveredCard}
           />
 
-          {/* --- ABDIEL (Técnico) --- */}
           <FounderCard 
             id="abdiel"
             name={t.abdiel.name}
@@ -137,10 +128,8 @@ export default function TeamSection({ lang = 'es' }: TeamSectionProps) {
             hoveredCard={hoveredCard}
             setHoveredCard={setHoveredCard}
           />
-
         </div>
 
-        {/* --- MICROCOPY FOOTER --- */}
         <motion.div 
           className="mt-16 text-center border-t border-white/5 pt-8"
           initial={{ opacity: 0 }}
@@ -152,7 +141,6 @@ export default function TeamSection({ lang = 'es' }: TeamSectionProps) {
             {t.footer}
           </p>
         </motion.div>
-
       </div>
     </section>
   );
@@ -166,7 +154,7 @@ interface FounderCardProps {
   desc: string;
   points: string[];
   theme: 'purple' | 'cyan';
-  icon: LucideIcon; // <--- Cambia ReactNode por LucideIcon
+  icon: React.ReactNode; // <--- CORRECCIÓN: ReactNode para aceptar el componente renderizado <Palette />
   hoveredCard: string | null;
   setHoveredCard: (id: string | null) => void;
 }
@@ -195,12 +183,10 @@ function FounderCard({ id, name, title, desc, points, theme, icon, hoveredCard, 
         transform: isHovered ? 'translateY(-5px)' : 'none'
       }}
     >
-      {/* Icono Flotante */}
       <div className={`mb-8 w-16 h-16 rounded-xl flex items-center justify-center ${iconBg} border border-white/5`}>
         {icon}
       </div>
 
-      {/* Títulos */}
       <div className="mb-6">
         <h3 className="text-3xl font-serif font-bold text-white mb-2">
           {name}
@@ -210,12 +196,10 @@ function FounderCard({ id, name, title, desc, points, theme, icon, hoveredCard, 
         </p>
       </div>
 
-      {/* Descripción */}
       <p className="text-gray-400 leading-relaxed mb-8 text-lg">
         {desc}
       </p>
 
-      {/* Puntos Clave */}
       <ul className="space-y-4 mt-auto">
         {points.map((point, i) => (
           <li key={i} className="flex items-start gap-3">
@@ -229,11 +213,9 @@ function FounderCard({ id, name, title, desc, points, theme, icon, hoveredCard, 
         ))}
       </ul>
 
-      {/* Gradiente de fondo sutil al hover */}
       <div 
         className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none ${theme === 'purple' ? 'bg-gradient-to-br from-purple-600 to-transparent' : 'bg-gradient-to-bl from-cyan-600 to-transparent'}`} 
       />
-
     </motion.div>
   );
 }

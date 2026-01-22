@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils"; // Asegúrate de tener esta utilidad o usa clsx directamente
+
+// Se eliminó el import de { cn } que no se estaba usando y daba error
 
 export const GlowingCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
   const divRef = useRef<HTMLDivElement>(null);
