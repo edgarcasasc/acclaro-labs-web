@@ -1,23 +1,21 @@
+// src/app/api/capture-lead/route.ts
 import { NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json();
-    const { name, website, email } = body;
+    const body = await request.json();
+    
+    // Aquí puedes conectar con tu base de datos (Supabase) o enviar un email
+    console.log("Lead recibido en servidor:", body);
 
-    // 1. Validación básica
-    if (!email || !website) {
-      return NextResponse.json({ error: 'Faltan datos' }, { status: 400 });
+    // Validación simple
+    if (!body.email) {
+      return NextResponse.json({ error: 'Email requerido' }, { status: 400 });
     }
 
-    // 2. AQUÍ: Guardar en Base de Datos (Supabase/Firebase/MongoDB)
-    // o enviar a tu CRM (HubSpot/Salesforce)
-    console.log("Lead Capturado:", { name, website, email });
-
-    // 3. Respuesta de éxito
-    return NextResponse.json({ success: true, message: 'Lead procesado' });
-
-  } catch (error) {
+    return NextResponse.json({ success: true, message: "Lead guardado" });
+    
+  } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
     return NextResponse.json({ error: 'Error interno' }, { status: 500 });
   }
 }

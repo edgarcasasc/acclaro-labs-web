@@ -1,8 +1,11 @@
 // src/app/servicios/consultoria-crm/page.tsx
 import React from 'react';
 import DigitalUniverse from '@/components/DigitalUniverse';
+import Footer from '@/components/Footer'; // <--- 1. Importamos el Footer
+
+// Componentes de la Landing
 import CrmHero from '@/components/crm/CrmHero';
-import CrmProblem from '@/components/crm/CrmProblem';
+import CrmProblem from '@/components/crm/CrmProblem'; // (O CrmReality, según cómo hayas nombrado el archivo)
 import CrmSolution from '@/components/crm/CrmSolution';
 import CrmAuthority from '@/components/crm/CrmAuthority';
 import CrmFinalCTA from '@/components/crm/CrmFinalCTA';
@@ -32,6 +35,9 @@ export default function ConsultoriaCRMPage() {
         <CrmFinalCTA />
 
       </main>
+
+      {/* CAPA 3: Footer Global */}
+      <Footer />
     </>
   );
 }

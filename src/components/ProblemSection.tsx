@@ -1,59 +1,59 @@
 // src/components/ProblemSection.tsx
 'use client'
 
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useSpring, useMotionTemplate } from 'framer-motion';
 import React, { ReactNode } from 'react';
 
 // --- 1. DICCIONARIO DE CONTENIDO (i18n) ---
 const CONTENT = {
   es: {
-    heading: "Tu Ecosistema Roto Te Cuesta Más Que Dinero",
+    heading: "El costo oculto: conversiones perdidas y operación lenta",
     cards: [
       {
-        title: "Tus Datos están Atrapados.",
-        desc: "Tus insights de venta y soporte son oro puro, pero mueren en hojas de cálculo o CRMs aislados sin que marketing o tu web los vean jamás."
+        title: "Tus decisiones van a ciegas.",
+        desc: "Tienes datos en Excel, CRM, analytics y soporte, pero no están conectados. Sin una vista unificada, priorizas por intuición y pierdes oportunidades reales."
       },
       {
-        title: "Tu Web es Estática.",
-        desc: "Trata a tus clientes VIP igual que a un extraño. No está conectada a tus datos en tiempo real, por lo que no puede personalizar la experiencia ni automatizar ventas."
+        title: "Tu experiencia digital no responde al contexto.",
+        desc: "Tu sitio trata igual a todos porque no “conversa” con tu CRM/ERP y señales de comportamiento. Eso crea fricción, baja la conversión y alarga el ciclo de venta."
       },
       {
-        title: "Tu Contenido no Conecta.",
-        desc: "Tu equipo adivina qué quieren los clientes, en lugar de saberlo analizando las bitácoras de soporte y las preguntas frecuentes (FAQs) que ya posees."
+        title: "Tu conocimiento ya existe, pero no se usa.",
+        desc: "Soporte, FAQs y conversaciones contienen las preguntas que frenan la compra. Si no se analizan y se traducen a UX y contenido, tu equipo termina adivinando."
       }
     ]
   },
   en: {
-    heading: "Your Broken Ecosystem Costs You More Than Money",
+    heading: "The Hidden Cost: Lost Conversions and Slow Operations",
     cards: [
       {
-        title: "Your Data is Trapped.",
-        desc: "Your sales and support insights are pure gold, but they die in spreadsheets or isolated CRMs without marketing or your website ever seeing them."
+        title: "Your decisions are flying blind.",
+        desc: "You have data in Excel, CRM, analytics, and support, but they aren't connected. Without a unified view, you prioritize by intuition and miss real opportunities."
       },
       {
-        title: "Your Website is Static.",
-        desc: "It treats your VIP customers just like strangers. It isn't connected to your real-time data, so it can't personalize the experience or automate sales."
+        title: "Your digital experience ignores context.",
+        desc: "Your site treats everyone the same because it doesn't 'talk' to your CRM/ERP or behavior signals. This creates friction, lowers conversion, and lengthens the sales cycle."
       },
       {
-        title: "Your Content Doesn't Connect.",
-        desc: "Your team guesses what customers want, instead of knowing it by analyzing the support logs and FAQs you already own."
+        title: "Your knowledge exists, but isn't used.",
+        desc: "Support, FAQs, and conversations hold the questions stopping purchases. If not analyzed and translated into UX and content, your team ends up guessing."
       }
     ]
   },
   fr: {
-    heading: "Votre Écosystème Brisé Vous Coûte Plus que de l'Argent",
+    heading: "Le Coût Caché : Conversions Perdues et Opérations Lentes",
     cards: [
       {
-        title: "Vos Données sont Piégées.",
-        desc: "Vos insights de vente et de support valent de l'or, mais ils meurent dans des feuilles de calcul ou des CRM isolés sans que le marketing ou votre site web ne puissent les voir."
+        title: "Vos décisions se prennent à l'aveugle.",
+        desc: "Vous avez des données dans Excel, CRM, analytics et support, mais elles ne sont pas connectées. Sans vue unifiée, vous priorisez à l'intuition et manquez des opportunités réelles."
       },
       {
-        title: "Votre Site Web est Statique.",
-        desc: "Il traite vos clients VIP comme des inconnus. Il n'est pas connecté à vos données en temps réel, il ne peut donc pas personnaliser l'expérience ni automatiser les ventes."
+        title: "Votre expérience numérique ignore le contexte.",
+        desc: "Votre site traite tout le monde de la même manière car il ne « parle » pas avec votre CRM/ERP. Cela crée des frictions, réduit la conversion et allonge le cycle de vente."
       },
       {
-        title: "Votre Contenu ne Connecte Pas.",
-        desc: "Votre équipe devine ce que veulent les clients, au lieu de le savoir en analysant les journaux de support et les FAQ que vous possédez déjà."
+        title: "Votre savoir existe, mais n'est pas utilisé.",
+        desc: "Le support, les FAQ et les conversations contiennent les questions qui freinent l'achat. S'ils ne sont pas analysés et traduits en UX et contenu, votre équipe finit par deviner."
       }
     ]
   }
@@ -65,7 +65,7 @@ const sectionVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2, // Anima a los hijos (las tarjetas) uno por uno
+      staggerChildren: 0.2,
     },
   },
 };
@@ -90,7 +90,7 @@ const IconCrmCiego = () => (
 
 const IconWebEstatica = () => (
   <svg width="28" height="28" viewBox="0 0 37.37 33.57" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-    <g><g><path d="M37.36,29.25v-2.73s0-8.77,0-8.77V4.59c0-.55.02-1.3-.02-1.84-.13-.9-.62-1.7-1.39-2.2C35.28.07,34.55,0,33.76,0c-.55,0-1.1,0-1.65,0h-4.3s-13.34,0-13.34,0H6.4s-2.26,0-2.26,0c-.47,0-1.12-.02-1.56.05C1.79.19,1.02.7.57,1.35c-.22.32-.46.8-.51,1.19C-.01,2.89,0,3.47,0,3.84v1.69s0,6.77,0,6.77v12.4s0,3.96,0,3.96c0,.61-.03,1.52.01,2.09.03.5.19.98.47,1.4.45.72,1.18,1.21,2.01,1.38,0,0,.01,0,.02,0,.4.06,1.11.04,1.54.04h2.47s8.63,0,8.63,0h13.09s4.16,0,4.16,0c.71,0,1.51.02,2.21-.02.81-.07,1.53-.51,2.04-1.11.83-.97.71-2,.71-3.19ZM1.17,4.38c0-.55-.02-1.14.03-1.68.04-.06.07-.25.11-.34.34-.72.88-1.08,1.65-1.19.84.01,1.71,0,2.56,0h4.92s14.71,0,14.71,0h6.16s1.96,0,1.96,0c.71,0,1.12-.07,1.79.2.52.31.88.65,1.07,1.26.02.06.04.22.07.26.02,1.49,0,2.99,0,4.49,0,.14,0,.26.01.4H1.17c.03-1.12-.01-2.27,0-3.39ZM35.66,31.76c-.45.46-.95.65-1.59.66-.77,0-1.55,0-2.32,0h-4.41s-13.48,0-13.48,0H4.17c-.9,0-1.73.12-2.42-.57-.25-.25-.52-.7-.55-1.07-.05-.71-.02-1.44-.02-2.15v-4.29s0-15.41,0-15.41c.88-.04,2-.01,2.89-.01h5.21s16.26,0,16.26,0h7.78s1.94,0,1.94,0c.21,0,.8-.02.98.02v.03c-.03.13-.02.92-.02,1.09v2.47s0,12.54,0,12.54v3.72c0,.24,0,.48,0,.71,0,.84.1,1.61-.55,2.27Z"/><path d="M19.44,20.81v-5.02s0-1.59,0-1.59c0-.57.08-1.25-.28-1.73-.47-.61-1.08-.52-1.76-.52h-1.4s-4.63,0-4.63,0h-4.5c-.74,0-1.53-.02-2.26.02-.18,0-.45.16-.59.28-.27.23-.44.55-.46.91-.05.66,0,1.87,0,2.57v4.98s0,4.46,0,4.46c0,.63-.03,1.76.02,2.34.17.51.5.9,1.05,1.01.73.06,1.97.01,2.74.01h5.38s3.8,0,3.8,0c.4,0,1.49.03,1.84-.02.63-.16,1.03-.63,1.05-1.29.05-.46.02-1.61.02-2.12v-4.29ZM16.95,27.39h-2.36c-3.09,0-6.18,0-9.26,0-.19,0-.57.03-.59-.23-.03-.41-.02-.83-.02-1.25v-2.32s0-7.77,0-7.77v-1.62c0-.22.02-.61-.02-.82.04-.07.12-.24.2-.25.62-.04,1.51-.02,2.12-.02h8.6c.79,0,1.59,0,2.38,0,.23,0,.27.14.29.34-.02.23,0,.86,0,1.13v2.43s0,7.64,0,7.64c0,.84.04,1.73-.04,2.55-.02.26-1.09.18-1.31.18Z"/><path d="M33.49,18.1c-.09-.06-.18-.09-.3-.09-.45-.01-.9,0-1.35,0h-2.39s-4.17,0-4.17,0c-.84,0-1.73-.03-2.56.04-.23.02-.42.5-.31.75.07.16.17.3.33.36.21.08,9.35.05,10.24.03.13,0,.3,0,.42-.05.12-.06.21-.16.28-.28.05-.08.07-.19.09-.29-.05-.19-.1-.36-.28-.48Z"/><path d="M33.38,13.85c-1.12-.06-2.32-.03-3.44-.03h-4.45c-.81,0-1.61,0-2.42,0-.1,0-.34,0-.42.06-.15.1-.22.21-.26.37-.05.42.12.69.56.74.64.02,1.36,0,2.01,0h3.58s2.99,0,2.99,0c.55,0,1.11,0,1.66-.01.4-.01.52-.26.61-.6-.05-.19-.18-.53-.4-.54Z"/><path d="M32.54,22.26c-.37-.02-.75-.01-1.12-.01h-2.13c-2.13,0-4.32-.02-6.44,0-.73.18-.59,1.14.12,1.14,1.16,0,2.31,0,3.47,0h5.92c.24-.01.36-.01.54-.19.31-.32.07-.92-.36-.94Z"/><path d="M28.54,26.13c-.21-.07-4.93-.06-5.5-.03-.13,0-.29,0-.4.07-.13.08-.22.22-.26.37-.03.13-.02.33.06.44.02.03.02.03.04.05.1.15.15.16.33.23.27.03.76.02,1.04.02h3.59c.28,0,.74.01,1.01-.01.39-.1.5-.41.44-.77-.08-.16-.18-.3-.35-.36Z"/><path d="M12.53,5.95c.69-.08,1.18-.7,1.09-1.39-.08-.69-.71-1.17-1.4-1.08-.68.09-1.15.71-1.07,1.39.08.68.7,1.16,1.38,1.08ZM12.28,4.48c.08-.04.17-.03.24.02.07.05.11.13.1.21s-.06.16-.14.19c-.12.05-.25,0-.31-.12-.05-.12,0-.25.11-.31Z"/><path d="M8.82,5.95c.68-.09,1.16-.71,1.07-1.39-.09-.68-.72-1.16-1.4-1.07-.68.09-1.15.71-1.07,1.39.09.68.71,1.16,1.39,1.07ZM8.56,4.48c.08-.03.17-.02.24.03.07.05.1.14.09.23-.01.09-.07.16-.15.19-.12.04-.26-.02-.3-.14-.05-.12.01-.26.13-.31Z"/><path d="M5.08,5.95c.68-.08,1.16-.71,1.08-1.39-.09-.68-.71-1.16-1.39-1.07-.68.09-1.16.71-1.07,1.39.09.68.71,1.16,1.38,1.07ZM4.84,4.48c.12-.05.25.02.3.14s-.02.25-.14.3c-.12.04-.25-.02-.3-.14-.04-.12.02-.25.14-.3Z"/></g></g>
+    <g><g><path d="M37.36,29.25v-2.73s0-8.77,0-8.77V4.59c0-.55.02-1.3-.02-1.84-.13-.9-.62-1.7-1.39-2.2C35.28.07,34.55,0,33.76,0c-.55,0-1.1,0-1.65,0h-4.3s-13.34,0-13.34,0H6.4s-2.26,0-2.26,0c-.47,0-1.12-.02-1.56.05C1.79.19,1.02.7.57,1.35c-.22.32-.46.8-.51,1.19C-.01,2.89,0,3.47,0,3.84v1.69s0,6.77,0,6.77v12.4s0,3.96,0,3.96c0,.61-.03,1.52.01,2.09.03.5.19.98.47,1.4.45.72,1.18,1.21,2.01,1.38,0,0,.01,0,.02,0,.4.06,1.11.04,1.54.04h2.47s8.63,0,8.63,0h13.09s4.16,0,4.16,0c.71,0,1.51.02,2.21-.02.81-.07,1.53-.51,2.04-1.11.83-.97.71-2,.71-3.19ZM1.17,4.38c0-.55-.02-1.14.03-1.68.04-.06.07-.25.11-.34.34-.72.88-1.08,1.65-1.19.84.01,1.71,0,2.56,0h4.92s14.71,0,14.71,0h6.16s1.96,0,1.96,0c.71,0,1.12-.07,1.79.2.52.31.88.65,1.07,1.26.02.06.04.22.07.26.02,1.49,0,2.99,0,4.49,0,.14,0,.26.01.4H1.17c.03-1.12-.01-2.27,0-3.39ZM35.66,31.76c-.45.46-.95.65-1.59.66-.77,0-1.55,0-2.32,0h-4.41s-13.48,0-13.48,0H4.17c-.9,0-1.73.12-2.42-.57-.25-.25-.52-.7-.55-1.07-.05-.71-.02-1.44-.02-2.15v-4.29s0-15.41,0-15.41c.88-.04,2-.01,2.89-.01h5.21s16.26,0,16.26,0h7.78s1.94,0,1.94,0c.21,0,.8-.02.98.02v.03c-.03.13-.02.92-.02,1.09v2.47s0,12.54,0,12.54v3.72c0,.24,0,.48,0,.71,0,.84.1,1.61-.55,2.27Z"/><path d="M19.44,20.81v-5.02s0-1.59,0-1.59c0-.57.08-1.25-.28-1.73-.47-.61-1.08-.52-1.76-.52h-1.4s-4.63,0-4.63,0h-4.5c-.74,0-1.53-.02-2.26.02-.18,0-.45.16-.59.28-.27.23-.44.55-.46.91-.05.66,0,1.87,0,2.57v4.98s0,4.46,0,4.46c0,.63-.03,1.76.02,2.34.17.51.5.9,1.05,1.01.73.06,1.97.01,2.74.01h5.38s3.8,0,3.8,0c.4,0,1.49.03,1.84-.02.63-.16,1.03-.63,1.05-1.29.05-.46.02-1.61.02-2.12v-4.29ZM16.95,27.39h-2.36c-3.09,0-6.18,0-9.26,0-.19,0-.57.03-.59-.23-.03-.41-.02-.83-.02-1.25v-2.32s0-7.77,0-7.77v-1.62c0-.22.02-.61-.02-.82.04-.07.12-.24.2-.25.62-.04,1.51-.02,2.12-.02h8.6c.79,0,1.59,0,2.38,0,.23,0,.27.14.29.34-.02.23,0,.86,0,1.13v2.43s0,7.64,0,7.64c0,.84.04,1.73-.04,2.55-.02.26-1.09.18-1.31.18Z"/><path d="M33.49,18.1c-.09-.06-.18-.09-.3-.09-.45-.01-.9,0-1.35,0h-2.39s-4.17,0-4.17,0c-.84,0-1.73-.03-2.56.04-.23.02-.42.5-.31.75.07.16.17.3.33.36.21.08,9.35.05,10.24.03.13,0,.3,0,.42-.05.12-.06.21-.16.28-.28.05-.08.07-.19.09-.29-.05-.19-.1-.36-.28-.48Z"/><path d="M33.38,13.85c-1.12-.06-2.32-.03-3.44-.03h-4.45c-.81,0-1.61,0-2.42,0-.1,0-.34,0-.42.06-.15.1-.22.21-.26.37-.05.42.12.69.56.74.64.02,1.36,0,2.01,0h3.58s2.99,0,2.99,0c.55,0,1.11,0,1.66-.01.4-.01.52-.26.61-.6-.05-.19-.18-.53-.4-.54Z"/><path d="M32.54,22.26c-.37-.02-.75-.01-1.12-.01h-2.13c-2.13,0-4.32-.02-6.44,0-.73.18-.59,1.14.12,1.14,1.16,0,2.31,0,3.47,0h5.92c.24-.01.36-.01.54-.19.31-.32.07-.92-.36-.94Z"/><path d="M28.54,26.13c-.21-.07-4.93-.06-5.5-.03-.13,0-.29,0-.4.07-.13.08-.22.22-.26.37-.03.13-.02.33.06.44.02.03.02.03.04.05.1.15.15.16.33.23.27.03.76.02,1.04.02h3.59c.28,0,.74.01,1.01-.01.39-.1.5-.41.44-.77-.08-.16-.18-.3-.35-.36Z"/><path d="M12.53,5.95c.69-.08,1.18-.7,1.09-1.39-.08-.69-.71-1.17-1.4-1.08-.68.09-1.15.71-1.07,1.39.09.68.7,1.16,1.38,1.08ZM12.28,4.48c.08-.04.17-.03.24.02.07.05.11.13.1.21s-.06.16-.14.19c-.12.05-.25,0-.31-.12-.05-.12,0-.25.11-.31Z"/><path d="M8.82,5.95c.68-.09,1.16-.71,1.07-1.39-.09-.68-.72-1.16-1.4-1.07-.68.09-1.15.71-1.07,1.39.09.68.71,1.16,1.39,1.07ZM8.56,4.48c.08-.03.17-.02.24.03.07.05.1.14.09.23-.01.09-.07.16-.15.19-.12.04-.26-.02-.3-.14-.05-.12.01-.26.13-.31Z"/><path d="M5.08,5.95c.68-.08,1.16-.71,1.08-1.39-.09-.68-.71-1.16-1.39-1.07-.68.09-1.16.71-1.07,1.39.09.68.71,1.16,1.38,1.07ZM4.84,4.48c.12-.05.25.02.3.14s-.02.25-.14.3c-.12.04-.25-.02-.3-.14-.04-.12.02-.25.14-.3Z"/></g></g>
   </svg>
 );
 
@@ -101,7 +101,7 @@ const IconContenidoNoConecta = () => (
 );
 
 
-// --- Componente de Tarjeta 3D Interactivo ---
+// --- Componente de Tarjeta 3D Interactivo + Glow ---
 interface CardProps {
   icon: ReactNode;
   title: string;
@@ -109,32 +109,51 @@ interface CardProps {
 }
 
 const ProblemCard = ({ icon, title, children }: CardProps) => {
+  // Variables para Tilt 3D
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
+  // Variables para el Glow (Mouse Position)
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Transformaciones 3D
   const rotateX = useTransform(y, [-30, 30], [8, -8]); 
   const rotateY = useTransform(x, [-30, 30], [-8, 8]);
-  
   const springRotateX = useSpring(rotateX, { stiffness: 300, damping: 20 });
   const springRotateY = useSpring(rotateY, { stiffness: 300, damping: 20 });
 
+  // Template para el gradiente dinámico (Evita re-renders de React)
+  const background = useMotionTemplate`radial-gradient(
+    600px circle at ${mouseX}px ${mouseY}px,
+    rgba(168, 26, 26, 0.15),
+    transparent 80%
+  )`;
+
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const rect = event.currentTarget.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left - rect.width / 2;
-    const mouseY = event.clientY - rect.top - rect.height / 2;
-    x.set(mouseX / 10);
-    y.set(mouseY / 10);
+    
+    // Cálculos para Tilt (Centro de la tarjeta = 0)
+    const centerX = event.clientX - rect.left - rect.width / 2;
+    const centerY = event.clientY - rect.top - rect.height / 2;
+    x.set(centerX / 10);
+    y.set(centerY / 10);
+
+    // Cálculos para Glow (Top-Left = 0)
+    mouseX.set(event.clientX - rect.left);
+    mouseY.set(event.clientY - rect.top);
   };
 
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
+    // Opcional: desvanecer el glow al salir, pero opacity-0 group-hover lo maneja mejor en CSS
   };
 
   return (
     <motion.div
       variants={cardVariants}
-      className="relative flex flex-col rounded-lg border border-rojo-lacre/30 bg-zinc-900/95 p-6 backdrop-blur-sm overflow-hidden"
+      className="group relative flex flex-col rounded-lg border border-rojo-lacre/30 bg-zinc-900/95 p-6 backdrop-blur-sm overflow-hidden"
       style={{
         transformStyle: 'preserve-3d', 
         rotateX: springRotateX,
@@ -144,25 +163,21 @@ const ProblemCard = ({ icon, title, children }: CardProps) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
+      {/* 1. Fondo de Rejilla Tecnológica */}
       <div 
         className="absolute inset-0 bg-tech-grid opacity-30" 
         style={{ backgroundSize: '30px 30px' }}
       />
 
-      <motion.div 
-        className="absolute inset-0"
+      {/* 2. EL NUEVO GLOW DINÁMICO (Aceternity Style) */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(var(--color-rojo-lacre-rgb), 0.15) 0%, transparent 70%)',
-          opacity: 0,
-          scale: 0.8,
-        }}
-        whileHover={{
-          opacity: 1,
-          scale: 1,
-          transition: { duration: 0.3 }
+          background: background
         }}
       />
       
+      {/* 3. Contenido de la Tarjeta */}
       <div className="relative z-10 flex flex-col" style={{ transform: 'translateZ(20px)' }}>
         <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rojo-lacre shadow-glow-red-sm animate-pulse">
           <div className="text-blanco-pergamino">
@@ -187,10 +202,7 @@ interface ProblemSectionProps {
 
 // --- Componente Principal ---
 export default function ProblemSection({ lang = 'es' }: ProblemSectionProps) {
-  // Seleccionamos el contenido
   const t = CONTENT[lang];
-  
-  // Iconos en array para mapear (orden fijo)
   const icons = [<IconCrmCiego key="1"/>, <IconWebEstatica key="2"/>, <IconContenidoNoConecta key="3"/>];
 
   return (
@@ -214,7 +226,6 @@ export default function ProblemSection({ lang = 'es' }: ProblemSectionProps) {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {/* Mapeamos el contenido traducido */}
           {t.cards.map((card, index) => (
             <ProblemCard 
               key={index}

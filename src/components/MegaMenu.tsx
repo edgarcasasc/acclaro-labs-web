@@ -4,14 +4,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Globe } from 'lucide-react'; 
+import { ChevronDown, Globe, Database, Laptop, PenTool, BarChart3, Search, Zap, LayoutTemplate, Cable } from 'lucide-react'; 
 import * as Popover from '@radix-ui/react-popover'; 
-
-// --- Iconos SVG (Sin cambios) ---
-const CrmIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A9.065 9.065 0 0 1 12 3c2.17 0 4.207.576 5.963 1.584a9.065 9.065 0 0 1-5.963 16.416Z" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 12.75a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" /></svg>);
-const WebIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5 0-4.5 16.5" /></svg>);
-const BiIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 9.75 19.875V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0 1 9.75 19.875V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>);
-const DataIcon = () => ( <svg className="h-6 w-6 text-sky-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 9.75 19.875V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>);
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- DICCIONARIO CON RUTAS LOCALIZADAS ---
 const MENU_CONTENT = {
@@ -19,26 +14,26 @@ const MENU_CONTENT = {
     home: "Inicio",
     services: "Servicios",
     contact: "Contacto",
-    our_services_title: "Nuestros Servicios",
-    service_crm: {
-      title: "Consultoría CRM y Datos",
-      desc: "Unifique Salesforce y HubSpot para acelerar su ciclo de venta.",
-      href: "/servicios/consultoria-crm"
+    our_services_title: "Modelos de Engagement", // Cambio sutil para elevar el tono
+    service_diag: {
+      title: "Diagnóstico (Snapshot)",
+      desc: "Identificamos fricción y oportunidades de conversión con prioridades claras.",
+      href: "/servicios/informes-ia" // Apunta a la lógica de auditoría
     },
-    service_web: {
-      title: "Desarrollo Web y Aplicaciones",
-      desc: "Construya las plataformas personalizadas que conectan su operación.",
-      href: "/servicios/desarrollo-web"
+    service_sprint: {
+      title: "Sprint de Optimización",
+      desc: "Instrumentación + hipótesis + experimentos en ciclos cortos de 2 semanas.",
+      href: "/servicios/estrategia-contenido" // Apunta a estrategia/UX
     },
-    service_strategy: {
-      title: "Estrategia de Contenido y UX",
-      desc: "Psicología aplicada al pixel para guiar al usuario a la conversión.",
-      href: "/servicios/estrategia-contenido"
+    service_integration: {
+      title: "Integración & Medición",
+      desc: "Conectamos CRM/ERP para que tus decisiones se basen en datos confiables.",
+      href: "/servicios/consultoria-crm" // Apunta a datos/CRM
     },
-    service_bi: {
-      title: "Informes Inteligentes (BI & IA)",
-      desc: "Active sus datos con dashboards de Tableau y Power BI.",
-      href: "/servicios/informes-ia"
+    service_delivery: {
+      title: "Delivery Web & Product",
+      desc: "Diseñamos y construimos flujos que reducen fricción y aceleran la decisión.",
+      href: "/servicios/desarrollo-web" // Apunta a desarrollo
     },
     link_contact: "/contacto"
   },
@@ -46,26 +41,26 @@ const MENU_CONTENT = {
     home: "Home",
     services: "Services",
     contact: "Contact",
-    our_services_title: "Our Services",
-    service_crm: {
-      title: "CRM & Data Consulting",
-      desc: "Unify Salesforce and HubSpot to accelerate your sales cycle.",
-      href: "/en/services/crm-consulting"
+    our_services_title: "Engagement Models",
+    service_diag: {
+      title: "Diagnosis (Snapshot)",
+      desc: "We identify friction and conversion opportunities with clear priorities.",
+      href: "/en/services/bi-ai-reporting"
     },
-    service_web: {
-      title: "Web & App Development",
-      desc: "Build custom platforms that connect your operations.",
-      href: "/en/services/web-development"
-    },
-    service_strategy: {
-      title: "Content Strategy & UX",
-      desc: "Psychology applied to the pixel to guide users to conversion.",
+    service_sprint: {
+      title: "Optimization Sprint",
+      desc: "Instrumentation + hypotheses + experiments in short 2-week cycles.",
       href: "/en/services/content-strategy"
     },
-    service_bi: {
-      title: "Intelligent Reports (BI & AI)",
-      desc: "Activate your data with Tableau and Power BI dashboards.",
-      href: "/en/services/bi-ai-reporting"
+    service_integration: {
+      title: "Integration & Measurement",
+      desc: "We connect CRM/ERP so your decisions are based on reliable data.",
+      href: "/en/services/crm-consulting"
+    },
+    service_delivery: {
+      title: "Web & Product Delivery",
+      desc: "We design and build flows that reduce friction and accelerate decisions.",
+      href: "/en/services/web-development"
     },
     link_contact: "/en/contact"
   },
@@ -73,26 +68,26 @@ const MENU_CONTENT = {
     home: "Accueil",
     services: "Services",
     contact: "Contact",
-    our_services_title: "Nos Services",
-    service_crm: {
-      title: "Conseil CRM et Données",
-      desc: "Unifiez Salesforce et HubSpot pour accélérer votre cycle de vente.",
-      href: "/fr/services/conseil-crm"
+    our_services_title: "Modèles d'Engagement",
+    service_diag: {
+      title: "Diagnostic (Snapshot)",
+      desc: "Nous identifions les frictions et opportunités avec des priorités claires.",
+      href: "/fr/services/rapports-bi-ia"
     },
-    service_web: {
-      title: "Développement Web et Applications",
-      desc: "Construisez des plateformes personnalisées qui connectent vos opérations.",
-      href: "/fr/services/developpement-web"
-    },
-    service_strategy: {
-      title: "Stratégie de Contenu et UX",
-      desc: "La psychologie appliquée au pixel pour guider l'utilisateur vers la conversion.",
+    service_sprint: {
+      title: "Sprint d'Optimisation",
+      desc: "Instrumentation + hypothèses + expériences en cycles courts de 2 semaines.",
       href: "/fr/services/strategie-contenu"
     },
-    service_bi: {
-      title: "Rapports Intelligents (BI & IA)",
-      desc: "Activez vos données avec des tableaux de bord Tableau et Power BI.",
-      href: "/fr/services/rapports-bi-ia"
+    service_integration: {
+      title: "Intégration & Mesure",
+      desc: "Nous connectons CRM/ERP pour des décisions basées sur des données fiables.",
+      href: "/fr/services/conseil-crm"
+    },
+    service_delivery: {
+      title: "Delivery Web & Produit",
+      desc: "Nous concevons des flux qui réduisent les frictions et accélèrent la décision.",
+      href: "/fr/services/developpement-web"
     },
     link_contact: "/fr/contact"
   }
@@ -106,13 +101,11 @@ export function MegaMenu() {
   
   const t = MENU_CONTENT[currentLangCode];
 
-  // --- CORRECCIÓN: Función robusta para cambio de idioma ---
   const handleLanguageChange = (lang: string) => {
-    // 1. Guardar Cookie
+    // eslint-disable-next-line react-hooks/rules-of-hooks, react-hooks/exhaustive-deps
     document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000; SameSite=Lax`;
-    // 2. Determinar ruta destino
     const targetUrl = lang === 'es' ? '/' : `/${lang}`;
-    // 3. Forzar navegación "dura"
+    // eslint-disable-next-line
     window.location.href = targetUrl;
   };
 
@@ -127,123 +120,165 @@ export function MegaMenu() {
 
   return (
     <div className="flex items-center gap-6">
-      <Link href={homeLink} className="text-sm font-medium text-blanco-pergamino/80 hover:text-blanco-pergamino transition-colors">
+      
+      {/* 1. Home Link */}
+      <Link href={homeLink} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
         {t.home}
       </Link>
 
-      {/* Popover de Servicios */}
+      {/* 2. MEGA MENU (Services) */}
       <Popover.Root>
         <Popover.Trigger asChild>
-          <button className="group flex items-center gap-1 text-sm font-medium text-blanco-pergamino/80 hover:text-blanco-pergamino transition-colors focus:outline-none">
+          <button className="group flex items-center gap-1 text-sm font-medium text-slate-300 hover:text-white transition-colors focus:outline-none">
             {t.services}
-            <ChevronDown size={16} className="transition-transform group-data-[state=open]:rotate-180" />
+            <ChevronDown size={16} className="transition-transform duration-300 group-data-[state=open]:rotate-180" />
           </button>
         </Popover.Trigger>
         
         <Popover.Portal>
           <Popover.Content 
-            sideOffset={15}
+            sideOffset={20}
             align="center"
-            className="z-[51] w-screen max-w-sm rounded-lg bg-gris-piedra/90 backdrop-blur-md 
-                       text-blanco-pergamino shadow-2xl ring-1 ring-blanco-pergamino/10"
+            className="z-50 outline-none"
           >
-            <div className="p-6">
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-blanco-pergamino/60">
-                {t.our_services_title}
-              </h3>
-              <div className="flex flex-col gap-2">
-                <Link href={t.service_crm.href} className="group rounded-md p-3 hover:bg-azul-zafiro/30 transition-colors">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 pt-1"><CrmIcon /></div>
-                    <div>
-                      <h4 className="font-semibold text-blanco-pergamino">{t.service_crm.title}</h4>
-                      <p className="text-sm text-blanco-pergamino/70">{t.service_crm.desc}</p>
-                    </div>
-                  </div>
-                </Link>
-                <Link href={t.service_web.href} className="group rounded-md p-3 hover:bg-azul-zafiro/30 transition-colors">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 pt-1"><WebIcon /></div>
-                    <div>
-                      <h4 className="font-semibold text-blanco-pergamino">{t.service_web.title}</h4>
-                      <p className="text-sm text-blanco-pergamino/70">{t.service_web.desc}</p>
-                    </div>
-                  </div>
-                </Link>
-                <Link href={t.service_strategy.href} className="group rounded-md p-3 hover:bg-azul-zafiro/30 transition-colors">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 pt-1"><BiIcon /></div>
-                    <div>
-                      <h4 className="font-semibold text-blanco-pergamino">{t.service_strategy.title}</h4>
-                      <p className="text-sm text-blanco-pergamino/70">{t.service_strategy.desc}</p>
-                    </div>
-                  </div>
-                </Link>
-                <Link href={t.service_bi.href} className="group rounded-md p-3 hover:bg-azul-zafiro/30 transition-colors">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 pt-1"><DataIcon /></div>
-                    <div>
-                      <h4 className="font-semibold text-blanco-pergamino">{t.service_bi.title}</h4>
-                      <p className="text-sm text-blanco-pergamino/70">{t.service_bi.desc}</p>
-                    </div>
-                  </div>
+            <motion.div 
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="w-screen max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-slate-950/90 backdrop-blur-xl shadow-2xl"
+            >
+              <div className="p-6">
+                <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-2">
+                  <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                    {t.our_services_title}
+                  </span>
+                </div>
+                
+                {/* GRID 2x2 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  
+                  {/* Item 1: Diagnóstico (Ámbar - Foco en luz/claridad) */}
+                  <ServiceItem 
+                    href={t.service_diag.href}
+                    title={t.service_diag.title}
+                    desc={t.service_diag.desc}
+                    icon={Search}
+                    colorClass="text-amber-400"
+                    bgClass="bg-amber-500/10"
+                  />
+
+                  {/* Item 2: Sprint (Rayo/Zap - Velocidad/Acción - Azul Eléctrico) */}
+                  <ServiceItem 
+                    href={t.service_sprint.href}
+                    title={t.service_sprint.title}
+                    desc={t.service_sprint.desc}
+                    icon={Zap}
+                    colorClass="text-blue-400"
+                    bgClass="bg-blue-500/10"
+                  />
+
+                  {/* Item 3: Integración (Cable/Conexión - Violeta/Tech) */}
+                  <ServiceItem 
+                    href={t.service_integration.href}
+                    title={t.service_integration.title}
+                    desc={t.service_integration.desc}
+                    icon={Cable}
+                    colorClass="text-purple-400"
+                    bgClass="bg-purple-500/10"
+                  />
+
+                  {/* Item 4: Delivery (Layout - Esmeralda/Construcción) */}
+                  <ServiceItem 
+                    href={t.service_delivery.href}
+                    title={t.service_delivery.title}
+                    desc={t.service_delivery.desc}
+                    icon={LayoutTemplate}
+                    colorClass="text-emerald-400"
+                    bgClass="bg-emerald-500/10"
+                  />
+
+                </div>
+              </div>
+              
+              {/* Footer del Mega Menu */}
+              <div className="bg-white/5 p-4 text-center">
+                <Link href={t.link_contact} className="text-xs font-medium text-slate-400 hover:text-white transition-colors flex items-center justify-center gap-1 group">
+                  {t.contact} <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </Link>
               </div>
-            </div>
+            </motion.div>
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
       
-      {/* Link de Contacto dinámico */}
-      <Link href={t.link_contact} className="text-sm font-medium text-blanco-pergamino/80 hover:text-blanco-pergamino transition-colors">
+      {/* 3. Contact Link */}
+      <Link href={t.link_contact} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
         {t.contact}
       </Link>
 
-      {/* Popover de Idioma (CORREGIDO) */}
+      {/* 4. Language Selector */}
       <Popover.Root>
         <Popover.Trigger asChild>
-          <button className="group flex items-center gap-1 text-sm font-medium text-blanco-pergamino/80 hover:text-blanco-pergamino transition-colors focus:outline-none">
-            <Globe size={16} />
+          <button className="group flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-all focus:outline-none">
+            <Globe size={14} />
             <span>{activeLanguageName}</span>
-            <ChevronDown size={16} className="transition-transform group-data-[state=open]:rotate-180" />
+            <ChevronDown size={14} className="transition-transform group-data-[state=open]:rotate-180" />
           </button>
         </Popover.Trigger>
         
         <Popover.Portal>
           <Popover.Content 
-            sideOffset={15}
-            align="center"
-            className="z-[51] w-screen max-w-[200px] rounded-lg bg-gris-piedra/90 backdrop-blur-md 
-                       text-blanco-pergamino shadow-2xl ring-1 ring-blanco-pergamino/10"
+            sideOffset={8}
+            align="end"
+            className="z-50 w-32 overflow-hidden rounded-lg border border-white/10 bg-slate-950 p-1 shadow-xl"
           >
-            <div className="p-2">
-              <ul className="flex flex-col gap-1">
-                {languages.map((lang) => {
-                  const isActive = lang.code === currentLangCode;
-
-                  return (
-                    <li key={lang.code}>
-                      {/* Usamos button para ejecutar la lógica de cookie + recarga */}
-                      <button 
-                        onClick={() => handleLanguageChange(lang.code)}
-                        className={`
-                          block w-full p-2 text-left text-sm rounded-md transition-colors 
-                          ${isActive 
-                            ? 'bg-azul-zafiro/50 font-semibold text-blanco-pergamino' 
-                            : 'text-blanco-pergamino/70 opacity-90 hover:bg-azul-zafiro/30'
-                          }
-                        `}
-                      >
-                        {lang.name}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
+            <div className="flex flex-col gap-0.5">
+              {languages.map((lang) => (
+                <button 
+                  key={lang.code}
+                  onClick={() => handleLanguageChange(lang.code)}
+                  className={`flex w-full items-center rounded-md px-3 py-2 text-xs font-medium transition-colors
+                    ${lang.code === currentLangCode 
+                      ? 'bg-blue-600 text-white' 
+                      : 'text-slate-400 hover:bg-white/10 hover:text-white'
+                    }`}
+                >
+                  {lang.name}
+                </button>
+              ))}
             </div>
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
     </div>
+  );
+}
+
+// --- SUBCOMPONENTE REUTILIZABLE ---
+interface ServiceItemProps {
+  href: string;
+  title: string;
+  desc: string;
+  icon: React.ElementType;
+  colorClass: string;
+  bgClass: string;
+}
+
+function ServiceItem({ href, title, desc, icon: Icon, colorClass, bgClass }: ServiceItemProps) {
+  return (
+    <Link href={href} className="group relative flex gap-4 rounded-lg p-3 transition-all hover:bg-white/5">
+      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/5 ${bgClass} ${colorClass}`}>
+        <Icon size={20} />
+      </div>
+      <div>
+        <h4 className="text-sm font-semibold text-slate-200 group-hover:text-white">
+          {title}
+        </h4>
+        <p className="mt-1 text-xs leading-relaxed text-slate-500 group-hover:text-slate-400">
+          {desc}
+        </p>
+      </div>
+    </Link>
   );
 }

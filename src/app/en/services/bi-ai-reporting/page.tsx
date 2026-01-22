@@ -1,32 +1,32 @@
 import React from 'react';
-// CORRECCIÓN: Se quita /layout/ del path
+
+// Componentes Globales
 import DigitalUniverse from '@/components/DigitalUniverse'; 
-
-// CORRECCIÓN: Se quita /sections/ de los paths
-import InformesHero from '@/components/InformesHero';
-import InformesProblem from '@/components/InformesProblem';
-import InformesSolution from '@/components/InformesSolution';
-import InformesDiferenciadores from '@/components/InformesDiferenciadores';
-// CORRECCIÓN: Reutilizamos el componente base
 import SocialProof from '@/components/SocialProof'; 
-import InformesCTA from '@/components/InformesCTA';
+import Footer from '@/components/Footer';
 
-/**
- * Página de Activación de Informes Inteligentes (Página de Conversión / BoFu)
- * Utiliza la arquitectura de capas del proyecto AcclaroLabs.
- */
-export default function EnInformesPage() {
+// Componentes Específicos (Rutas corregidas)
+import InformesHero from '@/components/informes/InformesHero';
+import InformesProblem from '@/components/informes/InformesProblem';
+import InformesSolution from '@/components/informes/InformesSolution';
+import InformesMethodology from '@/components/informes/InformesMethodology'; 
+import InformesCTA from '@/components/informes/InformesCTA';
+
+export default function InformesPageEN() {
   return (
     <>
       <DigitalUniverse />
+      
       <main className="relative z-10">
         <InformesHero lang="en" />
         <InformesProblem lang="en" />
         <InformesSolution lang="en" />
-        <InformesDiferenciadores lang="en" />
+        <InformesMethodology lang="en" />
         <SocialProof lang="en" />
         <InformesCTA lang="en" />
       </main>
+
+     <Footer lang="en" /> {/* <--- 2. Agregamos el footer en francés */}
     </>
   );
 }

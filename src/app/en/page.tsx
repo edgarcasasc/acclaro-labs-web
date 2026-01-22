@@ -7,6 +7,7 @@ import SolutionSection from '@/components/SolutionSection';
 import LeadMagnetSection from '@/components/LeadMagnetSection';
 import TeamSection from '@/components/TeamSection';
 import CallToActionSection from '@/components/CallToActionSection';
+import Footer from '@/components/Footer'; // <--- 1. Importamos el Footer
 
 export default function EnHomePage() {
   return (
@@ -24,6 +25,9 @@ export default function EnHomePage() {
         <TeamSection lang="en" />
         <CallToActionSection lang="en" />
       </main>
+
+      {/* CAPA 3: FOOTER */}
+      <Footer lang="en" /> {/* <--- 2. Agregamos el componente al final */}
     </>
   );
 }

@@ -1,10 +1,12 @@
-// src/app/servicios/desarrollo-web/page.tsx
 import React from 'react';
 import DigitalUniverse from '@/components/DigitalUniverse';
+import Footer from '@/components/Footer'; // <--- 1. Importamos el Footer
+
+// Componentes de la Landing
 import WebDevHero from '@/components/webdev/WebDevHero';
 import WebDevProblem from '@/components/webdev/WebDevProblem';
 import WebDevSolution from '@/components/webdev/WebDevSolution';
-import WebDevAuthority from '@/components/webdev/WebDevAuthority';
+import WebDevAuthority from '@/components/webdev/WebDevAuthority'; // O 'WebDevPwa' si prefieres la sección visual
 import WebDevFinalCTA from '@/components/webdev/WebDevFinalCTA';
 
 export default function DesarrolloWebPage() {
@@ -32,6 +34,9 @@ export default function DesarrolloWebPage() {
         <WebDevFinalCTA lang="es" />
 
       </main>
+
+      {/* CAPA 3: Footer Global */}
+      <Footer />
     </>
   );
 }

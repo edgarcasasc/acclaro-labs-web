@@ -6,7 +6,7 @@ import WebDevProblem from '@/components/webdev/WebDevProblem';
 import WebDevSolution from '@/components/webdev/WebDevSolution';
 import WebDevAuthority from '@/components/webdev/WebDevAuthority';
 import WebDevFinalCTA from '@/components/webdev/WebDevFinalCTA';
-
+import Footer from '@/components/Footer'; // <--- 1. Importamos el Footer
 export default function DesarrolloWebPage() {
   return (
     <>
@@ -31,7 +31,7 @@ export default function DesarrolloWebPage() {
         {/* 5. CIERRE: Auditoría Técnica */}
         <WebDevFinalCTA lang="fr" />
 
-      </main>
+      </main><Footer lang="fr" /> {/* <--- 2. Agregamos el footer en francés */}
     </>
   );
 }

@@ -1,106 +1,246 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AlertTriangle, FileSpreadsheet, EyeOff, BarChart4 } from 'lucide-react';
+import { Table2, Target, FileWarning, AlertTriangle, XCircle, SearchX } from 'lucide-react';
 
+// --- DICCIONARIO DE CONTENIDO (Copy Aprobado: "La Realidad") ---
 const CONTENT = {
   es: {
-    label: "La Realidad",
-    title_main: "El dato más caro no es el que compras.",
-    title_sub: "Es el que tienes y no usas.",
-    intro: "Sabemos lo que se siente. Invertiste una fortuna en licencias, pero la realidad operativa es distinta:",
+    label: "LA REALIDAD",
+    title_start: "El dato más caro",
+    title_end: "es el que ya tienes y no puedes activar.",
+    desc: "Invertiste en licencias y herramientas. Pero en la operación diaria, la historia es otra:",
     cards: [
-      { title: "Excel Hell", desc: "Tu equipo de ventas pierde horas limpiando hojas de cálculo porque no confían en los datos del CRM." },
-      { title: "Marketing a Ciegas", desc: "Disparas campañas sin ver qué leads se convirtieron realmente en ventas. El ROI es un misterio." },
-      { title: "Reportes de Fe", desc: "Tus dashboards muestran números que nadie sabe de dónde vienen. Tomas decisiones basadas en intuición, no en datos." }
+      {
+        title: "Excel como parche",
+        body: "Ventas y operaciones pierden horas limpiando hojas de cálculo porque no confían en los datos del CRM.",
+        icon: Table2,
+        color: "group-hover:text-rose-400",
+        border: "group-hover:border-rose-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(244,63,94,0.2)]"
+      },
+      {
+        title: "Marketing sin atribución",
+        body: "Inviertes en campañas, pero no puedes conectar el gasto con ingresos reales. El ROI queda incompleto.",
+        icon: Target,
+        color: "group-hover:text-orange-400",
+        border: "group-hover:border-orange-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.2)]"
+      },
+      {
+        title: "Reportes sin trazabilidad",
+        body: "Los dashboards muestran números, pero nadie puede explicar su origen. Terminas decidiendo por intuición.",
+        icon: FileWarning,
+        color: "group-hover:text-amber-400",
+        border: "group-hover:border-amber-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(245,158,11,0.2)]"
+      }
     ],
-    footer_main: "No tienes un problema de software.",
-    footer_sub: "Tienes un problema de arquitectura de la verdad."
+    footer_start: "No tienes un problema de software.",
+    footer_end: "Tienes un problema de integración, trazabilidad y gobernanza."
   },
   en: {
-    label: "The Reality",
-    title_main: "The most expensive data isn't the one you buy.",
-    title_sub: "It’s the one you have but don’t use.",
-    intro: "We know the feeling. You invested a fortune in licenses, but the operational reality is different:",
+    label: "THE REALITY",
+    title_start: "The most expensive data",
+    title_end: "is the one you have but can't activate.",
+    desc: "You invested in licenses. But in daily operations, the story is different:",
     cards: [
-      { title: "Excel Hell", desc: "Your sales team wastes hours cleaning spreadsheets because they don't trust the CRM data." },
-      { title: "Marketing Flying Blind", desc: "You launch campaigns without seeing which leads actually convert into sales. ROI is a mystery." },
-      { title: "Reports on Faith", desc: "Your dashboards show numbers no one can trace. You make decisions based on intuition, not data." }
+      {
+        title: "Excel as a patch",
+        body: "Sales and ops waste hours cleaning spreadsheets because they don't trust CRM data.",
+        icon: Table2,
+        color: "group-hover:text-rose-400",
+        border: "group-hover:border-rose-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(244,63,94,0.2)]"
+      },
+      {
+        title: "Marketing without attribution",
+        body: "You invest in campaigns but can't connect spend to real revenue. ROI remains incomplete.",
+        icon: Target,
+        color: "group-hover:text-orange-400",
+        border: "group-hover:border-orange-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.2)]"
+      },
+      {
+        title: "Untraceable reporting",
+        body: "Dashboards show numbers, but no one can explain their source. You end up guessing.",
+        icon: FileWarning,
+        color: "group-hover:text-amber-400",
+        border: "group-hover:border-amber-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(245,158,11,0.2)]"
+      }
     ],
-    footer_main: "You don't have a software problem.",
-    footer_sub: "You have an architecture of truth problem."
+    footer_start: "You don't have a software problem.",
+    footer_end: "You have an integration, traceability, and governance problem."
   },
   fr: {
-    label: "La Réalité",
-    title_main: "La donnée la plus chère n'est pas celle que vous achetez.",
-    title_sub: "C'est celle que vous possédez mais n'utilisez pas.",
-    intro: "Nous connaissons ce sentiment. Vous avez investi une fortune en licences, mais la réalité opérationnelle est tout autre :",
+    label: "LA RÉALITÉ",
+    title_start: "La donnée la plus chère",
+    title_end: "est celle que vous avez mais ne pouvez activer.",
+    desc: "Vous avez investi dans des licences. Mais au quotidien, l'histoire est différente :",
     cards: [
-      { title: "L'Enfer d'Excel", desc: "Votre équipe commerciale perd des heures à nettoyer des feuilles de calcul car elle ne fait pas confiance aux données du CRM." },
-      { title: "Marketing à l'Aveugle", desc: "Vous lancez des campagnes sans voir quels leads se transforment réellement en ventes. Le ROI reste un mystère." },
-      { title: "Rapports de Foi", desc: "Vos tableaux de bord affichent des chiffres dont personne ne connaît l'origine. Vous prenez des décisions basées sur l'intuition, pas sur les données." }
+      {
+        title: "Excel comme pansement",
+        body: "Les ventes perdent des heures sur des tableurs car ils ne font pas confiance au CRM.",
+        icon: Table2,
+        color: "group-hover:text-rose-400",
+        border: "group-hover:border-rose-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(244,63,94,0.2)]"
+      },
+      {
+        title: "Marketing sans attribution",
+        body: "Vous investissez, mais ne pouvez lier la dépense aux revenus. Le ROI est incomplet.",
+        icon: Target,
+        color: "group-hover:text-orange-400",
+        border: "group-hover:border-orange-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.2)]"
+      },
+      {
+        title: "Rapports sans traçabilité",
+        body: "Les tableaux montrent des chiffres dont personne ne connaît l'origine. Vous décidez à l'intuition.",
+        icon: FileWarning,
+        color: "group-hover:text-amber-400",
+        border: "group-hover:border-amber-500/30",
+        glow: "group-hover:shadow-[0_0_30px_-5px_rgba(245,158,11,0.2)]"
+      }
     ],
-    footer_main: "Vous n'avez pas un problème de logiciel.",
-    footer_sub: "Vous avez un problème d'architecture de la vérité."
+    footer_start: "Vous n'avez pas un problème de logiciel.",
+    footer_end: "Vous avez un problème d'intégration et de gouvernance."
   }
 };
 
-interface CrmProblemProps {
-  lang?: 'es' | 'en' | 'fr';
-}
+interface Props { lang?: 'es' | 'en' | 'fr'; }
 
-export default function CrmProblem({ lang = 'es' }: CrmProblemProps) {
+export default function CrmReality({ lang = 'es' }: Props) {
   const t = CONTENT[lang];
-  
-  // Iconos fijos (no cambian por idioma)
-  const icons = [
-    <FileSpreadsheet key={1} className="w-8 h-8 text-rojo-lacre" />,
-    <EyeOff key={2} className="w-8 h-8 text-rojo-lacre" />,
-    <BarChart4 key={3} className="w-8 h-8 text-rojo-lacre" />
-  ];
+
+  // Variantes de animación para Stagger (Cascada)
+  const containerVars = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVars = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
 
   return (
-    <section className="py-20 px-6 bg-black/40 backdrop-blur-sm border-y border-white/5">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-rojo-lacre/10 border border-rojo-lacre/30 mb-6">
-            <AlertTriangle size={16} className="text-rojo-lacre" />
-            <span className="text-rojo-lacre text-sm font-bold uppercase tracking-wider">{t.label}</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-bold font-serif mb-6">
-            {t.title_main}<br/>
-            <span className="text-gray-400">{t.title_sub}</span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            {t.intro}
-          </p>
+    <section className="relative py-24 px-6 bg-slate-950 overflow-hidden border-y border-white/5">
+      
+      {/* Fondo Ruido Sutil (Noise Texture) */}
+      <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      
+      {/* Luz ambiental "Danger" (Roja/Naranja muy sutil) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-rose-900/10 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        
+        {/* --- HEADER --- */}
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 mb-6"
+          >
+            <AlertTriangle size={16} className="text-rose-500" />
+            <span className="text-xs font-bold tracking-[0.2em] text-rose-500/80 uppercase">
+              {t.label}
+            </span>
+          </motion.div>
+
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-5xl font-bold font-serif text-white mb-6 leading-tight"
+          >
+            <span className="text-slate-500">{t.title_start}</span> <br />
+            <span className="text-white">{t.title_end}</span>
+          </motion.h2>
+
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-lg text-slate-400 font-light"
+          >
+            {t.desc}
+          </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {t.cards.map((card, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="bg-gris-piedra p-8 rounded-xl border border-white/10 hover:border-rojo-lacre/50 transition-colors group"
-            >
-              <div className="mb-6 bg-black/30 w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                {icons[index]}
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-white">{card.title}</h3>
-              <p className="text-gray-400 leading-relaxed">{card.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-        
-        <div className="mt-12 text-center">
-          <p className="text-2xl font-serif text-white">
-            {t.footer_main} <br/>
-            <span className="text-oro-antiguo border-b border-oro-antiguo">{t.footer_sub}</span>
-          </p>
-        </div>
+        {/* --- GRID DE FRICCIÓN (Problem Cards) --- */}
+        <motion.div 
+          variants={containerVars}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          {t.cards.map((card, index) => {
+            const Icon = card.icon;
+            return (
+              <motion.div 
+                key={index}
+                variants={itemVars}
+                className={`group relative p-8 rounded-2xl border border-white/5 bg-slate-900/50 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 ${card.border} ${card.glow}`}
+              >
+                {/* Icono Flotante */}
+                <div className={`mb-6 p-4 rounded-xl bg-slate-950 border border-white/5 w-fit transition-colors duration-300 ${card.color}`}>
+                  <Icon size={28} strokeWidth={1.5} />
+                </div>
+
+                <h3 className={`text-xl font-bold mb-4 text-slate-200 transition-colors duration-300 group-hover:text-white`}>
+                  {card.title}
+                </h3>
+
+                <p className="text-slate-400 text-sm leading-relaxed group-hover:text-slate-300 transition-colors">
+                  {card.body}
+                </p>
+
+                {/* Línea de advertencia en hover */}
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* --- FOOTER: EL DIAGNÓSTICO --- */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6 }}
+          className="mt-20 max-w-3xl mx-auto"
+        >
+          <div className="relative p-8 rounded-lg bg-slate-900 border-l-4 border-oro-antiguo shadow-2xl">
+            {/* Comillas de fondo */}
+            <div className="absolute -top-6 -left-4 text-6xl text-slate-800 font-serif opacity-50">“</div>
+            
+            <div className="relative z-10 text-center md:text-left">
+              <p className="text-slate-500 font-mono text-sm uppercase tracking-wide mb-2">
+                Diagnóstico
+              </p>
+              <p className="text-xl md:text-2xl text-slate-200 leading-relaxed">
+                <span className="text-slate-500 line-through decoration-slate-700 decoration-2 mr-2">
+                  {t.footer_start}
+                </span>
+                <span className="font-bold text-white block md:inline mt-2 md:mt-0">
+                  {t.footer_end}
+                </span>
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );

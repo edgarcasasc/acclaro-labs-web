@@ -95,8 +95,6 @@ export default function LeadMagnetSection({ lang = 'es' }: LeadMagnetSectionProp
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-20 animate-pulse transition duration-1000"></div>
             
             {/* Componente del Chat */}
-            {/* NOTA: Si quisieras pasarle el idioma al chat también, podrías hacerlo aquí: <ConversationalForm lang={lang} /> 
-                Pero por ahora lo dejamos así para no romper más cosas. */}
             <ConversationalForm />
             
         </motion.div>

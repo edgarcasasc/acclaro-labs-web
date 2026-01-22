@@ -4,6 +4,7 @@ import ContentHero from '@/components/content-ux/ContentHero';
 import ContentProblem from '@/components/content-ux/ContentProblem';
 import ContentSolution from '@/components/content-ux/ContentSolution';
 import AuditFormSection from '@/components/AuditFormSection'; 
+import Footer from '@/components/Footer';
 
 export default function FrContentStrategyPage() {
   return (
@@ -15,6 +16,7 @@ export default function FrContentStrategyPage() {
         <ContentSolution lang="fr"/>
         <AuditFormSection lang="fr"/>
       </main>
+      <Footer lang="fr" /> {/* <--- 2. Agregamos el footer en francés */}
     </>
   );
 }

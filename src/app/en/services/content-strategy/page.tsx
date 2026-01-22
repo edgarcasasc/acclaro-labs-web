@@ -4,6 +4,8 @@ import ContentHero from '@/components/content-ux/ContentHero';
 import ContentProblem from '@/components/content-ux/ContentProblem';
 import ContentSolution from '@/components/content-ux/ContentSolution';
 import AuditFormSection from '@/components/AuditFormSection'; 
+import Footer from '@/components/Footer'; // <--- 1. Importamos el Footer
+
 
 export default function EnContentStrategyPage() {
   return (
@@ -14,7 +16,8 @@ export default function EnContentStrategyPage() {
         <ContentProblem lang="en"/>
         <ContentSolution lang="en"/>
         <AuditFormSection lang="en"/>
-      </main>
+      </main>      <Footer lang="en" /> {/* <--- 2. Agregamos el componente al final */}
+      
     </>
   );
 }

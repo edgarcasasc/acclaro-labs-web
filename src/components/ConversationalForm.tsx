@@ -1,185 +1,225 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Send, User, Bot } from "lucide-react"; // Asumo que usas lucide-react o similar
+import { useState, useEffect, useRef } from "react";
+import { Send, Sparkles, User, Bot } from "lucide-react";
 
+// Tipos
 type Message = {
   id: string;
-  role: "bot" | "user";
+  role: "user" | "bot";
   content: string;
-  type?: "text" | "email" | "url"; // Para validación de input
 };
 
+type ScriptStep = {
+  id: string;
+  question: string;
+  field: string;
+  placeholder?: string; // Nuevo: Para guiar al usuario en cada paso
+};
+
+// --- GUIÓN ACTUALIZADO (Estrategia High-Intent) ---
+const script: ScriptStep[] = [
+  { 
+    id: "1", 
+    question: "Hola. Soy Nova. Pega la URL del sitio que quieres revisar y dime tu objetivo principal: más leads, más ventas o menos tickets de soporte.", 
+    field: "url_goal",
+    placeholder: "Ej: miempresa.com - Busco más leads B2B"
+  },
+  { 
+    id: "2", 
+    question: "Entendido. Para calibrar el análisis, ¿qué stack tecnológico utilizan principalmente? (Ej: WordPress, HubSpot, Salesforce, Custom...)", 
+    field: "stack",
+    placeholder: "Ej: Next.js + HubSpot"
+  },
+  { 
+    id: "3", 
+    question: "Perfecto. Estoy compilando el Snapshot de fricción. ¿A qué correo corporativo debo enviar los 3 hallazgos priorizados?", 
+    field: "email",
+    placeholder: "nombre@empresa.com"
+  },
+  { 
+    id: "4", 
+    question: "Procesando solicitud... He programado el envío de tu reporte. Revisa tu bandeja de entrada en unos minutos.", 
+    field: "final",
+    placeholder: "..."
+  },
+];
+
 export default function ConversationalForm() {
-  // Estado del flujo
-  const [step, setStep] = useState(0);
+  const [history, setHistory] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ name: "", website: "", email: "" });
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [step, setStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  
+  // Referencia al contenedor del chat
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Guion del Chat (Scripted Flow)
-  const script = [
-    {
-      id: "intro",
-      content: "Hola. Soy la IA de Acclaro. ¿Qué sitio web te gustaría que auditemos hoy?",
-      field: "website",
-      inputType: "url",
-    },
-    {
-      id: "name",
-      content: "Entendido. Analizaremos esa arquitectura. ¿Con quién tengo el gusto de hablar?",
-      field: "name",
-      inputType: "text",
-    },
-    {
-      id: "email",
-      content: (name: string) => `Un placer, ${name}. ¿A qué correo te envío el reporte preliminar cuando termine?`,
-      field: "email",
-      inputType: "email",
-    },
-    {
-      id: "closing",
-      content: "Perfecto. Procesando tu solicitud. Revisa tu bandeja de entrada en breve.",
-      field: null,
-      inputType: null,
-    },
-  ];
-
-  // Historial de mensajes
-  const [history, setHistory] = useState<Message[]>([
-    { id: "1", role: "bot", content: script[0].content as string },
-  ]);
-
-// Auto-scroll al fondo
+  // Efecto inicial: Saludo del Bot
   useEffect(() => {
-    // CORRECCIÓN: Solo hacer scroll si hay interacción real (más de 1 mensaje)
-    if (history.length > 1) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (history.length === 0) {
+      setHistory([
+        {
+          id: "init-1",
+          role: "bot",
+          content: script[0].question,
+        },
+      ]);
+    }
+  }, [history.length]);
+
+  // Auto-scroll quirúrgico
+  useEffect(() => {
+    if (history.length > 1 && chatContainerRef.current) {
+      const container = chatContainerRef.current;
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      });
     }
   }, [history]);
-  const handleSend = async () => {
-    if (!input.trim()) return;
 
-    // 1. Agregar mensaje del usuario
-    const currentStepObj = script[step];
-    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input };
-    setHistory((prev) => [...prev, userMsg]);
-    
-    // 2. Guardar datos
-    const updatedData = { ...formData, [currentStepObj.field as string]: input };
-    setFormData(updatedData);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userText = input;
     setInput("");
-    setLoading(true);
+    setIsLoading(true);
 
-    // Simular "Escribiendo..."
+    // 1. Agregar mensaje del USUARIO
+    const userMsg: Message = { 
+      id: Date.now().toString(), 
+      role: "user", 
+      content: userText 
+    };
+    
+    setHistory((prev) => [...prev, userMsg]);
+
+    // 2. Guardar datos
+    const currentField = script[step].field;
+    const newFormData = { ...formData, [currentField]: userText };
+    setFormData(newFormData);
+
+    // 3. Simular IA
     setTimeout(async () => {
       const nextStep = step + 1;
-      
+
       if (nextStep < script.length) {
-        // Siguiente pregunta del Bot
-        const nextScript = script[nextStep];
-        let botContent = nextScript.content;
-        
-        // Si el contenido es una función (para personalizar con el nombre)
-        if (typeof botContent === "function") {
-          botContent = botContent(updatedData.name);
-        }
-
-        setHistory((prev) => [
-          ...prev,
-          { id: Date.now().toString(), role: "bot", content: botContent as string },
-        ]);
+        const botMsg: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "bot",
+          content: script[nextStep].question,
+        };
+        setHistory((prev) => [...prev, botMsg]);
         setStep(nextStep);
-        setLoading(false);
+        setIsLoading(false);
 
-        // Si es el último paso, enviar al servidor
-        if (nextStep === script.length - 1) {
-            await submitLead(updatedData);
+        // Si es el último paso, enviamos
+        if (script[nextStep].field === "final") {
+          await submitLead(newFormData);
         }
 
+      } else {
+        setIsLoading(false);
       }
-    }, 800); // Pequeño delay para realismo
+    }, 1000); // Delay un poco más largo para simular "análisis"
   };
 
-  // Función simulada de envío (conectar a tu API real)
-  const submitLead = async (data: any) => {
+  const submitLead = async (data: Record<string, string>) => {
     try {
-        console.log("Enviando lead:", data);
-        // AQUÍ CONECTAS CON TU BACKEND
-        // await fetch('/api/capture-lead', { method: 'POST', body: JSON.stringify(data) });
-    } catch (e) {
-        console.error("Error enviando lead", e);
+      await fetch("/api/capture-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      console.log("Lead capturado exitosamente");
+    } catch (error) {
+      console.error("Error enviando lead:", error);
     }
   };
 
+  // Obtener el placeholder actual según el paso
+  const currentPlaceholder = script[step]?.placeholder || "Escribe tu respuesta...";
+
   return (
-    <div className="w-full max-w-md mx-auto bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-xl overflow-hidden shadow-2xl flex flex-col h-[400px]">
-      {/* Header del Chat */}
-      <div className="bg-gray-800/50 p-3 border-b border-gray-700 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-        <span className="text-xs font-mono text-gray-300">ACCLARO AGENT - ONLINE</span>
+    <div className="flex h-[500px] w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/50 backdrop-blur-md shadow-2xl">
+      
+      {/* Header */}
+      <div className="flex items-center gap-3 border-b border-slate-800 bg-slate-900/80 px-4 py-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+          <Sparkles className="h-4 w-4" />
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold text-white">Nova AI Assistant</h3>
+          <p className="text-xs text-slate-400">En línea • Respuesta en minutos</p>
+        </div>
       </div>
 
       {/* Área de Mensajes */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-700">
-        <AnimatePresence initial={false}>
-          {history.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`max-w-[80%] p-3 rounded-lg text-sm ${
-                  msg.role === "user"
-                    ? "bg-blue-600 text-white rounded-br-none"
-                    : "bg-gray-800 text-gray-200 border border-gray-700 rounded-bl-none"
-                }`}
-              >
+      <div 
+        ref={chatContainerRef}
+        className="flex-1 space-y-4 overflow-y-auto p-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-700"
+      >
+        {history.map((msg) => (
+          <div
+            key={msg.id}
+            className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div className={`flex max-w-[85%] gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+              
+              {/* Avatar */}
+              <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border ${
+                msg.role === "user" 
+                  ? "border-blue-500/30 bg-blue-500/10 text-blue-400" 
+                  : "border-amber-500/30 bg-amber-500/10 text-amber-400"
+              }`}>
+                {msg.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+              </div>
+
+              {/* Burbuja */}
+              <div className={`rounded-2xl px-4 py-2 text-sm leading-relaxed ${
+                msg.role === "user"
+                  ? "bg-blue-600 text-white"
+                  : "bg-slate-800 text-slate-200"
+              }`}>
                 {msg.content}
               </div>
-            </motion.div>
-          ))}
-          {loading && (
-             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                 <div className="bg-gray-800 p-3 rounded-lg border border-gray-700">
-                    <span className="flex gap-1">
-                        <span className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}/>
-                        <span className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }}/>
-                        <span className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }}/>
-                    </span>
-                 </div>
-             </motion.div>
-          )}
-        </AnimatePresence>
-        <div ref={messagesEndRef} />
+            </div>
+          </div>
+        ))}
+        
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="flex items-center gap-2 rounded-2xl bg-slate-800 px-4 py-3">
+              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.3s]"></span>
+              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]"></span>
+              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400"></span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Input Area (Solo visible si no ha terminado) */}
-      {step < script.length - 1 && (
-        <div className="p-3 bg-gray-800/50 border-t border-gray-700 flex gap-2">
+      {/* Input Area */}
+      <form onSubmit={handleSubmit} className="border-t border-slate-800 bg-slate-900/50 p-4">
+        <div className="relative flex items-center">
           <input
-            type={script[step].inputType === "email" ? "email" : "text"}
+            type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder={
-                script[step].field === 'website' ? "acclarolabs.com..." : "Escribe aquí..."
-            }
-            className="flex-1 bg-gray-900 border border-gray-600 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+            placeholder={currentPlaceholder}
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-sm text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
+            disabled={isLoading || step >= script.length} 
           />
           <button
-            onClick={handleSend}
-            disabled={!input.trim()}
-            className="bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:cursor-not-allowed text-white p-2 rounded-md transition-all"
+            type="submit"
+            disabled={!input.trim() || isLoading}
+            className="absolute right-2 rounded-lg bg-amber-500 p-2 text-slate-900 transition-colors hover:bg-amber-400 disabled:bg-slate-800 disabled:text-slate-600"
           >
-            <Send size={18} />
+            <Send className="h-4 w-4" />
           </button>
         </div>
-      )}
+      </form>
     </div>
   );
 }

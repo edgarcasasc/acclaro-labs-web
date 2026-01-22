@@ -1,13 +1,12 @@
-import type { Config } from 'tailwindcss'
 import defaultTheme from 'tailwindcss/defaultTheme'
 
 // CORRECCIÓN: Quitamos ": Config" para evitar que TypeScript bloquee el build
 // por la propiedad safelist. Tailwind lo leerá bien de todos modos.
 const config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
 
   // Ahora esto no dará error
@@ -43,6 +42,10 @@ const config = {
       }
     },
   },
-  plugins: [],
+  
+  // 👇 AQUÍ ESTÁ EL CAMBIO CLAVE:
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
 export default config

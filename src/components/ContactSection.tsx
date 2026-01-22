@@ -1,305 +1,349 @@
-// src/components/ContactSection.tsx
 'use client';
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-// Agregamos el icono 'Bot' para la sección de IA
-import { Mail, MapPin, Send, MessageSquare, CheckCircle, Loader2, Bot } from 'lucide-react';
 
-// --- 1. DICCIONARIO DE CONTENIDO (i18n) ---
+import React, { useActionState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Mail, MapPin, Bot, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { sendContactForm } from '@/app/actions'; // <--- IMPORTAMOS LA ACCIÓN
+
+// --- DICCIONARIO MULTI-IDIOMA (Sin cambios) ---
 const CONTENT = {
   es: {
     badge: "Acceso Directo",
-    title: "Hablemos de <span class='text-oro-antiguo'>Unificar</span> tu Negocio.",
-    desc: "Sin intermediarios. Sin filas de espera. Sin respuestas automáticas genéricas.",
-    quote: "\"¿Tienes un ecosistema digital fracturado? Cuéntanos el desafío. <strong class='text-white'>Edgar o Abdiel</strong> leerán este mensaje personalmente y te responderán con una perspectiva humana y estratégica.\"",
-    write_us: "Escribe Directo",
-    base: "Base de Operaciones",
-    location: "Monterrey, N.L., México <span class='text-gray-500 text-sm'>(Trabajando globalmente)</span>",
-    // --- NUEVA SECCIÓN: AI Disclaimer ---
-    ai_title: "Comunicación Sin Fronteras (AI-Powered)",
-    ai_desc: "Creemos que el talento no tiene código postal. Usamos IA para comunicarnos fluidamente en tu idioma nativo. Escríbenos como prefieras: la tecnología nos conecta.",
+    title_start: "Hablemos de",
+    title_highlight: "optimizar",
+    title_end: "tu negocio digital.",
+    subtitle: "Sin intermediarios. Sin tickets eternos. Te respondemos con una perspectiva humana y accionable.",
+    quote: '"Cuéntanos el contexto y comparte tu URL si puedes. Edgar o Abdiel leerán tu mensaje personalmente y te responderán con el siguiente paso más claro."',
+    contact_methods: {
+      email_label: "Escribe Directo",
+      location_label: "Base de Operaciones",
+      location_text: "Monterrey, N.L., México",
+      location_sub: "(Trabajando globalmente)",
+      ai_label: "Comunicación Sin Fronteras",
+      ai_badge: "AI-Powered",
+      ai_desc: "Usamos IA para comunicarnos con claridad en tu idioma, sin perder el criterio humano."
+    },
     form: {
       name: "Nombre",
-      email: "Correo Corporativo",
-      email_note: "El apellido de tu empresa importa.",
-      challenge: "¿Cuál es el desafío principal hoy?",
-      message: "Mensaje",
-      message_placeholder: "Danos contexto. Mientras más sepamos, mejor será la primera conversación.",
-      btn: "Enviar Mensaje a los Fundadores",
-      btn_loading: "Enviando...",
-      footer: "Respetamos tu tiempo y tus datos. Recibirás una respuesta humana en menos de 24 horas hábiles. <strong>Cero spam, solo estrategia.</strong>"
+      name_ph: "Nombre y apellido",
+      email: "Email Corporativo",
+      email_ph: "nombre@empresa.com",
+      email_note: "Preferimos email corporativo para responder más rápido.",
+      outcome_label: "¿Qué quieres mejorar primero?",
+      outcome_ph: "Selecciona una opción...",
+      context_label: "Contexto",
+      context_ph: "Comparte tu URL y 3 datos: objetivo, métricas actuales (si las tienes) y herramientas principales.",
+      btn: "Solicitar diagnóstico",
+      sending: "Enviando...",
+      success_title: "¡Mensaje Enviado!",
+      success_desc: "Hemos recibido tu solicitud. Te responderemos en breve.",
+      microcopy: "Respetamos tu tiempo y tus datos. Recibirás una respuesta humana en menos de 24 horas hábiles.",
+      no_spam: "Cero spam."
     },
-    options: {
-      default: "Selecciona una opción...",
-      salesforce: "Mis datos de Salesforce no cuadran",
-      web: "Mi web es lenta / no convierte",
-      content: "Necesito estrategia de contenido",
-      audit: "Quiero una auditoría completa",
-      other: "Otro / Colaboración"
-    },
-    success: {
-      title: "¡Mensaje Recibido!",
-      desc: "Tu mensaje ha llegado directamente a los fundadores. Te responderemos en breve.",
-      btn: "Enviar otro mensaje"
-    }
+    options: [
+      "Medición y atribución (Datos no confiables)",
+      "Conversión (Fuga en el funnel)",
+      "Eficiencia operativa (Procesos manuales)",
+      "Integración (CRM/ERP/Soporte desconectados)",
+      "Automatización/IA aplicada",
+      "Otro / Colaboración"
+    ]
   },
   en: {
     badge: "Direct Access",
-    title: "Let's Talk About <span class='text-oro-antiguo'>Unifying</span> Your Business.",
-    desc: "No middlemen. No waiting lines. No generic auto-replies.",
-    quote: "\"Do you have a fractured digital ecosystem? Tell us the challenge. <strong class='text-white'>Edgar or Abdiel</strong> will read this message personally and reply with a human and strategic perspective.\"",
-    write_us: "Write Directly",
-    base: "Base of Operations",
-    location: "Monterrey, N.L., Mexico <span class='text-gray-500 text-sm'>(Working globally)</span>",
-    // --- NUEVA SECCIÓN: AI Disclaimer ---
-    ai_title: "Borderless Communication (AI-Powered)",
-    ai_desc: "We believe talent has no zip code. We use AI to communicate fluently in your native language. Write to us as you prefer: technology connects us.",
+    title_start: "Let's talk about",
+    title_highlight: "optimizing",
+    title_end: "your digital business.",
+    subtitle: "No middlemen. No endless tickets. We answer with a human and actionable perspective.",
+    quote: '"Tell us the context and share your URL if you can. Edgar or Abdiel will read your message personally and respond with the clearest next step."',
+    contact_methods: {
+      email_label: "Write Directly",
+      location_label: "Base of Operations",
+      location_text: "Monterrey, N.L., Mexico",
+      location_sub: "(Working globally)",
+      ai_label: "Borderless Communication",
+      ai_badge: "AI-Powered",
+      ai_desc: "We use AI to communicate clearly in your language, without losing human judgment."
+    },
     form: {
       name: "Name",
-      email: "Corporate Email",
-      email_note: "Your company domain matters.",
-      challenge: "What is your main challenge today?",
-      message: "Message",
-      message_placeholder: "Give us context. The more we know, the better the first conversation.",
-      btn: "Send Message to the Founders",
-      btn_loading: "Sending...",
-      footer: "We respect your time and data. You will receive a human response within 24 business hours. <strong>Zero spam, just strategy.</strong>"
+      name_ph: "Full name",
+      email: "Work Email",
+      email_ph: "name@company.com",
+      email_note: "We prefer work email for faster response.",
+      outcome_label: "What do you want to improve first?",
+      outcome_ph: "Select an option...",
+      context_label: "Context",
+      context_ph: "Share your URL and 3 facts: objective, current metrics (if any), and main tools.",
+      btn: "Request Diagnosis",
+      sending: "Sending...",
+      success_title: "Message Sent!",
+      success_desc: "We've received your request. We'll get back to you shortly.",
+      microcopy: "We respect your time and data. You will receive a human response in less than 24 business hours.",
+      no_spam: "Zero spam."
     },
-    options: {
-      default: "Select an option...",
-      salesforce: "My Salesforce data doesn't add up",
-      web: "My website is slow / doesn't convert",
-      content: "I need a content strategy",
-      audit: "I want a full audit",
-      other: "Other / Collaboration"
-    },
-    success: {
-      title: "Message Received!",
-      desc: "Your message has reached the founders directly. We will get back to you shortly.",
-      btn: "Send another message"
-    }
+    options: [
+      "Measurement & Attribution (Unreliable Data)",
+      "Conversion (Funnel Leaks)",
+      "Operational Efficiency (Manual Processes)",
+      "Integration (Disconnected CRM/ERP/Support)",
+      "Automation/Applied AI",
+      "Other / Collaboration"
+    ]
   },
   fr: {
     badge: "Accès Direct",
-    title: "Parlons de <span class='text-oro-antiguo'>l'Unification</span> de votre Entreprise.",
-    desc: "Pas d'intermédiaires. Pas de file d'attente. Pas de réponses automatiques génériques.",
-    quote: "« Vous avez un écosystème numérique fracturé ? Racontez-nous votre défi. <strong class='text-white'>Edgar ou Abdiel</strong> liront ce message personnellement et vous répondront avec une perspective humaine et stratégique. »",
-    write_us: "Écrivez-nous directement",
-    base: "Base d'Opérations",
-    location: "Monterrey, N.L., Mexique <span class='text-gray-500 text-sm'>(Opérant à l'échelle mondiale)</span>",
-    // --- NUEVA SECCIÓN: AI Disclaimer ---
-    ai_title: "Communication Sans Frontières (via IA)",
-    ai_desc: "Nous croyons que le talent n'a pas de code postal. Nous utilisons l'IA pour communiquer couramment dans votre langue. Écrivez comme vous préférez : la technologie nous connecte.",
+    title_start: "Parlons d'",
+    title_highlight: "optimiser",
+    title_end: "votre activité numérique.",
+    subtitle: "Pas d'intermédiaires. Pas de tickets interminables. Nous répondons avec une perspective humaine et exploitable.",
+    quote: '"Racontez-nous le contexte et partagez votre URL si possible. Edgar ou Abdiel liront votre message personnellement et répondront avec la prochaine étape claire."',
+    contact_methods: {
+      email_label: "Écrire Directement",
+      location_label: "Base d'Opérations",
+      location_text: "Monterrey, N.L., Mexique",
+      location_sub: "(Travaillant globalement)",
+      ai_label: "Communication Sans Frontières",
+      ai_badge: "AI-Powered",
+      ai_desc: "Nous utilisons l'IA pour communiquer clairement dans votre langue, sans perdre le jugement humain."
+    },
     form: {
       name: "Nom",
+      name_ph: "Nom et prénom",
       email: "Email Professionnel",
-      email_note: "Le nom de domaine de votre entreprise compte.",
-      challenge: "Quel est votre principal défi aujourd'hui ?",
-      message: "Message",
-      message_placeholder: "Donnez-nous du contexte. Plus nous en savons, meilleure sera la première conversation.",
-      btn: "Envoyer le Message aux Fondateurs",
-      btn_loading: "Envoi en cours...",
-      footer: "Nous respectons votre temps et vos données. Vous recevrez une réponse humaine en moins de 24 heures ouvrables. <strong>Zéro spam, que de la stratégie.</strong>"
+      email_ph: "nom@entreprise.com",
+      email_note: "Nous préférons l'email pro pour une réponse plus rapide.",
+      outcome_label: "Que voulez-vous améliorer en premier ?",
+      outcome_ph: "Sélectionnez une option...",
+      context_label: "Contexte",
+      context_ph: "Partagez votre URL et 3 faits : objectif, métriques actuelles (si disponibles) et outils principaux.",
+      btn: "Demander un diagnostic",
+      sending: "Envoi en cours...",
+      success_title: "Message Envoyé !",
+      success_desc: "Nous avons bien reçu votre demande. Nous vous répondrons sous peu.",
+      microcopy: "Nous respectons votre temps et vos données. Vous recevrez une réponse humaine en moins de 24 heures ouvrables.",
+      no_spam: "Zéro spam."
     },
-    options: {
-      default: "Sélectionnez une option...",
-      salesforce: "Mes données Salesforce ne sont pas cohérentes",
-      web: "Mon site est lent / ne convertit pas",
-      content: "J'ai besoin d'une stratégie de contenu",
-      audit: "Je veux un audit complet",
-      other: "Autre / Collaboration"
-    },
-    success: {
-      title: "Message Reçu !",
-      desc: "Votre message a bien été transmis aux fondateurs. Nous vous répondrons sous peu.",
-      btn: "Envoyer un autre message"
-    }
+    options: [
+      "Mesure et Attribution (Données non fiables)",
+      "Conversion (Fuites dans l'entonnoir)",
+      "Efficacité Opérationnelle (Processus manuels)",
+      "Intégration (CRM/ERP/Support déconnectés)",
+      "Automatisation/IA Appliquée",
+      "Autre / Collaboration"
+    ]
   }
 };
-
-// Configura aquí tu URL de Formspree (o usa la misma que en la auditoría)
-const FORMSPREE_ENDPOINT = "TU_URL_DE_ENDPOINT_DE_FORMSPREE"; 
 
 interface ContactSectionProps {
   lang?: 'es' | 'en' | 'fr';
 }
 
+const initialState = {
+  success: false,
+  message: '',
+};
+
 export default function ContactSection({ lang = 'es' }: ContactSectionProps) {
   const t = CONTENT[lang];
-
-  const [formData, setFormData] = useState({ name: '', email: '', challenge: '', message: '' });
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch(FORMSPREE_ENDPOINT, { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, language: lang, type: 'Direct Contact' }),
-      });
-
-      if (response.status === 200) {
-        setIsSuccess(true);
-        setFormData({ name: '', email: '', challenge: '', message: '' });
-      } 
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  
+  // --- HOOK DE SERVER ACTION ---
+  const [state, formAction, isPending] = useActionState(sendContactForm, initialState);
 
   return (
-    <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-start">
+    <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           
-      {/* --- COLUMNA IZQUIERDA: El Manifiesto de Contacto --- */}
+      {/* --- COLUMNA IZQUIERDA (Igual que antes) --- */}
       <motion.div 
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        className="pt-4"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="pt-4 lg:sticky lg:top-32"
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-400/30 mb-6">
-          <MessageSquare size={14} className="text-sky-400" />
-          <span className="text-sky-400 text-xs font-bold uppercase tracking-wider">{t.badge}</span>
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-azul-zafiro/10 border border-azul-zafiro/30 mb-8 backdrop-blur-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+          </span>
+          <span className="text-sky-400 text-xs font-bold uppercase tracking-widest">{t.badge}</span>
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-bold font-serif mb-6 leading-tight" dangerouslySetInnerHTML={{ __html: t.title }} />
+        <h1 className="text-4xl md:text-6xl font-bold font-serif mb-6 leading-tight text-white">
+          {t.title_start} <br/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-oro-antiguo to-amber-300">
+            {t.title_highlight}
+          </span> {t.title_end}
+        </h1>
         
-        <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-          {t.desc}
+        <p className="text-lg text-slate-400 mb-10 leading-relaxed font-light">
+          {t.subtitle}
         </p>
         
-        <p className="text-gray-400 mb-10 border-l-2 border-oro-antiguo/50 pl-4 italic" dangerouslySetInnerHTML={{ __html: t.quote }} />
+        <blockquote className="relative p-6 mb-12 bg-white/5 rounded-r-xl border-l-4 border-oro-antiguo backdrop-blur-sm">
+          <p className="text-slate-300 italic text-lg leading-relaxed">
+            {t.quote}
+          </p>
+        </blockquote>
 
-        <div className="space-y-8"> {/* Aumentado espaciado vertical */}
-          <div className="flex items-start gap-4 group">
-            <div className="p-3 rounded-lg bg-white/5 border border-white/10 group-hover:border-oro-antiguo/30 transition-colors">
-              <Mail className="text-oro-antiguo" size={24} />
+        <div className="space-y-8">
+          <div className="flex items-start gap-5 group">
+            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-oro-antiguo group-hover:border-oro-antiguo/50 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.2)] transition-all duration-300">
+              <Mail size={24} />
             </div>
             <div>
-              <h3 className="font-bold text-white text-sm uppercase tracking-wide">{t.write_us}</h3>
-              <a href="mailto:hola@acclarolabs.com" className="text-gray-300 hover:text-white transition-colors">
-                hola@acclarolabs.com
+              <h3 className="font-bold text-white text-xs uppercase tracking-widest mb-1">{t.contact_methods.email_label}</h3>
+              <a href="mailto:hello@acclaroflow.com" className="text-lg text-slate-300 hover:text-white transition-colors border-b border-transparent hover:border-white/50 pb-0.5">
+                hello@acclaroflow.com
               </a>
             </div>
           </div>
 
-          <div className="flex items-start gap-4 group">
-            <div className="p-3 rounded-lg bg-white/5 border border-white/10 group-hover:border-sky-400/30 transition-colors">
-              <MapPin className="text-sky-400" size={24} />
+          <div className="flex items-start gap-5 group">
+            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-sky-400 group-hover:border-sky-400/50 group-hover:shadow-[0_0_15px_rgba(56,189,248,0.2)] transition-all duration-300">
+              <MapPin size={24} />
             </div>
             <div>
-              <h3 className="font-bold text-white text-sm uppercase tracking-wide">{t.base}</h3>
-              <p className="text-gray-300" dangerouslySetInnerHTML={{ __html: t.location }} />
-            </div>
-          </div>
-
-          {/* --- NUEVO BLOQUE: AI Disclaimer --- */}
-          <div className="flex items-start gap-4 group">
-            <div className="p-3 rounded-lg bg-white/5 border border-white/10 group-hover:border-violet-400/30 transition-colors">
-              <Bot className="text-violet-400" size={24} />
-            </div>
-            <div>
-              <h3 className="font-bold text-white text-sm uppercase tracking-wide">{t.ai_title}</h3>
-              <p className="text-gray-300 text-sm leading-relaxed mt-1">
-                {t.ai_desc}
+              <h3 className="font-bold text-white text-xs uppercase tracking-widest mb-1">{t.contact_methods.location_label}</h3>
+              <p className="text-slate-300">
+                {t.contact_methods.location_text} <br/>
+                <span className="text-slate-500 text-sm">{t.contact_methods.location_sub}</span>
               </p>
             </div>
           </div>
-          
+
+          <div className="flex items-start gap-5 group">
+            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-violet-400 group-hover:border-violet-400/50 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.2)] transition-all duration-300">
+              <Bot size={24} />
+            </div>
+            <div>
+              <h3 className="font-bold text-white text-xs uppercase tracking-widest mb-1 flex items-center gap-2">
+                {t.contact_methods.ai_label}
+                <span className="bg-violet-500/20 text-violet-300 text-[10px] px-1.5 py-0.5 rounded">{t.contact_methods.ai_badge}</span>
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed mt-1 max-w-sm">
+                {t.contact_methods.ai_desc}
+              </p>
+            </div>
+          </div>
         </div>
       </motion.div>
 
-      {/* --- COLUMNA DERECHA: Formulario --- */}
+      {/* --- COLUMNA DERECHA: El Formulario Funcional --- */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="bg-zinc-900/80 backdrop-blur-md border border-white/10 p-8 rounded-2xl shadow-2xl relative overflow-hidden"
+        className="relative"
       >
-          <div className="absolute top-0 right-0 w-32 h-32 bg-azul-zafiro/40 blur-[80px] rounded-full pointer-events-none"></div>
+        <div className="absolute -inset-1 bg-gradient-to-b from-azul-zafiro/20 to-purple-600/20 rounded-2xl blur-xl opacity-50" />
 
-        {!isSuccess ? (
-          <form className="space-y-5 relative z-10" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">{t.form.name}</label>
-              <input required name="name" type="text" value={formData.name} onChange={handleChange} className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all" />
+        <div className="relative bg-slate-950/80 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-2xl shadow-2xl overflow-hidden">
+          
+          {/* ESTADO DE ÉXITO */}
+          {state.success ? (
+            <div className="flex flex-col items-center justify-center text-center py-12 h-full min-h-[400px]">
+              <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 text-emerald-400 animate-in zoom-in duration-300">
+                <CheckCircle2 size={32} />
+              </div>
+              <h3 className="text-2xl font-serif text-white mb-2">{t.form.success_title}</h3>
+              <p className="text-slate-400 max-w-xs">{t.form.success_desc}</p>
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">{t.form.email}</label>
-              <input required name="email" type="email" value={formData.email} onChange={handleChange} className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all" />
-              <p className="text-xs text-gray-600 mt-1">{t.form.email_note}</p>
-            </div>
+          ) : (
+            /* FORMULARIO ACTIVO */
+            <form action={formAction} className="space-y-6">
+              
+              <div className="group">
+                <label htmlFor="name" className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 group-focus-within:text-oro-antiguo transition-colors">{t.form.name}</label>
+                <input 
+                  type="text" 
+                  name="name" // IMPORTANTE: name attribute
+                  id="name"
+                  required
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-4 text-white placeholder-slate-600 focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all disabled:opacity-50" 
+                  placeholder={t.form.name_ph}
+                  disabled={isPending}
+                />
+              </div>
+              
+              <div className="group">
+                <label htmlFor="email" className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 group-focus-within:text-oro-antiguo transition-colors">{t.form.email}</label>
+                <input 
+                  type="email" 
+                  name="email" // IMPORTANTE
+                  id="email"
+                  required
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-4 text-white placeholder-slate-600 focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all disabled:opacity-50" 
+                  placeholder={t.form.email_ph}
+                  disabled={isPending}
+                />
+                <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                  <span className="text-oro-antiguo">*</span> {t.form.email_note}
+                </p>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">{t.form.challenge}</label>
-              <select name="challenge" value={formData.challenge} onChange={handleChange} className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all appearance-none">
-                <option value="" className="bg-zinc-900">{t.options.default}</option>
-                <option value="Salesforce Data" className="bg-zinc-900">{t.options.salesforce}</option>
-                <option value="Web Performance" className="bg-zinc-900">{t.options.web}</option>
-                <option value="Content Strategy" className="bg-zinc-900">{t.options.content}</option>
-                <option value="Full Audit" className="bg-zinc-900">{t.options.audit}</option>
-                <option value="Other" className="bg-zinc-900">{t.options.other}</option>
-              </select>
-            </div>
+              <div className="group">
+                <label htmlFor="outcome" className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 group-focus-within:text-oro-antiguo transition-colors">{t.form.outcome_label}</label>
+                <div className="relative">
+                  <select 
+                    name="outcome" // IMPORTANTE
+                    id="outcome"
+                    className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-4 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all appearance-none cursor-pointer hover:bg-slate-900 disabled:opacity-50"
+                    disabled={isPending}
+                  >
+                    <option value="" className="bg-slate-950 text-gray-500">{t.form.outcome_ph}</option>
+                    {t.options.map((opt, i) => (
+                      <option key={i} value={opt} className="bg-slate-950">{opt}</option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </div>
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">{t.form.message}</label>
-              <textarea 
-                required
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows={4} 
-                className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all resize-none" 
-                placeholder={t.form.message_placeholder}
-              ></textarea>
-            </div>
+              <div className="group">
+                <label htmlFor="context" className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 group-focus-within:text-oro-antiguo transition-colors">{t.form.context_label}</label>
+                <textarea 
+                  name="context" // IMPORTANTE
+                  id="context"
+                  rows={4} 
+                  required
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-lg p-4 text-white placeholder-slate-600 focus:border-oro-antiguo focus:ring-1 focus:ring-oro-antiguo outline-none transition-all resize-none disabled:opacity-50" 
+                  placeholder={t.form.context_ph}
+                  disabled={isPending}
+                ></textarea>
+              </div>
 
-            <button disabled={isLoading} className="w-full bg-azul-zafiro text-white font-bold py-4 rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-glow-blue flex items-center justify-center gap-2 group disabled:opacity-70">
-              {isLoading ? (
-                <>
-                  <Loader2 className="animate-spin" size={18} /> {t.form.btn_loading}
-                </>
-              ) : (
-                <>
-                  <span>{t.form.btn}</span>
-                  <Send size={18} className="group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </button>
+              <button 
+                type="submit" // AHORA SÍ ES SUBMIT
+                disabled={isPending}
+                className="w-full bg-azul-zafiro hover:bg-blue-600 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center justify-center gap-3 group relative overflow-hidden disabled:bg-slate-800 disabled:cursor-not-allowed"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    <span className="relative z-10">{t.form.sending}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="relative z-10">{t.form.btn}</span>
+                    <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+                {!isPending && <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />}
+              </button>
 
-            <p className="text-xs text-center text-gray-500 mt-4 border-t border-white/5 pt-4" dangerouslySetInnerHTML={{ __html: t.form.footer }} />
-          </form>
-        ) : (
-          <div className="text-center py-10 animate-in fade-in zoom-in duration-500 relative z-10">
-            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="text-green-400 w-10 h-10" />
-            </div>
-            <h3 className="text-3xl font-serif font-bold text-white mb-4">{t.success.title}</h3>
-            <p className="text-lg text-gray-300 mb-8">
-              {t.success.desc}
-            </p>
-            <button 
-              onClick={() => setIsSuccess(false)}
-              className="text-sky-400 hover:underline text-sm"
-            >
-              {t.success.btn}
-            </button>
-          </div>
-        )}
+              <p className="text-[10px] text-center text-slate-500 mt-6 border-t border-white/5 pt-4">
+                {t.form.microcopy} <br/>
+                <span className="text-slate-400">{t.form.no_spam}</span>
+              </p>
+
+            </form>
+          )}
+        </div>
       </motion.div>
+
     </div>
   );
 }

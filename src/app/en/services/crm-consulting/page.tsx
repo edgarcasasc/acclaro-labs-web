@@ -5,6 +5,8 @@ import CrmProblem from '@/components/crm/CrmProblem';
 import CrmSolution from '@/components/crm/CrmSolution';
 import CrmAuthority from '@/components/crm/CrmAuthority';
 import CrmFinalCTA from '@/components/crm/CrmFinalCTA';
+import Footer from '@/components/Footer'; // <--- 1. Importamos el Footer
+
 
 export default function EnCrmPage() {
   return (
@@ -16,7 +18,8 @@ export default function EnCrmPage() {
         <CrmSolution lang="en" />
         <CrmAuthority lang="en" />
         <CrmFinalCTA lang="en" />
-      </main>
+      </main>      <Footer lang="en" /> {/* <--- 2. Agregamos el componente al final */}
+      
     </>
   );
 }

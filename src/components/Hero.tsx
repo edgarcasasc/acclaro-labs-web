@@ -16,26 +16,26 @@ extend(THREE as any);
 // --- DICCIONARIO DE TRADUCCIÓN (TEXTOS) ---
 const CONTENT = {
   es: {
-    title: "DEL CAOS A LA CLARIDAD.",
-    desc: "Tus datos no se hablan con tu sitio web. Tu marketing navega a ciegas. Nosotros construimos el puente que unifica tu inteligencia de negocio (venga de Excel, HubSpot, Salesforce o cualquier ERP), tu plataforma y tu contenido.",
-    ctaPrimary: "Obtén tu Auditoría Gratuita de Claridad",
-    ctaSecondary: "Ver nuestro blueprint de 3 pasos",
+    title: "Acelera el negocio digital de tu empresa.",
+    desc: "Optimizamos UX, analítica y experimentación, conectando tus sistemas (CRM/ERP/soporte) para medir impacto y escalar con automatización/IA cuando conviene.",
+    ctaPrimary: "Solicitar Diagnóstico",
+    ctaSecondary: "Ver método y entregables",
     linkPrimary: "/servicios/estrategia-contenido#auditoria",
     linkSecondary: "/servicios/desarrollo-web"
   },
   en: {
-    title: "FROM CHAOS TO CLARITY.",
-    desc: "Your data isn't talking to your website. Your marketing is flying blind. We build the bridge that unifies your business intelligence (whether from Excel, HubSpot, Salesforce, or any ERP), your platform, and your content.",
-    ctaPrimary: "Get Your Free Clarity Audit",
-    ctaSecondary: "View our 3-Step Blueprint",
+    title: "Accelerate your company's digital growth.",
+    desc: "We improve UX, analytics, and experimentation—connecting your systems (CRM/ERP/support) so you can measure impact and scale with automation/AI only when it makes business sense.",
+    ctaPrimary: "Request a Diagnostic",
+    ctaSecondary: "See our Method & Deliverables",
     linkPrimary: "/servicios/estrategia-contenido#auditoria",
     linkSecondary: "/servicios/desarrollo-web"
   },
   fr: {
-    title: "DU CHAOS À LA CLARTÉ.",
-    desc: "Vos données ne communiquent pas avec votre site web. Votre marketing navigue à l'aveugle. Nous construisons la passerelle qui unifie votre intelligence d'affaires (qu'elle vienne d'Excel, HubSpot, Salesforce ou de tout ERP), votre plateforme et votre contenu.",
-    ctaPrimary: "Obtenez votre Audit de Clarté Gratuit",
-    ctaSecondary: "Voir notre Blueprint en 3 étapes",
+    title: "Accélérez la performance digitale de votre entreprise.",
+    desc: "Nous optimisons l'UX, l'analytics et l'expérimentation, en connectant vos systèmes (CRM/ERP/support) pour mesurer l’impact et passer à l’échelle avec l’automatisation/IA quand cela crée une vraie valeur.",
+    ctaPrimary: "Demander un diagnostic",
+    ctaSecondary: "Voir la méthode et les livrables",
     linkPrimary: "/servicios/estrategia-contenido#auditoria",
     linkSecondary: "/servicios/desarrollo-web"
   }

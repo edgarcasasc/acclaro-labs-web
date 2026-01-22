@@ -5,6 +5,7 @@ import CrmProblem from '@/components/crm/CrmProblem';
 import CrmSolution from '@/components/crm/CrmSolution';
 import CrmAuthority from '@/components/crm/CrmAuthority';
 import CrmFinalCTA from '@/components/crm/CrmFinalCTA';
+import Footer from '@/components/Footer';
 
 export default function FrCrmPage() {
   return (
@@ -16,7 +17,7 @@ export default function FrCrmPage() {
         <CrmSolution lang="fr" />
         <CrmAuthority lang="fr" />
         <CrmFinalCTA lang="fr" />
-      </main>
+      </main><Footer lang="fr" /> {/* <--- 2. Agregamos el footer en francés */}
     </>
   );
 }
