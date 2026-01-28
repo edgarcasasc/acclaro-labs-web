@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Loader2, FileSearch, Figma, BarChart, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react';
 
-// --- 1. DICCIONARIO DE CONTENIDO COMPLETO (Sin recortes) ---
+// --- 1. DICCIONARIO DE CONTENIDO COMPLETO ---
 const CONTENT = {
   es: {
     deliverables_title: "No entregamos opiniones. Entregamos activos.",
@@ -99,43 +99,50 @@ interface Props { lang?: 'es' | 'en' | 'fr'; }
 
 export default function AuditFormSection({ lang = 'es' }: Props) {
   // --- EL PARCHE MÁGICO (as any) ---
-  // Esto le dice a TypeScript: "Confía en mí, sé lo que hago, no verifiques tipos aquí".
-  // También agregamos un fallback a 'es' por si acaso.
   const t = (CONTENT as any)[lang] || CONTENT['es'];
   
   const [formData, setFormData] = useState({ name: '', email: '', url: '', crmType: 'Salesforce' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
- const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
     
     try {
-        const response = await fetch('/api/capture-lead', {
-            // ... (tu configuración del fetch)
+        // CORRECCIÓN CRÍTICA: Agregamos el '/' al final para evitar redirecciones 308 que borran el body
+        const response = await fetch('/api/capture-lead/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: formData.name,
+                email: formData.email,
+                website: formData.url,
+                crm: formData.crmType,
+                source: 'audit_form'
+            })
         });
 
         if (response.ok) {
-            // --- INICIO CÓDIGO GTM ---
-            // Enviamos la señal de éxito a Google Tag Manager
+            // --- CÓDIGO GTM ---
             (window as any).dataLayer = (window as any).dataLayer || [];
             (window as any).dataLayer.push({
-                'event': 'form_success',      // Nombre del evento
-                'form_id': 'audit_clarity',   // Para saber cuál form fue
-                'user_role': formData.crmType // Dato extra útil
+                'event': 'form_success',
+                'form_id': 'audit_clarity',
+                'user_role': formData.crmType
             });
-            // --- FIN CÓDIGO GTM ---
+            // -----------------
 
             setStatus('success');
             setFormData({ name: '', email: '', url: '', crmType: 'Salesforce' });
         } else {
+            console.error("Error en API:", response.status, response.statusText);
             setStatus('error');
         }
     } catch (error) {
-        console.error(error);
+        console.error("Error de red:", error);
         setStatus('error');
     }
-};
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
