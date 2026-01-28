@@ -43,7 +43,7 @@ export default function CallToActionSection({ lang = 'es' }: CallToActionSection
   return (
     <section className="relative z-10 w-full bg-slate-950 py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center min-h-[70vh]">
       
-      {/* --- FONDO TECH (Tu Grid & Beams original) --- */}
+      {/* --- FONDO TECH --- */}
       <div className="absolute inset-0 w-full h-full pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
         <motion.div 
@@ -84,7 +84,7 @@ export default function CallToActionSection({ lang = 'es' }: CallToActionSection
           {/* GRUPO DE BOTONES (CTA + Email) */}
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
             
-            {/* 1. Botón CTA "Shimmer" (Tu joya visual) */}
+            {/* 1. Botón CTA Principal */}
             <Link href="/contacto">
               <motion.button 
                 className="group relative inline-flex h-14 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
@@ -99,8 +99,8 @@ export default function CallToActionSection({ lang = 'es' }: CallToActionSection
               </motion.button>
             </Link>
 
-            {/* 2. Botón Secundario (Email - NUEVO) */}
-            <a href="mailto:hola@acclaroflow.com">
+            {/* 2. Botón Secundario (Email) - Corregido a hello@ */}
+            <a href="mailto:hello@acclaroflow.com">
                 <button className="flex items-center gap-3 text-slate-400 hover:text-white px-6 py-4 rounded-full font-medium transition-colors border border-transparent hover:border-slate-800 hover:bg-slate-900/50">
                     <Mail className="w-5 h-5" />
                     <span>{t.email_btn}</span>
@@ -116,7 +116,7 @@ export default function CallToActionSection({ lang = 'es' }: CallToActionSection
 
         </motion.div>
 
-        {/* --- FOOTER INTEGRADO (NUEVO) --- */}
+        {/* --- FOOTER INTEGRADO --- */}
         <motion.div 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -126,10 +126,11 @@ export default function CallToActionSection({ lang = 'es' }: CallToActionSection
             <div className="mb-4 md:mb-0 font-mono">
                 &copy; {new Date().getFullYear()} {t.footer_rights}
             </div>
+            {/* Redes Sociales - Corregido a <a> externos */}
             <div className="flex gap-8 font-mono uppercase tracking-wider text-xs">
-                <Link href="https://www.linkedin.com/company/acclarolabs/" className="hover:text-blue-400 transition-colors">LinkedIn</Link>
-                <Link href="https://x.com/Acclarolabs" className="hover:text-blue-400 transition-colors">Twitter</Link>
-                <Link href="https://github.com/acclarolabs" className="hover:text-blue-400 transition-colors">Github</Link>
+                <a href="https://www.linkedin.com/company/acclarolabs/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">LinkedIn</a>
+                <a href="https://x.com/Acclarolabs" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">Twitter</a>
+                <a href="https://github.com/acclarolabs" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">Github</a>
             </div>
         </motion.div>
 

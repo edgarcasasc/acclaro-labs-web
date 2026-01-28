@@ -8,6 +8,8 @@ import TeamSection from "@/components/TeamSection";
 import CallToActionSection from "@/components/CallToActionSection";
 import Footer from "@/components/Footer";
 import VisualEffects from "@/components/VisualEffects";
+import LeadMagnetChat from '@/components/lead/LeadMagnetChat.client';
+
 
 // 1. METADATOS MAESTROS (SEO Internacional y GEO)
 export const metadata: Metadata = {
@@ -59,6 +61,7 @@ export default function Home() {
           <LeadMagnetSection lang="es" /> 
           <TeamSection lang="es" />
           <CallToActionSection lang="es" />
+          <LeadMagnetChat /> 
         </main>
         
         <Footer lang="es" />
