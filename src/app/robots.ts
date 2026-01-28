@@ -7,10 +7,12 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
       disallow: [
-        '/api/',       // No rastrear tus endpoints de API
+        '/api/',       // No rastrear endpoints de API
         '/_next/',     // No rastrear archivos internos de Next.js
-        '/static/',    // Si tienes estáticos privados
-        '/*.json$',    // Evitar rastrear archivos de configuración expuestos
+        '/static/',    // Assets privados
+        '/*.json$',    // Archivos de configuración
+        '/dashboard/', // <--- BLOQUEO TOTAL al panel de control
+        '/admin/',     // Bloqueo a futura zona administrativa
       ],
     },
     sitemap: 'https://acclarolabs.com/sitemap.xml',

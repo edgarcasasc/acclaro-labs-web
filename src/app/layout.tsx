@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from 'next/font/google';
 import { GlobalNav } from '@/components/GlobalNav';
@@ -12,17 +13,16 @@ const playfair = Playfair_Display({
   weight: ['700', '900'] 
 });
 
-// 2. HEAD DEFINITIVO: METADATOS (EN ESPAÑOL PARA LA RAÍZ)
+// 2. HEAD DEFINITIVO: METADATOS
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://acclarolabs.com"),
   
   title: {
-    default: "Acclaro Labs | Del Caos a la Claridad", // <--- Traducido para coherencia
+    default: "Acclaro Labs | Del Caos a la Claridad", 
     template: "%s | Acclaro Labs"
   },
   description: "Construimos ecosistemas digitales unificados. Conectamos Salesforce, Desarrollo Web y Estrategia de IA para escalar empresas.",
   
-  // SEÑALIZACIÓN HREFLANG COMPLETA
   alternates: {
     canonical: "/",
     languages: {
@@ -33,7 +33,6 @@ export const metadata: Metadata = {
     },
   },
 
-  // OPENGRAPH OPTIMIZADO
   openGraph: {
     title: "Acclaro Labs | Del Caos a la Claridad",
     description: "Recupera ingresos perdidos en tu web y CRM con auditoría forense.",
@@ -43,14 +42,13 @@ export const metadata: Metadata = {
     alternateLocale: ["en_US", "fr_FR"],
     type: "website",
     images: [{
-      url: '/og-image-es.png', // Asegúrate de que esta imagen exista en /public
+      url: '/og-image-es.png', 
       width: 1200,
       height: 630,
       alt: 'Acclaro Labs - Ecosistemas Digitales Unificados',
     }],
   },
 
-  // TWITTER/X METADATA
   twitter: {
     card: "summary_large_image",
     site: "@acclarolabs",
@@ -73,14 +71,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+// CORRECCIÓN NEXT.JS 15: El Layout debe ser async para manejar params como Promise
+export default async function RootLayout({
   children,
-}: Readonly<{
+  params,
+}: {
   children: React.ReactNode;
-}>) {
+  params: Promise<{ lang?: string }>; // Definido como Promise para cumplir con el validador de tipos
+}) {
   
+  // Extraemos el idioma de la promesa de params
+  const { lang: rawLang } = await params;
+  const lang = rawLang || "es";
+
   // 3. GRAFO DE ENTIDAD MAESTRO (@graph)
-  // Incluye: Organización, WebSite, WebPage, Breadcrumb, Fundadores, Servicios, FAQ
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -126,7 +130,6 @@ export default function RootLayout({
         "breadcrumb": { "@id": "https://acclarolabs.com/#breadcrumb" },
         "inLanguage": "es-MX"
       },
-      // --- CORRECCIÓN: BreadcrumbList (Faltaba definirlo) ---
       {
         "@type": "BreadcrumbList",
         "@id": "https://acclarolabs.com/#breadcrumb",
@@ -139,7 +142,6 @@ export default function RootLayout({
           }
         ]
       },
-      // --- NUEVO: SERVICIO (Para SEO Transaccional) ---
       {
         "@type": "Service",
         "@id": "https://acclarolabs.com/#service-audit",
@@ -148,24 +150,30 @@ export default function RootLayout({
         "serviceType": ["UX Audit", "CRO", "Technical SEO"],
         "areaServed": ["MX", "US", "LATAM"]
       },
-      // --- NUEVO: FUNDADORES (Autoridad / E-E-A-T) ---
       {
         "@type": "Person",
         "@id": "https://acclarolabs.com/#edgar",
-        "name": "Edgar",
+        "name": "Edgar Ovidio Casas",
         "jobTitle": "Co-Founder & Technical Architect",
         "worksFor": { "@id": "https://acclarolabs.com/#organization" },
-        "knowsAbout": ["Salesforce", "Cloud Architecture", "CRM Strategy"]
+        "url": "https://acclarolabs.com",
+        "sameAs": [
+          "https://www.linkedin.com/in/edgar-ovidio-camarillo-camarillo/"
+        ],
+        "knowsAbout": ["Salesforce Architecture", "Cloud Computing", "CRM Strategy"]
       },
       {
         "@type": "Person",
         "@id": "https://acclarolabs.com/#abdiel",
-        "name": "Abdiel",
+        "name": "Abdiel Enrique Casas",
         "jobTitle": "Co-Founder & Growth Strategist",
         "worksFor": { "@id": "https://acclarolabs.com/#organization" },
-        "knowsAbout": ["UX Strategy", "AI Implementation", "Conversion Rate Optimization"]
+        "url": "https://acclarolabs.com",
+        "sameAs": [
+          "https://www.linkedin.com/in/enrique-casas-94bb9767/"
+        ],
+        "knowsAbout": ["UX Design", "Conversion Rate Optimization", "AI Implementation"]
       },
-      // --- NUEVO: FAQ (Para Snippets de IA) ---
       {
         "@type": "FAQPage",
         "mainEntity": [
@@ -191,15 +199,13 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} antialiased`}>
-        {/* Inyección del Grafo de Entidades Completo */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        {/* Suspense para evitar bloqueo de hidratación */}
         <Suspense fallback={<div className="h-16" />}>
           <GlobalNav />
         </Suspense>
