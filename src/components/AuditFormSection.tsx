@@ -3,62 +3,123 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Loader2, FileSearch, Figma, BarChart, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react';
 
-// --- PEGA AQUÍ EL MISMO DICCIONARIO 'CONTENT' QUE YA TIENES ---
-// (Lo he omitido aquí para ahorrar espacio, pero asegúrate de mantenerlo)
+// --- 1. DICCIONARIO DE CONTENIDO COMPLETO (Sin recortes) ---
 const CONTENT = {
   es: {
-    // ... Tu contenido original ...
     deliverables_title: "No entregamos opiniones. Entregamos activos.",
     cards: [
-      { title: "Reporte de Fricción", desc: "Auditoría heurística documentando dónde y por qué pierdes clientes.", icon: FileSearch, color: "text-emerald-400" },
-      { title: "Wireframes de Conversión", desc: "Pantallas de alta fidelidad con la nueva arquitectura.", icon: Figma, color: "text-purple-400" },
-      { title: "Proyección de Impacto", desc: "Estimación de recuperación de ingresos.", icon: BarChart, color: "text-blue-400" }
+      {
+        title: "Reporte de Fricción",
+        desc: "Auditoría heurística documentando dónde y por qué pierdes clientes (Fricción cognitiva, técnica y de mensaje).",
+        icon: FileSearch,
+        color: "text-emerald-400"
+      },
+      {
+        title: "Wireframes de Conversión",
+        desc: "Pantallas de alta fidelidad con la nueva arquitectura de decisión. Listas para desarrollo o A/B testing.",
+        icon: Figma,
+        color: "text-purple-400"
+      },
+      {
+        title: "Proyección de Impacto",
+        desc: "Estimación de recuperación de ingresos basada en las correcciones implementadas.",
+        icon: BarChart,
+        color: "text-blue-400"
+      }
     ],
     form_title: "Diagnóstico de Claridad del Ecosistema",
-    form_desc: "Analizamos tu web y tu CRM <strong class='text-oro-antiguo'>manualmente</strong> para encontrar las 'grietas digitales'.",
+    form_desc: "Analizamos tu web y tu CRM <strong class='text-oro-antiguo'>manualmente</strong> para encontrar las 'grietas digitales' por donde se escapan tus ingresos.",
     labels: { name: "Nombre", email: "Correo Corporativo", url: "URL del Sitio Web", crm: "¿Qué CRM utilizas?" },
-    options: { salesforce: "Salesforce", hubspot: "HubSpot", zoho: "Zoho", pipedrive: "Pipedrive", other: "Otro", excel: "Aún no usamos CRM (Excel)" },
+    options: {
+      salesforce: "Salesforce",
+      hubspot: "HubSpot",
+      zoho: "Zoho",
+      pipedrive: "Pipedrive",
+      other: "Otro",
+      excel: "Aún no usamos CRM (Excel / hojas de cálculo)"
+    },
     cta: { default: ">> Solicitar mi Auditoría Forense Gratuita <<", loading: "Procesando..." },
     note: "Nota: Cupos actuales disponibles: 2.",
-    success: { title: "Solicitud Recibida", desc: "Edgar y Abdiel han sido notificados. Analizaremos tu ecosistema.", btn: "Volver al inicio" },
+    success: {
+      title: "Solicitud Recibida",
+      desc: "Edgar y Abdiel han sido notificados. Analizaremos tu ecosistema y recibirás el reporte preliminar en menos de 24 horas hábiles.",
+      btn: "Volver al inicio"
+    },
     error: "Error de conexión. Intenta de nuevo."
   },
-  en: { 
-     // ... (Mantén tu versión en inglés) ...
-     cta: { default: "Request Audit", loading: "Processing..." },
-     // ...
-  }, 
-  fr: { 
-     // ... (Mantén tu versión en francés) ...
-     cta: { default: "Demander Audit", loading: "Envoi..." },
-     // ...
+  en: {
+    deliverables_title: "We don't deliver opinions. We deliver assets.",
+    cards: [
+      { title: "Friction Report", desc: "Heuristic audit documenting where and why you lose customers.", icon: FileSearch, color: "text-emerald-400" },
+      { title: "Conversion Wireframes", desc: "High-fidelity screens with the new decision architecture.", icon: Figma, color: "text-purple-400" },
+      { title: "Impact Projection", desc: "Revenue recovery estimation based on implemented fixes.", icon: BarChart, color: "text-blue-400" }
+    ],
+    form_title: "Ecosystem Clarity Diagnosis",
+    form_desc: "We analyze your website and CRM <strong class='text-oro-antiguo'>manually</strong> to find the 'digital cracks' where revenue leaks.",
+    labels: { name: "Name", email: "Corporate Email", url: "Website URL", crm: "Which CRM do you use?" },
+    options: { 
+      salesforce: "Salesforce", 
+      hubspot: "HubSpot", 
+      zoho: "Zoho", 
+      pipedrive: "Pipedrive",
+      other: "Other", 
+      excel: "We don't use a CRM yet (Excel / Spreadsheets)" 
+    },
+    cta: { default: ">> Request my Free Forensic Audit <<", loading: "Processing..." },
+    note: "Note: Current spots available: 2.",
+    success: { title: "Request Received", desc: "Edgar and Abdiel have been notified. We'll analyze your ecosystem and contact you within 24 hours.", btn: "Back to home" },
+    error: "Connection error. Try again."
+  },
+  fr: {
+    deliverables_title: "Nous ne livrons pas d'opinions. Nous livrons des actifs.",
+    cards: [
+      { title: "Rapport de Friction", desc: "Audit heuristique documentant où et pourquoi vous perdez des clients.", icon: FileSearch, color: "text-emerald-400" },
+      { title: "Wireframes de Conversion", desc: "Écrans haute fidélité avec la nouvelle architecture de décision.", icon: Figma, color: "text-purple-400" },
+      { title: "Projection d'Impact", desc: "Estimation de la récupération des revenus basée sur les correctifs.", icon: BarChart, color: "text-blue-400" }
+    ],
+    form_title: "Diagnostic de Clarté de l'Écosystème",
+    form_desc: "Nous analysons votre site et CRM <strong class='text-oro-antiguo'>manuellement</strong> pour trouver les fissures numériques.",
+    labels: { name: "Nom", email: "Email Pro", url: "URL du Site", crm: "Quel CRM utilisez-vous ?" },
+    options: { 
+      salesforce: "Salesforce", 
+      hubspot: "HubSpot", 
+      zoho: "Zoho", 
+      pipedrive: "Pipedrive",
+      other: "Autre", 
+      excel: "Pas encore de CRM (Excel / Tableurs)" 
+    },
+    cta: { default: ">> Demander mon Audit Forensique <<", loading: "Envoi..." },
+    note: "Note : Places disponibles : 2.",
+    success: { title: "Demande Reçue", desc: "Edgar et Abdiel ont été notifiés. Nous vous contacterons sous 24 heures.", btn: "Retour à l'accueil" },
+    error: "Erreur de connexion. Réessayez."
   }
 };
 
 interface Props { lang?: 'es' | 'en' | 'fr'; }
 
 export default function AuditFormSection({ lang = 'es' }: Props) {
-  // @ts-ignore
-  const t = CONTENT[lang] || CONTENT['es'];
+  // --- EL PARCHE MÁGICO (as any) ---
+  // Esto le dice a TypeScript: "Confía en mí, sé lo que hago, no verifiques tipos aquí".
+  // También agregamos un fallback a 'es' por si acaso.
+  const t = (CONTENT as any)[lang] || CONTENT['es'];
+  
   const [formData, setFormData] = useState({ name: '', email: '', url: '', crmType: 'Salesforce' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  // --- AQUÍ ESTÁ EL CAMBIO CLAVE ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
     
     try {
-        // Enviar datos reales al Backend
         const response = await fetch('/api/capture-lead', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 name: formData.name,
                 email: formData.email,
-                website: formData.url,     // Mapeamos 'url' a 'website' que espera la API
-                crm: formData.crmType,     // Enviamos el CRM
-                source: 'audit_form'       // <--- ETIQUETA DE ORIGEN
+                website: formData.url,
+                crm: formData.crmType,
+                source: 'audit_form'
             })
         });
 
@@ -115,7 +176,7 @@ export default function AuditFormSection({ lang = 'es' }: Props) {
           </div>
         </div>
 
-        {/* BLOCK 2: FORMULARIO REAL */}
+        {/* BLOCK 2: FORMULARIO */}
         <div className="max-w-2xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
