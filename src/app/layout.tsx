@@ -2,11 +2,11 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from 'next/font/google';
 import { GlobalNav } from '@/components/GlobalNav';
-import SchemaOrg from '@/components/SchemaOrg'; // Importamos el nuevo componente modular
+import SchemaOrg from '@/components/SchemaOrg'; 
 import { Suspense } from 'react';
 import "./globals.css";
 
-// 1. CONFIGURACIÓN DE FUENTES (Optimización de CLS)
+// 1. CONFIGURACIÓN DE FUENTES
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ 
   subsets: ['latin'], 
@@ -14,18 +14,26 @@ const playfair = Playfair_Display({
   weight: ['700', '900'] 
 });
 
-// 2. METADATOS MAESTROS UNIFICADOS (Solución P0 y P1)
+// 2. CONSTANTES DE MARCA (Mensaje Unificado)
+const SITE_CONFIG = {
+  title: "Acclaro Labs | UX, Analítica & Integración CRM para Escalar",
+  description: "Auditoría UX, instrumentación analítica y CRM (Salesforce). Conectamos datos y estrategia para crecer con evidencia.",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://acclarolabs.com"
+};
+
+// 3. METADATOS MAESTROS (Limpios de 'keywords')
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://acclarolabs.com"),
+  metadataBase: new URL(SITE_CONFIG.url),
   
   title: {
-    default: "Acclaro Labs | UX, Analítica & Integración CRM para Escalar",
+    default: SITE_CONFIG.title,
     template: "%s | Acclaro Labs"
   },
-  description: "Integramos CRM, Salesforce y Desarrollo Web con estrategias de IA. Optimizamos UX y experimentación para aumentar tu conversión con evidencia.",
+  description: SITE_CONFIG.description,
   
+  // SEO TÉCNICO: Canonicalización y Hreflang Recíproco
   alternates: {
-    canonical: "/",
+    canonical: "/", 
     languages: {
       'es-MX': '/',
       'en-US': '/en/',
@@ -34,10 +42,11 @@ export const metadata: Metadata = {
     },
   },
 
+  // OpenGraph (Social Sharing)
   openGraph: {
-    title: "Acclaro Labs | UX, Analítica & Integración CRM para Escalar",
-    description: "Deja de adivinar: conecta datos, UX y Salesforce para medir el impacto real en tus ingresos.",
-    url: "https://acclarolabs.com/",
+    title: SITE_CONFIG.title,
+    description: SITE_CONFIG.description,
+    url: "/",
     siteName: "Acclaro Labs",
     locale: "es_MX",
     alternateLocale: ["en_US", "fr_FR"],
@@ -46,15 +55,16 @@ export const metadata: Metadata = {
       url: '/og-image-es.png',
       width: 1200,
       height: 630,
-      alt: 'Acclaro Labs - Estrategia Digital y Auditoría Forense',
+      alt: 'Acclaro Labs - Auditoría UX e Integración CRM',
     }],
   },
 
+  // Twitter Card
   twitter: {
     card: "summary_large_image",
     site: "@acclarolabs",
     creator: "@acclarolabs",
-    title: "Acclaro Labs | Auditoría Forense Digital & CRM",
+    title: "Auditoría Forense Digital & CRM | Acclaro Labs", 
     description: "Detectamos fricción y fugas de dinero en tu ecosistema digital con evidencia técnica.",
     images: ['/og-image-es.png'],
   },
@@ -72,7 +82,7 @@ export const metadata: Metadata = {
   },
 };
 
-// 3. ROOT LAYOUT DINÁMICO (Next.js 15 / React 19)
+// 4. ROOT LAYOUT (Async para Next.js 15)
 export default async function RootLayout({
   children,
   params,
@@ -81,7 +91,6 @@ export default async function RootLayout({
   params: Promise<{ lang?: string }>;
 }) {
   
-  // Await params es obligatorio en Next.js 15
   const resolvedParams = await params;
   const lang = (resolvedParams.lang as 'es' | 'en' | 'fr') || "es";
 
@@ -89,15 +98,15 @@ export default async function RootLayout({
     <html lang={lang === 'es' ? 'es-MX' : lang} suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} antialiased selection:bg-blue-500/30`}>
         
-        {/* INYECCIÓN DE GRAFO DE ENTIDAD (Modularizado) */}
+        {/* CEREBRO SEMÁNTICO (JSON-LD) */}
         <SchemaOrg lang={lang} />
 
-        {/* NAVEGACIÓN GLOBAL CON SUSPENSE (Protección de Hidratación) */}
+        {/* NAVEGACIÓN GLOBAL */}
         <Suspense fallback={<div className="h-16 bg-transparent" />}>
           <GlobalNav />
         </Suspense>
 
-        {/* CAPA DE CONTENIDO SCROLLABLE */}
+        {/* CONTENIDO PRINCIPAL */}
         <div className="relative pt-16 md:pt-20">
           {children}
         </div>

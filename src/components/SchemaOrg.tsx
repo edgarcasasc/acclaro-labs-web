@@ -1,54 +1,84 @@
+// src/components/SchemaOrg.tsx
 export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }) {
-  const isRoot = lang === 'es';
   const baseUrl = "https://acclarolabs.com";
-  const currentUrl = isRoot ? `${baseUrl}/` : `${baseUrl}/${lang}/`;
+  // Canonicalización estricta con trailing slash (P1.B)
+  const currentUrl = lang === 'es' ? `${baseUrl}/` : `${baseUrl}/${lang}/`;
 
   const descriptions = {
-    es: "Agencia de estrategia digital especializada en integración CRM Salesforce, desarrollo web de alto rendimiento y IA.",
-    en: "Digital strategy agency specializing in Salesforce CRM integration, high-performance web development, and AI.",
-    fr: "Agence de stratégie digitale spécialisée en intégration Salesforce, développement web et IA."
+    es: "Auditoría UX, Integración CRM (Salesforce) y Estrategia de IA. Optimizamos tu ecosistema digital para crecer con evidencia.",
+    en: "UX Audit, CRM Integration (Salesforce), and AI Strategy. We optimize your digital ecosystem to grow with evidence.",
+    fr: "Audit UX, Intégration CRM (Salesforce) et Stratégie IA. Nous optimisons votre écosystème numérique pour croître avec des preuves."
   };
 
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
-      // 1. ORGANIZACIÓN (Con señales locales P1.9)
+      // 1. PROFESSIONAL SERVICE (Más específico que Organization - P2.B)
       {
-        "@type": "Organization",
+        "@type": "ProfessionalService",
         "@id": `${baseUrl}/#organization`,
         "name": "Acclaro Labs",
         "url": baseUrl,
         "logo": `${baseUrl}/logo.png`,
         "description": descriptions[lang],
+        "image": `${baseUrl}/og-image-${lang}.png`,
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Monterrey",
           "addressRegion": "Nuevo León",
           "addressCountry": "MX"
         },
+        // Área de servicio explícita para SEO Local/Global
+        "areaServed": ["MX", "US", "LATAM"],
+        "priceRange": "$$$",
         "sameAs": [
           "https://www.linkedin.com/company/acclarolabs",
-          "https://twitter.com/Acclarolabs",
+          "https://twitter.com/acclarolabs",
           "https://github.com/acclarolabs"
-        ]
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "email": "hello@acclarolabs.com",
+          "availableLanguage": ["es", "en", "fr"]
+        }
       },
-      // 2. WEBSITE (Crucial para Sitelinks Searchbox)
+      
+      // 2. WEBSITE (P2.A - Conexión de Sitelinks)
       {
         "@type": "WebSite",
         "@id": `${baseUrl}/#website`,
-        "url": currentUrl,
+        "url": baseUrl,
         "name": "Acclaro Labs",
-        "inLanguage": lang === 'es' ? 'es-MX' : lang === 'en' ? 'en-US' : 'fr-FR',
-        "publisher": { "@id": `${baseUrl}/#organization` }
+        "publisher": { "@id": `${baseUrl}/#organization` },
+        "inLanguage": lang === 'es' ? 'es-MX' : lang === 'en' ? 'en-US' : 'fr-FR'
       },
-      // 3. FUNDADORES (E-E-A-T Validado P0.3)
+
+      // 3. WEBPAGE (La pieza que faltaba para conectar todo - P2.A)
+      {
+        "@type": "WebPage",
+        "@id": `${currentUrl}#webpage`,
+        "url": currentUrl,
+        "name": descriptions[lang].split('.')[0], // Título corto
+        "description": descriptions[lang],
+        "isPartOf": { "@id": `${baseUrl}/#website` },
+        "about": { "@id": `${baseUrl}/#organization` },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": `${baseUrl}/og-image-${lang}.png`
+        },
+        "inLanguage": lang === 'es' ? 'es-MX' : lang === 'en' ? 'en-US' : 'fr-FR'
+      },
+
+      // 4. FUNDADORES (Identidad Corregida - P0.A)
       {
         "@type": "Person",
         "@id": `${baseUrl}/#edgar`,
-        "name": "Edgar Ovidio Camarillo",
+        "name": "Edgar Ovidio Casas", // Alineado con UI visible (Team Cards)
         "jobTitle": "Co-Founder & Technical Architect",
         "worksFor": { "@id": `${baseUrl}/#organization` },
-        "sameAs": ["https://www.linkedin.com/in/edgar-ovidio-camarillo-camarillo/"]
+        "sameAs": ["https://www.linkedin.com/in/edgar-ovidio-camarillo-camarillo/"],
+        "knowsAbout": ["Salesforce", "Cloud Architecture", "CRM Strategy"]
       },
       {
         "@type": "Person",
@@ -56,7 +86,8 @@ export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }
         "name": "Abdiel Enrique Casas",
         "jobTitle": "Co-Founder & Growth Strategist",
         "worksFor": { "@id": `${baseUrl}/#organization` },
-        "sameAs": ["https://www.linkedin.com/in/enrique-casas-94bb9767/"]
+        "sameAs": ["https://www.linkedin.com/in/enrique-casas-94bb9767/"],
+        "knowsAbout": ["UX Strategy", "CRO", "AI Implementation"]
       }
     ]
   };
