@@ -106,24 +106,26 @@ export default function AuditFormSection({ lang = 'es' }: Props) {
   const [formData, setFormData] = useState({ name: '', email: '', url: '', crmType: 'Salesforce' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+ const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
     
     try {
         const response = await fetch('/api/capture-lead', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: formData.name,
-                email: formData.email,
-                website: formData.url,
-                crm: formData.crmType,
-                source: 'audit_form'
-            })
+            // ... (tu configuración del fetch)
         });
 
         if (response.ok) {
+            // --- INICIO CÓDIGO GTM ---
+            // Enviamos la señal de éxito a Google Tag Manager
+            (window as any).dataLayer = (window as any).dataLayer || [];
+            (window as any).dataLayer.push({
+                'event': 'form_success',      // Nombre del evento
+                'form_id': 'audit_clarity',   // Para saber cuál form fue
+                'user_role': formData.crmType // Dato extra útil
+            });
+            // --- FIN CÓDIGO GTM ---
+
             setStatus('success');
             setFormData({ name: '', email: '', url: '', crmType: 'Salesforce' });
         } else {
@@ -133,7 +135,7 @@ export default function AuditFormSection({ lang = 'es' }: Props) {
         console.error(error);
         setStatus('error');
     }
-  };
+};
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

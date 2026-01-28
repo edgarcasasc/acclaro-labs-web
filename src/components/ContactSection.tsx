@@ -150,6 +150,18 @@ export default function ContactSection({ lang = 'es' }: ContactSectionProps) {
   // --- HOOK DE SERVER ACTION ---
   const [state, formAction, isPending] = useActionState(sendContactForm, initialState);
 
+  // --- INTEGRACIÓN GOOGLE TAG MANAGER (GTM) ---
+  useEffect(() => {
+    if (state.success) {
+      // Enviamos el evento al DataLayer solo cuando el envío es exitoso
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({
+          'event': 'form_success',
+          'form_id': 'contact_home'
+      });
+    }
+  }, [state.success]);
+
   return (
     <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           
