@@ -1,3 +1,4 @@
+// src/app/fr/page.tsx
 import React from 'react';
 import { Metadata } from "next";
 import Hero from '@/components/Hero';
@@ -8,49 +9,59 @@ import LeadMagnetSection from '@/components/LeadMagnetSection';
 import TeamSection from '@/components/TeamSection';
 import CallToActionSection from '@/components/CallToActionSection';
 import Footer from '@/components/Footer';
-
-// 1. IMPORTAMOS EL PUENTE PARA RENDIMIENTO (LCP)
 import VisualEffects from "@/components/VisualEffects";
 
-// 2. METADATOS MAESTROS PARA EL MERCADO FRANCOFÓNO (FRANCIA / EUROPA)
+// 1. METADATOS MAESTROS (Mercado Francófono - Alineación P0/P1)
 export const metadata: Metadata = {
-  title: "Écosystèmes Digitaux Unifiés & Stratégie IA | Acclaro Labs",
-  description: "Nous transformons le chaos opérationnel en clarté. Experts en intégration Salesforce, développement web haute performance et stratégies de contenu pilotées par l'IA.",
-  keywords: ["Conseil CRM", "Intégration Salesforce", "Automatisation IA", "Développement Web Performance"],
-  
-  // SEÑALIZACIÓN HREFLANG: El vínculo técnico entre las 3 versiones
+  // Unificación de mensaje: UX, Analítica e Integración CRM
+  title: "Acclaro Labs | UX, Analytique et Intégration CRM pour Scaler",
+  description: "Nous intégrons CRM, Salesforce et Web haute performance avec des stratégies d'IA. Nous optimisons l'UX et l'expérimentation pour augmenter votre conversion.",
+
+  // P0.2 & P2.1: Canonical y Hreflang recíproco con trailing slash
   alternates: {
-    canonical: "/fr",
+    canonical: "https://acclarolabs.com/fr/",
     languages: {
-      'es-MX': '/',
-      'en-US': '/en',
-      'fr-FR': '/fr',
+      'es-MX': 'https://acclarolabs.com/',
+      'en-US': 'https://acclarolabs.com/en/',
+      'fr-FR': 'https://acclarolabs.com/fr/',
+      'x-default': 'https://acclarolabs.com/en/',
     },
   },
 
+  // P1.1: OpenGraph optimizado para Francia/Europa
   openGraph: {
     title: "Acclaro Labs | Du Chaos à la Clarté",
-    description: "Écosystèmes digitaux unifiés pour les entreprises qui cherchent à passer à l'échelle.",
+    description: "Arrêtez de deviner : connectez vos données, l'UX et Salesforce pour mesurer l'impact réel sur vos revenus.",
+    url: "https://acclarolabs.com/fr/",
+    siteName: "Acclaro Labs",
+    locale: "fr_FR",
+    alternateLocale: ["es_MX", "en_US"],
+    type: 'website',
     images: [{
-      url: '/og-image-fr.png', // Imagen específica para redes sociales en francés
+      url: '/og-image-fr.png',
       width: 1200,
       height: 630,
       alt: 'Acclaro Labs - Écosystèmes Digitaux Unifiés',
     }],
-    type: 'website',
+  },
+
+  // P1.2: Twitter/X unificado
+  twitter: {
+    card: "summary_large_image",
+    title: "Acclaro Labs | Audit Forensique Numérique et CRM",
+    description: "Nous détectons les frictions et les pertes de revenus dans votre écosystème numérique avec des preuves techniques.",
+    images: ['/og-image-fr.png'],
   },
 };
 
 export default function FrHomePage() {
   return (
     <>
-      {/* 3. CARGA DIFERIDA (Solo Cliente)
-          Aseguramos que el H1 en francés sea visible instantáneamente.
-      */}
+      {/* 2. CARGA DIFERIDA DE EFECTOS (Optimización LCP) */}
       <VisualEffects />
 
-      {/* 4. CONTENIDO PRINCIPAL
-          Pasamos lang="fr" a cada sección para activar el diccionario francés.
+      {/* 3. CONTENIDO PRINCIPAL
+          Forzamos lang="fr" para activar el diccionario de internacionalización.
       */}
       <main className="relative z-10">
         <Hero lang="fr" />
