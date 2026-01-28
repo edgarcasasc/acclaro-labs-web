@@ -1,225 +1,205 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Send, Sparkles, User, Bot } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send } from "lucide-react";
 
-// Tipos
 type Message = {
   id: string;
-  role: "user" | "bot";
+  role: "bot" | "user";
   content: string;
 };
 
-type ScriptStep = {
-  id: string;
-  question: string;
-  field: string;
-  placeholder?: string; // Nuevo: Para guiar al usuario en cada paso
-};
-
-// --- GUIÓN ACTUALIZADO (Estrategia High-Intent) ---
-const script: ScriptStep[] = [
-  { 
-    id: "1", 
-    question: "Hola. Soy Nova. Pega la URL del sitio que quieres revisar y dime tu objetivo principal: más leads, más ventas o menos tickets de soporte.", 
-    field: "url_goal",
-    placeholder: "Ej: miempresa.com - Busco más leads B2B"
+const SCRIPT = [
+  {
+    id: "intro",
+    text: "Hola. Soy la IA de Acclaro. ¿Qué sitio web te gustaría que auditemos hoy?",
+    field: "website",
+    type: "url",
   },
-  { 
-    id: "2", 
-    question: "Entendido. Para calibrar el análisis, ¿qué stack tecnológico utilizan principalmente? (Ej: WordPress, HubSpot, Salesforce, Custom...)", 
-    field: "stack",
-    placeholder: "Ej: Next.js + HubSpot"
+  {
+    id: "name",
+    text: "Entendido. Analizaremos esa arquitectura. ¿Con quién tengo el gusto de hablar?",
+    field: "name",
+    type: "text",
   },
-  { 
-    id: "3", 
-    question: "Perfecto. Estoy compilando el Snapshot de fricción. ¿A qué correo corporativo debo enviar los 3 hallazgos priorizados?", 
+  {
+    id: "email",
+    text: (name: string) => `Un placer, ${name}. ¿A qué correo te envío el reporte preliminar?`,
     field: "email",
-    placeholder: "nombre@empresa.com"
+    type: "email",
   },
-  { 
-    id: "4", 
-    question: "Procesando solicitud... He programado el envío de tu reporte. Revisa tu bandeja de entrada en unos minutos.", 
-    field: "final",
-    placeholder: "..."
+  {
+    id: "closing",
+    text: "Perfecto. Procesando tu solicitud. Revisa tu bandeja de entrada en breve.",
+    field: null,
+    type: null,
   },
 ];
 
 export default function ConversationalForm() {
-  const [history, setHistory] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
   const [step, setStep] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
   
-  // Referencia al contenedor del chat
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [history, setHistory] = useState<Message[]>([
+    { id: "init", role: "bot", content: SCRIPT[0].text as string },
+  ]);
+  
+  const formData = useRef({ name: "", website: "", email: "" });
+  const scrollRef = useRef<HTMLDivElement>(null);
+  // REFERENCIA NUEVA PARA EL INPUT
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Efecto inicial: Saludo del Bot
-  useEffect(() => {
-    if (history.length === 0) {
-      setHistory([
-        {
-          id: "init-1",
-          role: "bot",
-          content: script[0].question,
-        },
-      ]);
-    }
-  }, [history.length]);
-
-  // Auto-scroll quirúrgico
-  useEffect(() => {
-    if (history.length > 1 && chatContainerRef.current) {
-      const container = chatContainerRef.current;
-      container.scrollTo({
-        top: container.scrollHeight,
+  // --- 1. LOGICA DE SCROLL (Sin Saltos de Página) ---
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      const { scrollHeight, clientHeight } = scrollRef.current;
+      scrollRef.current.scrollTo({
+        top: scrollHeight - clientHeight,
         behavior: "smooth",
       });
     }
-  }, [history]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-
-    const userText = input;
-    setInput("");
-    setIsLoading(true);
-
-    // 1. Agregar mensaje del USUARIO
-    const userMsg: Message = { 
-      id: Date.now().toString(), 
-      role: "user", 
-      content: userText 
-    };
-    
-    setHistory((prev) => [...prev, userMsg]);
-
-    // 2. Guardar datos
-    const currentField = script[step].field;
-    const newFormData = { ...formData, [currentField]: userText };
-    setFormData(newFormData);
-
-    // 3. Simular IA
-    setTimeout(async () => {
-      const nextStep = step + 1;
-
-      if (nextStep < script.length) {
-        const botMsg: Message = {
-          id: (Date.now() + 1).toString(),
-          role: "bot",
-          content: script[nextStep].question,
-        };
-        setHistory((prev) => [...prev, botMsg]);
-        setStep(nextStep);
-        setIsLoading(false);
-
-        // Si es el último paso, enviamos
-        if (script[nextStep].field === "final") {
-          await submitLead(newFormData);
-        }
-
-      } else {
-        setIsLoading(false);
-      }
-    }, 1000); // Delay un poco más largo para simular "análisis"
   };
 
-  const submitLead = async (data: Record<string, string>) => {
+  useEffect(() => {
+    const timeout = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timeout);
+  }, [history, loading]);
+
+  // --- 2. LOGICA DE FOCO INTELIGENTE (Solución al Salto) ---
+  useEffect(() => {
+    // Solo hacemos foco automático si NO es el primer paso y el bot dejó de "escribir"
+    if (!loading && step > 0) {
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 100);
+    }
+  }, [loading, step]);
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+
+    // Guardar datos
+    const currentField = SCRIPT[step].field;
+    if (currentField) {
+        // @ts-ignore
+        formData.current[currentField] = input; 
+    }
+
+    // UI Updates
+    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input };
+    setHistory((prev) => [...prev, userMsg]);
+    setInput("");
+    setLoading(true);
+
+    // Simulación IA
+    setTimeout(async () => {
+      const nextStep = step + 1;
+      
+      if (nextStep < SCRIPT.length) {
+        const nextLine = SCRIPT[nextStep];
+        let botText = nextLine.text;
+
+        if (typeof botText === "function") {
+          botText = botText(formData.current.name);
+        }
+
+        setHistory((prev) => [
+          ...prev, 
+          { id: Date.now().toString(), role: "bot", content: botText as string }
+        ]);
+        setStep(nextStep);
+        setLoading(false);
+
+        if (nextStep === SCRIPT.length - 1) {
+            await submitLead();
+        }
+      }
+    }, 600);
+  };
+
+  const submitLead = async () => {
     try {
-      await fetch("/api/capture-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      console.log("Lead capturado exitosamente");
-    } catch (error) {
-      console.error("Error enviando lead:", error);
+        await fetch('/api/capture-lead', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData.current) 
+        });
+    } catch (e) {
+        console.error(e);
     }
   };
 
-  // Obtener el placeholder actual según el paso
-  const currentPlaceholder = script[step]?.placeholder || "Escribe tu respuesta...";
-
   return (
-    <div className="flex h-[500px] w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/50 backdrop-blur-md shadow-2xl">
+    <div className="w-full max-w-md mx-auto bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-xl overflow-hidden shadow-2xl flex flex-col h-[400px]">
       
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-800 bg-slate-900/80 px-4 py-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
-          <Sparkles className="h-4 w-4" />
-        </div>
-        <div>
-          <h3 className="text-sm font-semibold text-white">Nova AI Assistant</h3>
-          <p className="text-xs text-slate-400">En línea • Respuesta en minutos</p>
-        </div>
+      <div className="bg-gray-800/50 p-3 border-b border-gray-700 flex items-center gap-2 shrink-0">
+        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+        <span className="text-xs font-mono text-gray-300">ACCLARO AGENT - ONLINE</span>
       </div>
 
-      {/* Área de Mensajes */}
+      {/* Chat Area */}
       <div 
-        ref={chatContainerRef}
-        className="flex-1 space-y-4 overflow-y-auto p-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-700"
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent overscroll-contain"
       >
-        {history.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-          >
-            <div className={`flex max-w-[85%] gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-              
-              {/* Avatar */}
-              <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border ${
+        <AnimatePresence mode="popLayout">
+          {history.map((msg) => (
+            <motion.div
+              key={msg.id}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div className={`max-w-[85%] p-3 rounded-lg text-sm shadow-sm ${
                 msg.role === "user" 
-                  ? "border-blue-500/30 bg-blue-500/10 text-blue-400" 
-                  : "border-amber-500/30 bg-amber-500/10 text-amber-400"
-              }`}>
-                {msg.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-              </div>
-
-              {/* Burbuja */}
-              <div className={`rounded-2xl px-4 py-2 text-sm leading-relaxed ${
-                msg.role === "user"
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-800 text-slate-200"
+                  ? "bg-blue-600 text-white rounded-br-none" 
+                  : "bg-gray-800 text-gray-200 border border-gray-700 rounded-bl-none"
               }`}>
                 {msg.content}
               </div>
-            </div>
-          </div>
-        ))}
+            </motion.div>
+          ))}
+        </AnimatePresence>
         
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="flex items-center gap-2 rounded-2xl bg-slate-800 px-4 py-3">
-              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.3s]"></span>
-              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]"></span>
-              <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400"></span>
-            </div>
-          </div>
+        {loading && (
+             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                 <div className="bg-gray-800 p-3 rounded-lg border border-gray-700 rounded-bl-none">
+                    <div className="flex gap-1">
+                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"/>
+                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-100"/>
+                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-200"/>
+                    </div>
+                 </div>
+             </motion.div>
         )}
       </div>
 
       {/* Input Area */}
-      <form onSubmit={handleSubmit} className="border-t border-slate-800 bg-slate-900/50 p-4">
-        <div className="relative flex items-center">
+      {step < SCRIPT.length - 1 && (
+        <div className="p-3 bg-gray-800/50 border-t border-gray-700 flex gap-2 shrink-0 z-10">
           <input
-            type="text"
+            ref={inputRef}
+            // ⚠️ ELIMINADO EL AUTOFOCUS PARA EVITAR EL SALTO
+            type={SCRIPT[step].type === 'email' ? 'email' : 'text'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={currentPlaceholder}
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-sm text-white placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
-            disabled={isLoading || step >= script.length} 
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Escribe tu respuesta..."
+            className="flex-1 bg-gray-900 border border-gray-600 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 placeholder-gray-500"
           />
           <button
-            type="submit"
-            disabled={!input.trim() || isLoading}
-            className="absolute right-2 rounded-lg bg-amber-500 p-2 text-slate-900 transition-colors hover:bg-amber-400 disabled:bg-slate-800 disabled:text-slate-600"
+            onClick={handleSend}
+            disabled={!input.trim()}
+            className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white p-2 rounded-md transition-colors"
           >
-            <Send className="h-4 w-4" />
+            <Send size={18} />
           </button>
         </div>
-      </form>
+      )}
     </div>
   );
 }
