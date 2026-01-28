@@ -1,7 +1,7 @@
-// src/components/SchemaOrg.tsx
 export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }) {
-  const baseUrl = "https://acclarolabs.com";
-  // Canonicalización estricta con trailing slash (P1.B)
+  const baseUrl = "https://acclarolabs.com"; // Sin slash aquí para concatenar fácil
+  
+  // SOLUCIÓN P1.B: Consistencia de Trailing Slash en el ID y la URL
   const currentUrl = lang === 'es' ? `${baseUrl}/` : `${baseUrl}/${lang}/`;
 
   const descriptions = {
@@ -13,12 +13,11 @@ export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
-      // 1. PROFESSIONAL SERVICE (Más específico que Organization - P2.B)
       {
         "@type": "ProfessionalService",
-        "@id": `${baseUrl}/#organization`,
+        "@id": `${baseUrl}/#organization`, // ID estable
         "name": "Acclaro Labs",
-        "url": baseUrl,
+        "url": `${baseUrl}/`, // URL con slash final
         "logo": `${baseUrl}/logo.png`,
         "description": descriptions[lang],
         "image": `${baseUrl}/og-image-${lang}.png`,
@@ -28,9 +27,7 @@ export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }
           "addressRegion": "Nuevo León",
           "addressCountry": "MX"
         },
-        // Área de servicio explícita para SEO Local/Global
         "areaServed": ["MX", "US", "LATAM"],
-        "priceRange": "$$$",
         "sameAs": [
           "https://www.linkedin.com/company/acclarolabs",
           "https://twitter.com/acclarolabs",
@@ -43,23 +40,19 @@ export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }
           "availableLanguage": ["es", "en", "fr"]
         }
       },
-      
-      // 2. WEBSITE (P2.A - Conexión de Sitelinks)
       {
         "@type": "WebSite",
         "@id": `${baseUrl}/#website`,
-        "url": baseUrl,
+        "url": `${baseUrl}/`, // Coincide con canonical
         "name": "Acclaro Labs",
         "publisher": { "@id": `${baseUrl}/#organization` },
         "inLanguage": lang === 'es' ? 'es-MX' : lang === 'en' ? 'en-US' : 'fr-FR'
       },
-
-      // 3. WEBPAGE (La pieza que faltaba para conectar todo - P2.A)
       {
         "@type": "WebPage",
         "@id": `${currentUrl}#webpage`,
-        "url": currentUrl,
-        "name": descriptions[lang].split('.')[0], // Título corto
+        "url": currentUrl, // Coincide con canonical de la página actual
+        "name": descriptions[lang].split('.')[0],
         "description": descriptions[lang],
         "isPartOf": { "@id": `${baseUrl}/#website` },
         "about": { "@id": `${baseUrl}/#organization` },
@@ -69,16 +62,14 @@ export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }
         },
         "inLanguage": lang === 'es' ? 'es-MX' : lang === 'en' ? 'en-US' : 'fr-FR'
       },
-
-      // 4. FUNDADORES (Identidad Corregida - P0.A)
+      // Fundadores (Identidad Unificada)
       {
         "@type": "Person",
         "@id": `${baseUrl}/#edgar`,
-        "name": "Edgar Ovidio Casas", // Alineado con UI visible (Team Cards)
+        "name": "Edgar Ovidio Casas",
         "jobTitle": "Co-Founder & Technical Architect",
         "worksFor": { "@id": `${baseUrl}/#organization` },
-        "sameAs": ["https://www.linkedin.com/in/edgar-ovidio-camarillo-camarillo/"],
-        "knowsAbout": ["Salesforce", "Cloud Architecture", "CRM Strategy"]
+        "sameAs": ["https://www.linkedin.com/in/edgar-ovidio-camarillo-camarillo/"]
       },
       {
         "@type": "Person",
@@ -86,8 +77,7 @@ export default function SchemaOrg({ lang = 'es' }: { lang?: 'es' | 'en' | 'fr' }
         "name": "Abdiel Enrique Casas",
         "jobTitle": "Co-Founder & Growth Strategist",
         "worksFor": { "@id": `${baseUrl}/#organization` },
-        "sameAs": ["https://www.linkedin.com/in/enrique-casas-94bb9767/"],
-        "knowsAbout": ["UX Strategy", "CRO", "AI Implementation"]
+        "sameAs": ["https://www.linkedin.com/in/enrique-casas-94bb9767/"]
       }
     ]
   };

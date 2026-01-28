@@ -11,6 +11,9 @@ import Link from 'next/link';
 
 extend(THREE as any);
 
+// SOLUCIÓN: Creamos un componente Link animado para no meter <button> dentro de <a>
+const MotionLink = motion(Link);
+
 const CONTENT = {
   es: {
     title: "Acelera el negocio digital de tu empresa.",
@@ -38,7 +41,6 @@ const CONTENT = {
   }
 };
 
-// MODIFICACIÓN SEO: Opacity 1 por defecto para que los bots lean el H1 de inmediato
 const glitchVariants: Variants = {
   initial: { opacity: 1, y: 0 }, 
   animate: {
@@ -98,7 +100,7 @@ export default function Hero({ lang = 'es' }: HeroProps) {
   return (
     <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950">
       
-      {/* Fondo 3D: Envuelto en Suspense para evitar el Bailout de renderizado */}
+      {/* Fondo 3D */}
       <div className="absolute inset-0 z-0">
         <Suspense fallback={<div className="w-full h-full bg-slate-950" />}>
           <Canvas camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
@@ -121,8 +123,6 @@ export default function Hero({ lang = 'es' }: HeroProps) {
           {t.title}
         </motion.h1>
 
-        {/* MODIFICACIÓN SEO: Eliminamos opacity 0 inicial. 
-            El usuario verá un suave "asentamiento" (y: 10 -> 0) pero el bot leerá el texto siempre. */}
         <motion.p 
           initial={{ y: 10, opacity: 1 }}
           animate={{ y: 0 }}
@@ -138,15 +138,16 @@ export default function Hero({ lang = 'es' }: HeroProps) {
           transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-8 flex flex-col sm:flex-row items-center gap-6"
         >
-          <Link href={t.linkPrimary}>
-            <motion.button 
-              className="bg-azul-zafiro text-blanco-pergamino font-bold py-3 px-8 rounded-lg text-lg hover:bg-opacity-90 transition-colors duration-300 shadow-lg hover:shadow-glow-blue"
-              whileHover={{ scale: 1.05 }} 
-              whileTap={{ scale: 0.95 }}    
-            >
-              {t.ctaPrimary}
-            </motion.button>
-          </Link>
+          {/* CAMBIO P0.C: Usamos MotionLink en lugar de anidar <button> en <Link>.
+              Agregamos 'inline-flex items-center justify-center' para mantener el diseño exacto del botón. */}
+          <MotionLink 
+            href={t.linkPrimary}
+            className="bg-azul-zafiro text-blanco-pergamino font-bold py-3 px-8 rounded-lg text-lg hover:bg-opacity-90 transition-colors duration-300 shadow-lg hover:shadow-glow-blue inline-flex items-center justify-center"
+            whileHover={{ scale: 1.05 }} 
+            whileTap={{ scale: 0.95 }}
+          >
+            {t.ctaPrimary}
+          </MotionLink>
           
           <Link href={t.linkSecondary} className="flex items-center gap-2 text-oro-antiguo font-semibold hover:underline cursor-pointer group">
             {t.ctaSecondary}

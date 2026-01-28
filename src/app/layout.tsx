@@ -1,12 +1,11 @@
 // src/app/layout.tsx
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next"; // Importamos Viewport para control móvil
 import { Inter, Playfair_Display } from 'next/font/google';
 import { GlobalNav } from '@/components/GlobalNav';
 import SchemaOrg from '@/components/SchemaOrg'; 
 import { Suspense } from 'react';
 import "./globals.css";
 
-// 1. CONFIGURACIÓN DE FUENTES
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ 
   subsets: ['latin'], 
@@ -14,40 +13,48 @@ const playfair = Playfair_Display({
   weight: ['700', '900'] 
 });
 
-// 2. CONSTANTES DE MARCA (Mensaje Unificado)
+// CONSTANTES GLOBALES (Single Source of Truth)
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://acclarolabs.com";
+
 const SITE_CONFIG = {
-  title: "Acclaro Labs | UX, Analítica & Integración CRM para Escalar",
+  // Alineación P0.B: Mismo título para H1, Title, OG y Twitter
+  title: "Acclaro Labs | Auditoría UX + Integración CRM para Escalar",
   description: "Auditoría UX, instrumentación analítica y CRM (Salesforce). Conectamos datos y estrategia para crecer con evidencia.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://acclarolabs.com"
+  siteName: "Acclaro Labs",
 };
 
-// 3. METADATOS MAESTROS (Limpios de 'keywords')
+export const viewport: Viewport = {
+  themeColor: '#0f172a',
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_CONFIG.url),
+  metadataBase: new URL(BASE_URL),
   
   title: {
     default: SITE_CONFIG.title,
-    template: "%s | Acclaro Labs"
+    template: `%s | ${SITE_CONFIG.siteName}`
   },
   description: SITE_CONFIG.description,
   
-  // SEO TÉCNICO: Canonicalización y Hreflang Recíproco
+  // SOLUCIÓN P1.B y P1.C: Consistencia de Slash y Hreflang Recíproco
   alternates: {
-    canonical: "/", 
+    canonical: "/", // Next.js resolverá a https://acclarolabs.com/
     languages: {
       'es-MX': '/',
       'en-US': '/en/',
       'fr-FR': '/fr/',
-      'x-default': '/en/', 
+      'x-default': '/en/', // Fallback global explícito
     },
   },
 
-  // OpenGraph (Social Sharing)
+  // SOLUCIÓN P1.A y P2.A: OpenGraph Completo y Consistente
   openGraph: {
     title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
     url: "/",
-    siteName: "Acclaro Labs",
+    siteName: SITE_CONFIG.siteName,
     locale: "es_MX",
     alternateLocale: ["en_US", "fr_FR"],
     type: "website",
@@ -59,15 +66,17 @@ export const metadata: Metadata = {
     }],
   },
 
-  // Twitter Card
+  // Twitter alineado
   twitter: {
     card: "summary_large_image",
     site: "@acclarolabs",
     creator: "@acclarolabs",
-    title: "Auditoría Forense Digital & CRM | Acclaro Labs", 
-    description: "Detectamos fricción y fugas de dinero en tu ecosistema digital con evidencia técnica.",
+    title: SITE_CONFIG.title, 
+    description: SITE_CONFIG.description,
     images: ['/og-image-es.png'],
   },
+
+  // SOLUCIÓN P2.C: Eliminación de 'keywords' (Legacy code eliminado)
 
   robots: {
     index: true,
@@ -82,7 +91,6 @@ export const metadata: Metadata = {
   },
 };
 
-// 4. ROOT LAYOUT (Async para Next.js 15)
 export default async function RootLayout({
   children,
   params,
@@ -95,19 +103,24 @@ export default async function RootLayout({
   const lang = (resolvedParams.lang as 'es' | 'en' | 'fr') || "es";
 
   return (
+    // Forzamos el idioma completo para accesibilidad
     <html lang={lang === 'es' ? 'es-MX' : lang} suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfair.variable} antialiased selection:bg-blue-500/30`}>
+      <body className={`${inter.variable} ${playfair.variable} antialiased selection:bg-blue-500/30 bg-slate-950`}>
         
-        {/* CEREBRO SEMÁNTICO (JSON-LD) */}
+        {/* Schema Graph JSON-LD */}
         <SchemaOrg lang={lang} />
 
-        {/* NAVEGACIÓN GLOBAL */}
-        <Suspense fallback={<div className="h-16 bg-transparent" />}>
+        {/* SOLUCIÓN RIESGO #1 (CSR Bailout): 
+            Envolvemos componentes cliente (Navbar) en Suspense.
+            Esto permite que Next.js haga streaming del HTML estático mientras
+            el JS del navbar se hidrata, evitando el "Bailout" total.
+        */}
+        <Suspense fallback={<div className="h-16 w-full fixed top-0 z-50 bg-slate-950/80 backdrop-blur-md" />}>
           <GlobalNav />
         </Suspense>
 
-        {/* CONTENIDO PRINCIPAL */}
-        <div className="relative pt-16 md:pt-20">
+        {/* Contenido Principal */}
+        <div className="relative pt-16 md:pt-20 min-h-screen">
           {children}
         </div>
         

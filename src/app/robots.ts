@@ -1,4 +1,3 @@
-// src/app/robots.ts
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -8,11 +7,9 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: [
         '/api/',       // No rastrear endpoints de API
-        '/_next/',     // No rastrear archivos internos de Next.js
-        '/static/',    // Assets privados
-        '/*.json$',    // Archivos de configuración
-        '/dashboard/', // <--- BLOQUEO TOTAL al panel de control
+        '/dashboard/', // <--- BLOQUEO TOTAL al panel de control (Seguridad P0)
         '/admin/',     // Bloqueo a futura zona administrativa
+        // NOTA: Eliminamos /_next/ y /static/ para que Google pueda "ver" el diseño CSS/JS
       ],
     },
     sitemap: 'https://acclarolabs.com/sitemap.xml',

@@ -1,43 +1,85 @@
-// src/app/sitemap.ts
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://acclarolabs.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://acclarolabs.com';
 
-  // Definimos las rutas principales
-  const routes = [
-    '',
-    '/servicios/consultoria-crm',
-    '/servicios/desarrollo-web',
-    '/servicios/estrategia-contenido',
-    '/servicios/informes-ia',
-    '/blog',
-    '/contacto',
+  // DICCIONARIO DE RUTAS: Mapeamos manualmente las traducciones reales de tus carpetas
+  // Esto asegura que /servicios/consultoria-crm se enlace con /en/services/crm-consulting
+  const routeMap = [
+    {
+      es: '',
+      en: '/en',
+      fr: '/fr',
+      priority: 1.0
+    },
+    {
+      es: '/contacto',
+      en: '/en/contact',
+      fr: '/fr/contact',
+      priority: 0.8
+    },
+    {
+      es: '/blog',
+      en: '/en/blog',
+      fr: '/fr/blog',
+      priority: 0.7
+    },
+    // SERVICIOS (Aquí corregimos el error de traducción de URLs)
+    {
+      es: '/servicios/consultoria-crm',
+      en: '/en/services/crm-consulting',
+      fr: '/fr/services/conseil-crm',
+      priority: 0.9
+    },
+    {
+      es: '/servicios/desarrollo-web',
+      en: '/en/services/web-development',
+      fr: '/fr/services/developpement-web',
+      priority: 0.9
+    },
+    {
+      es: '/servicios/estrategia-contenido',
+      en: '/en/services/content-strategy',
+      fr: '/fr/services/strategie-contenu',
+      priority: 0.8
+    },
+    {
+      es: '/servicios/informes-ia',
+      en: '/en/services/bi-ai-reporting',
+      fr: '/fr/services/rapports-bi-ia',
+      priority: 0.8
+    }
   ];
 
-  const languages = ['en', 'fr'];
+  // Generamos el array plano que pide Next.js
+  const sitemapEntries: MetadataRoute.Sitemap = routeMap.flatMap((route) => {
+    const lastModified = new Date();
+    const changeFrequency = 'weekly' as const;
 
-  // 1. Generamos las rutas en español (raíz)
-  const esRoutes = routes.map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
-  }));
+    return [
+      // Versión Español
+      {
+        url: `${baseUrl}${route.es}`,
+        lastModified,
+        changeFrequency,
+        priority: route.priority,
+      },
+      // Versión Inglés
+      {
+        url: `${baseUrl}${route.en}`,
+        lastModified,
+        changeFrequency,
+        priority: route.priority - 0.1, // Ligera prioridad menor a traducciones
+      },
+      // Versión Francés
+      {
+        url: `${baseUrl}${route.fr}`,
+        lastModified,
+        changeFrequency,
+        priority: route.priority - 0.1,
+      },
+    ];
+  });
 
-  // 2. Generamos las rutas para inglés y francés
-  const multiRoutes = languages.flatMap((lang) =>
-    routes.map((route) => {
-      // Ajuste de nombres de rutas para idiomas (si cambian en el futuro)
-      const langRoute = route === '' ? `/${lang}` : `/${lang}${route}`;
-      return {
-        url: `${baseUrl}${langRoute}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: route === '' ? 0.9 : 0.7,
-      };
-    })
-  );
-
-  return [...esRoutes, ...multiRoutes];
+  return sitemapEntries;
 }
