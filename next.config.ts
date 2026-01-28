@@ -6,7 +6,7 @@ const config: NextConfig = {
   // Sin esto, Google ve duplicados: /pagina vs /pagina/
   trailingSlash: true, 
 
-  // --- 2. CONFIGURACIÓN DE IMÁGENES (Tu código) ---
+  // --- 2. CONFIGURACIÓN DE IMÁGENES ---
   images: {
     remotePatterns: [
       {
