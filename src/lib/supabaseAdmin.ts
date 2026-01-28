@@ -1,21 +1,19 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+// 1. Leemos las variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-// MODIFICACIÓN: No lanzamos error si estamos en fase de "build", 
-// pero fallará si intentamos usarlo en runtime sin claves.
+// 2. Validación Estricta (Sin "placeholder")
 if (!supabaseUrl || !supabaseServiceKey) {
-  // Solo logueamos advertencia en vez de romper el build
-  console.warn("⚠️ Advertencia: Faltan variables de Supabase (OK si es durante el Build)")
+  // Si esto sale en los logs, es que Vercel no tiene las variables configuradas
+  throw new Error(`❌ ERROR CRÍTICO: Faltan variables en Vercel. 
+    URL: ${supabaseUrl ? 'OK' : 'FALTA'} 
+    KEY: ${supabaseServiceKey ? 'OK' : 'FALTA'}`)
 }
 
-// Creamos el cliente incluso si están vacías para que el build pase
-// (Pero dará error si intentas guardar un lead real sin claves)
-export const supabaseAdmin = createClient(
-  supabaseUrl || "https://placeholder.supabase.co", 
-  supabaseServiceKey || "placeholder-key", 
-  {
+// 3. Crear cliente
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
