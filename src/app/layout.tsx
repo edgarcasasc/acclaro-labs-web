@@ -1,9 +1,10 @@
 // src/app/layout.tsx
-import type { Metadata, Viewport } from "next"; // Importamos Viewport para control móvil
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from 'next/font/google';
 import { GlobalNav } from '@/components/GlobalNav';
 import SchemaOrg from '@/components/SchemaOrg'; 
 import { Suspense } from 'react';
+import Script from 'next/script'; // <--- 1. IMPORTAMOS SCRIPT
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -76,8 +77,6 @@ export const metadata: Metadata = {
     images: ['/og-image-es.png'],
   },
 
-  // SOLUCIÓN P2.C: Eliminación de 'keywords' (Legacy code eliminado)
-
   robots: {
     index: true,
     follow: true,
@@ -105,16 +104,34 @@ export default async function RootLayout({
   return (
     // Forzamos el idioma completo para accesibilidad
     <html lang={lang === 'es' ? 'es-MX' : lang} suppressHydrationWarning>
+      
+      {/* 2. GTM SCRIPT LOGIC (Optimizado para Next.js) */}
+      <Script id="google-tag-manager" strategy="afterInteractive">
+        {`
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-5Q3HMN42');
+        `}
+      </Script>
+
       <body className={`${inter.variable} ${playfair.variable} antialiased selection:bg-blue-500/30 bg-slate-950`}>
+        
+        {/* 3. GTM NOSCRIPT (Fallback para browsers sin JS) */}
+        <noscript>
+          <iframe 
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5Q3HMN42"
+            height="0" 
+            width="0" 
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         
         {/* Schema Graph JSON-LD */}
         <SchemaOrg lang={lang} />
 
-        {/* SOLUCIÓN RIESGO #1 (CSR Bailout): 
-            Envolvemos componentes cliente (Navbar) en Suspense.
-            Esto permite que Next.js haga streaming del HTML estático mientras
-            el JS del navbar se hidrata, evitando el "Bailout" total.
-        */}
+        {/* SOLUCIÓN RIESGO #1 (CSR Bailout) */}
         <Suspense fallback={<div className="h-16 w-full fixed top-0 z-50 bg-slate-950/80 backdrop-blur-md" />}>
           <GlobalNav />
         </Suspense>
