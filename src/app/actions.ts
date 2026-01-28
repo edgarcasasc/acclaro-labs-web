@@ -7,13 +7,13 @@ import { Resend } from 'resend';
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-// Definimos el tipo de respuesta
+// Definimos el tipo de respuesta para el formulario
 export type FormState = {
   success: boolean;
   message: string;
 };
 
-// --- FUNCIÓN 1: ENVIAR FORMULARIO (Ya la tenías) ---
+// --- FUNCIÓN 1: ENVIAR FORMULARIO (La que ya tenías) ---
 export async function sendContactForm(prevState: FormState, formData: FormData): Promise<FormState> {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
@@ -23,8 +23,6 @@ export async function sendContactForm(prevState: FormState, formData: FormData):
   if (!email || !name || !context) {
     return { success: false, message: "Faltan datos requeridos." };
   }
-
-  console.log(`📩 Procesando contacto de: ${email}`);
 
   try {
     // A. Guardar en DB
@@ -43,7 +41,7 @@ export async function sendContactForm(prevState: FormState, formData: FormData):
       ]);
 
     if (dbError) {
-      console.error("❌ Error guardando en Supabase:", dbError.message);
+      console.error("❌ Error guardando:", dbError.message);
       return { success: false, message: "Error al guardar los datos." };
     }
 
@@ -53,42 +51,37 @@ export async function sendContactForm(prevState: FormState, formData: FormData):
         from: 'Acclaro Web <onboarding@resend.dev>',
         to: ['hello@acclaroflow.com'], 
         replyTo: email,
-        subject: `🔥 Nuevo Lead: ${name} - ${outcome}`,
-        html: `
-          <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-            <h2 style="color: #0f172a;">Nuevo Lead desde la Web 🚀</h2>
-            <p><strong>Nombre:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Interés:</strong> ${outcome}</p>
-            <hr />
-            <p><strong>Mensaje:</strong><br/>${context}</p>
-          </div>
-        `,
+        subject: `🔥 Nuevo Lead: ${name}`,
+        html: `<p>Nuevo lead de ${name} (${email}).<br>Mensaje: ${context}</p>`,
       });
     }
 
-    return { success: true, message: "Mensaje enviado y guardado." };
+    return { success: true, message: "Mensaje enviado." };
 
   } catch (err) {
-    console.error("Error inesperado:", err);
+    console.error(err);
     return { success: false, message: "Error interno." };
   }
 }
 
 // ==========================================
-// --- NUEVAS FUNCIONES PARA EL DASHBOARD ---
+// --- ESTAS SON LAS QUE TE FALTAN ---
 // ==========================================
 
-// --- FUNCIÓN 2: OBTENER TODOS LOS LEADS (Lectura) ---
+// --- FUNCIÓN 2: LEER DATOS (Para que el Dashboard muestre info) ---
 export async function getLeads() {
   try {
-    // Pedimos todo a la tabla 'leads' ordenado por fecha (más reciente arriba)
+    // Seleccionamos TODO de la tabla leads
     const { data, error } = await supabaseAdmin
       .from('leads')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }); // Los más nuevos primero
 
-    if (error) throw error;
+    if (error) {
+      console.error("❌ Error Supabase:", error.message);
+      throw error;
+    }
+    
     return { success: true, data };
   } catch (error) {
     console.error('Error fetching leads:', error);
@@ -96,16 +89,15 @@ export async function getLeads() {
   }
 }
 
-// --- FUNCIÓN 3: ACTUALIZAR ESTADO (Escritura) ---
+// --- FUNCIÓN 3: ACTUALIZAR DATOS (Para cuando cambies el estado) ---
 export async function updateLeadStatus(id: number, status: string, notes: string) {
   try {
     const { error } = await supabaseAdmin
       .from('leads')
-      .update({ status, admin_notes: notes }) // Actualizamos estas columnas
-      .eq('id', id); // Donde el ID coincida
+      .update({ status: status, admin_notes: notes })
+      .eq('id', id);
 
     if (error) throw error;
-    
     return { success: true };
   } catch (error) {
     console.error('Error updating lead:', error);
