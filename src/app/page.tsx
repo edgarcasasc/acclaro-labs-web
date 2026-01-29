@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Acclaro Labs | Del Caos a la Claridad",
+    title: "Acclaro Labs | Ecosistemas Digitales y Estrategia de Contenido con IA",
     description: "Ecosistemas digitales unificados para empresas que buscan escalar con estrategia y tecnología.",
     images: [{
       url: '/og-image-es.png',
