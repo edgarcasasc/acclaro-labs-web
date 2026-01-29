@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Github, Twitter, Linkedin, ArrowRight } from "lucide-react";
 import { AcclaroBadge } from "./logos/AcclaroBadge";
-import { LogoAcclaro } from "./logos/LogoAcclaro";
+// CORRECCIÓN 1: Import por defecto (sin llaves)
+import LogoAcclaro from "./logos/LogoAcclaro"; 
 
 // --- 1. DICCIONARIO DE TRADUCCIONES ---
 const CONTENT = {
@@ -24,7 +25,7 @@ const CONTENT = {
       terms: "Términos de Servicio"
     },
     copyright: "Todos los derechos reservados.",
-    system_status: "Systems Normal" // Se suele dejar en inglés por estética tech, o "Sistemas Operativos"
+    system_status: "Systems Normal"
   },
   en: {
     tagline: "We optimize digital business with UX, analytics, and experimentation, connecting your systems to measure impact and scale with automation/AI when appropriate.",
@@ -93,6 +94,7 @@ export default function Footer({ lang = 'es' }: FooterProps) {
           <div className="space-y-6">
             
             <Link href="/" className="inline-block" aria-label="Acclaro Labs">
+              {/* USO CORRECTO DEL LOGO: h-8 define altura, w-auto evita deformación */}
               <LogoAcclaro className="h-8 w-auto text-slate-100 hover:opacity-90 transition-opacity" />
             </Link>
             
@@ -188,9 +190,10 @@ export default function Footer({ lang = 'es' }: FooterProps) {
 
 // --- COMPONENTES AUXILIARES ---
 
+// CORRECCIÓN 2: Usar <a> para enlaces externos
 function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
-    <Link 
+    <a 
       href={href} 
       className="text-slate-400 hover:text-amber-400 transition-colors duration-200 transform hover:scale-110"
       aria-label={label}
@@ -198,7 +201,7 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
       rel="noopener noreferrer"
     >
       {icon}
-    </Link>
+    </a>
   );
 }
 
