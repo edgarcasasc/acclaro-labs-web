@@ -39,17 +39,22 @@ export default function SocialProof({ lang = 'es' }: SocialProofProps) {
   // brightness-0 invert -> Convierte el logo a blanco puro (silueta)
   // hover:brightness-100 hover:invert-0 -> Restaura el color original al pasar el mouse
   const logoClasses = "h-12 w-auto mx-12 brightness-0 invert opacity-60 grayscale transition-all duration-500 ease-out hover:grayscale-0 hover:brightness-100 hover:invert-0 hover:opacity-100 hover:scale-110 cursor-pointer object-contain";
-  
+
   // Clases específicas para fila 1 (Tecnología/MIT) - A veces requieren tamaños visuales distintos
   const techLogoClasses = "h-10 w-auto mx-12 brightness-0 invert opacity-50 grayscale transition-all duration-500 ease-out hover:grayscale-0 hover:brightness-100 hover:invert-0 hover:opacity-100 hover:scale-110 cursor-pointer object-contain";
 
   return (
-    <section className="relative z-10 w-full py-20 border-b border-white/5 bg-slate-950/50 backdrop-blur-sm overflow-hidden">
-      <div className="container mx-auto px-6 text-center">
-        
+    <section className="relative z-10 w-full py-24 border-y border-white/5 bg-slate-900/30 backdrop-blur-xl overflow-hidden relative">
+
+      {/* Luz ambiental sutil */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-transparent pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[50%] bg-azul-zafiro/5 rounded-[100%] blur-[100px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 text-center relative z-10">
+
         {/* Header de Sección */}
-        <div className="mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold font-serif text-white mb-4 tracking-tight">
+        <div className="mb-16">
+          <h2 className="text-3xl md:text-4xl font-sans font-bold text-white mb-6 tracking-tight drop-shadow-md">
             {t.title}
           </h2>
           <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed font-light">
@@ -62,11 +67,11 @@ export default function SocialProof({ lang = 'es' }: SocialProofProps) {
           <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-6">
             {t.row1Label}
           </p>
-          
+
           {/* Contenedor con máscara de desvanecimiento en bordes */}
-          <div 
+          <div
             className="w-full relative flex overflow-hidden"
-            style={{ 
+            style={{
               maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
               WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
             }}
@@ -88,10 +93,10 @@ export default function SocialProof({ lang = 'es' }: SocialProofProps) {
           <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-6">
             {t.row2Label}
           </p>
-          
-          <div 
+
+          <div
             className="w-full relative flex overflow-hidden"
-            style={{ 
+            style={{
               maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
               WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
             }}

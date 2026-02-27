@@ -51,29 +51,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   ];
 
+  // Helper: Asegurarnos de que toda URL (que no sea la raíz pura) termine con trailing slash "/"
+  const formatUrl = (path: string) => {
+    if (!path) return `${baseUrl}/`;
+    return `${baseUrl}${path}/`;
+  };
+
   // Generamos el array plano que pide Next.js
   const sitemapEntries: MetadataRoute.Sitemap = routeMap.flatMap((route) => {
     const lastModified = new Date();
+    // Preferimos 'monthly' o 'weekly' adaptado a lo que suele pedir la web estática
     const changeFrequency = 'weekly' as const;
 
     return [
       // Versión Español
       {
-        url: `${baseUrl}${route.es}`,
+        url: formatUrl(route.es),
         lastModified,
         changeFrequency,
         priority: route.priority,
       },
       // Versión Inglés
       {
-        url: `${baseUrl}${route.en}`,
+        url: formatUrl(route.en),
         lastModified,
         changeFrequency,
         priority: route.priority - 0.1, // Ligera prioridad menor a traducciones
       },
       // Versión Francés
       {
-        url: `${baseUrl}${route.fr}`,
+        url: formatUrl(route.fr),
         lastModified,
         changeFrequency,
         priority: route.priority - 0.1,

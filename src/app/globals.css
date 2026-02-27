@@ -5,20 +5,20 @@
 
 /* 2. Definimos nuestras variables de color de Acclaro Labs */
 :root {
-  --color-rojo-lacre: #9A2A2A;
-  --color-azul-zafiro: #0D3A61;
-  --color-oro-antiguo: #B59A6A;
-  --color-gris-piedra: #2B2B2B;
-  --color-blanco-pergamino: #F8F6F0;
+  --color-rojo-lacre: #E11D48; /* Rose 600 - More vibrant red/pink */
+  --color-azul-zafiro: #2563EB; /* Blue 600 - Vibrant electric blue */
+  --color-oro-antiguo: #F59E0B; /* Amber 500 - Brighter glowing gold/orange */
+  --color-gris-piedra: #020617; /* Slate 950 - Deep modern dark background */
+  --color-blanco-pergamino: #F8FAFC; /* Slate 50 - Crisp modern white */
 
   /* --- NUEVO: Valores RGB (para opacidad en glows) --- */
   /* Necesitamos los valores RGB de tus colores para usarlos con 'rgba()' */
-  --color-rojo-lacre-rgb: 154, 42, 42;     /* Para #9A2A2A */
-  --color-azul-zafiro-rgb: 13, 58, 97;     /* Para #0D3A61 */
+  --color-rojo-lacre-rgb: 225, 29, 72;     /* Para #E11D48 */
+  --color-azul-zafiro-rgb: 37, 99, 235;     /* Para #2563EB */
 
   /* Definimos las fuentes que cargamos en layout.tsx */
   --font-sans: var(--font-inter);
-  --font-serif: var(--font-playfair);
+  --font-serif: var(--font-outfit); /* Using Outfit as the display/serif font replacement */
 }
 
 /* 3. Le decimos a Tailwind que use nuestras variables */

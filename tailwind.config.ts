@@ -31,7 +31,7 @@ const config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
-        serif: ['var(--font-serif)', ...defaultTheme.fontFamily.serif],
+        serif: ['var(--font-serif)', ...defaultTheme.fontFamily.sans], // Changed fallback to sans as Outfit is sans-serif
       },
       backgroundImage: {
         'tech-grid': "radial-gradient(circle, rgba(248, 246, 240, 0.05) 1px, transparent 1px)",
@@ -42,7 +42,7 @@ const config = {
       }
     },
   },
-  
+
   // 👇 AQUÍ ESTÁ EL CAMBIO CLAVE:
   plugins: [
     require('@tailwindcss/typography'),

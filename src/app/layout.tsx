@@ -1,17 +1,17 @@
 // src/app/layout.tsx
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from 'next/font/google';
+import { Inter, Outfit } from 'next/font/google';
 import { GlobalNav } from '@/components/GlobalNav';
-import SchemaOrg from '@/components/SchemaOrg'; 
+import SchemaOrg from '@/components/SchemaOrg';
 import { Suspense } from 'react';
 import Script from 'next/script'; // <--- 1. IMPORTAMOS SCRIPT
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const playfair = Playfair_Display({ 
-  subsets: ['latin'], 
-  variable: '--font-playfair', 
-  weight: ['700', '900'] 
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  weight: ['400', '600', '700', '900']
 });
 
 // CONSTANTES GLOBALES (Single Source of Truth)
@@ -32,13 +32,13 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  
+
   title: {
     default: SITE_CONFIG.title,
     template: `%s | ${SITE_CONFIG.siteName}`
   },
   description: SITE_CONFIG.description,
-  
+
   // SOLUCIÓN P1.B y P1.C: Consistencia de Slash y Hreflang Recíproco
   alternates: {
     canonical: "/", // Next.js resolverá a https://acclarolabs.com/
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@acclarolabs",
     creator: "@acclarolabs",
-    title: SITE_CONFIG.title, 
+    title: SITE_CONFIG.title,
     description: SITE_CONFIG.description,
     images: ['/og-image-es.png'],
   },
@@ -97,14 +97,14 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ lang?: string }>;
 }) {
-  
+
   const resolvedParams = await params;
   const lang = (resolvedParams.lang as 'es' | 'en' | 'fr') || "es";
 
   return (
     // Forzamos el idioma completo para accesibilidad
     <html lang={lang === 'es' ? 'es-MX' : lang} suppressHydrationWarning>
-      
+
       {/* 2. GTM SCRIPT LOGIC (Optimizado para Next.js) */}
       <Script id="google-tag-manager" strategy="afterInteractive">
         {`
@@ -116,18 +116,18 @@ export default async function RootLayout({
         `}
       </Script>
 
-      <body className={`${inter.variable} ${playfair.variable} antialiased selection:bg-blue-500/30 bg-slate-950`}>
-        
+      <body className={`${inter.variable} ${outfit.variable} antialiased selection:bg-blue-500/30 bg-slate-950`}>
+
         {/* 3. GTM NOSCRIPT (Fallback para browsers sin JS) */}
         <noscript>
-          <iframe 
+          <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-5Q3HMN42"
-            height="0" 
-            width="0" 
+            height="0"
+            width="0"
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
-        
+
         {/* Schema Graph JSON-LD */}
         <SchemaOrg lang={lang} />
 
@@ -140,7 +140,7 @@ export default async function RootLayout({
         <div className="relative pt-16 md:pt-20 min-h-screen">
           {children}
         </div>
-        
+
       </body>
     </html>
   );

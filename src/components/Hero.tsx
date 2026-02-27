@@ -42,10 +42,10 @@ const CONTENT = {
 };
 
 const glitchVariants: Variants = {
-  initial: { opacity: 1, y: 0 }, 
+  initial: { opacity: 1, y: 0 },
   animate: {
     textShadow: [
-      '2px 2px 0px #0D3A61, -2px -2px 0px #B59A6A', 
+      '2px 2px 0px #0D3A61, -2px -2px 0px #B59A6A',
       '-1px 0px 0px #0D3A61, 1px 0px 0px #B59A6A',
       '0px 0px 0px #0D3A61, 0px 0px 0px #B59A6A',
       '1px -1px 0px #0D3A61, -1px 1px 0px #B59A6A',
@@ -77,15 +77,16 @@ const Particles = () => {
   });
   useFrame((state, delta) => {
     if (ref.current) {
-        ref.current.rotation.x -= delta / 25;
-        ref.current.rotation.y -= delta / 20;
-        const target = new THREE.Vector3((mouse.x * viewport.width) / 2.5, (mouse.y * viewport.height) / 2.5, 0);
-        ref.current.position.lerp(target, 0.02);
+      ref.current.rotation.x -= delta / 25;
+      ref.current.rotation.y -= delta / 20;
+      const target = new THREE.Vector3((mouse.x * viewport.width) / 2.5, (mouse.y * viewport.height) / 2.5, 0);
+      ref.current.position.lerp(target, 0.02);
     }
   });
   return (
     <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
-      <PointMaterial transparent color="#B59A6A" size={0.015} sizeAttenuation={true} depthWrite={false} />
+      {/* Changed particle color to match the vibrant modern Theme (#2563EB or #F8FAFC) */}
+      <PointMaterial transparent color="#2563EB" size={0.015} sizeAttenuation={true} depthWrite={false} />
     </Points>
   );
 };
@@ -99,40 +100,41 @@ export default function Hero({ lang = 'es' }: HeroProps) {
 
   return (
     <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-slate-950">
-      
+
       {/* Fondo 3D */}
       <div className="absolute inset-0 z-0">
         <Suspense fallback={<div className="w-full h-full bg-slate-950" />}>
           <Canvas camera={{ position: [0, 0, 5] }} dpr={[1, 2]}>
-              <ambientLight intensity={0.2} />
-              <Particles />
+            <ambientLight intensity={0.2} />
+            <Particles />
           </Canvas>
         </Suspense>
       </div>
-      
+
       <div className="relative z-10 flex flex-col items-center text-center p-4">
-        
+
         <LogoAnimado className="w-40 h-40 mb-4" />
 
         <motion.h1
           variants={glitchVariants}
           initial="initial"
           animate="animate"
-          className="text-4xl md:text-6xl font-serif text-blanco-pergamino uppercase tracking-wider"
+          className="text-4xl md:text-6xl font-serif uppercase tracking-wider font-extrabold pb-2 drop-shadow-[0_0_15px_rgba(80,135,255,0.4)]"
+          style={{ color: '#5087ff' }}
         >
           {t.title}
         </motion.h1>
 
-        <motion.p 
+        <motion.p
           initial={{ y: 10, opacity: 1 }}
           animate={{ y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="max-w-2xl mt-8 text-lg md:text-xl text-blanco-pergamino/80"
+          className="max-w-2xl mt-8 text-lg md:text-xl text-blanco-pergamino/80 font-light"
         >
           {t.desc}
         </motion.p>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ y: 10, opacity: 1 }}
           animate={{ y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
@@ -140,16 +142,16 @@ export default function Hero({ lang = 'es' }: HeroProps) {
         >
           {/* CAMBIO P0.C: Usamos MotionLink en lugar de anidar <button> en <Link>.
               Agregamos 'inline-flex items-center justify-center' para mantener el diseño exacto del botón. */}
-          <MotionLink 
+          <MotionLink
             href={t.linkPrimary}
-            className="bg-azul-zafiro text-blanco-pergamino font-bold py-3 px-8 rounded-lg text-lg hover:bg-opacity-90 transition-colors duration-300 shadow-lg hover:shadow-glow-blue inline-flex items-center justify-center"
-            whileHover={{ scale: 1.05 }} 
+            className="bg-azul-zafiro/90 backdrop-blur-sm border border-azul-zafiro/50 text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-azul-zafiro transition-all duration-300 shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.7)] inline-flex items-center justify-center"
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             {t.ctaPrimary}
           </MotionLink>
-          
-          <Link href={t.linkSecondary} className="flex items-center gap-2 text-oro-antiguo font-semibold hover:underline cursor-pointer group">
+
+          <Link href={t.linkSecondary} className="flex items-center gap-2 text-oro-antiguo font-semibold hover:text-white transition-colors cursor-pointer group">
             {t.ctaSecondary}
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
