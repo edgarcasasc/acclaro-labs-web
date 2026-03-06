@@ -6,6 +6,7 @@ import SchemaOrg from '@/components/SchemaOrg';
 import { Suspense } from 'react';
 import Script from 'next/script'; // <--- 1. IMPORTAMOS SCRIPT
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const outfit = Outfit({
@@ -141,6 +142,7 @@ export default async function RootLayout({
           {children}
         </div>
 
+      <SpeedInsights />
       </body>
     </html>
   );

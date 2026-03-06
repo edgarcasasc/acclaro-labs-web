@@ -8,22 +8,22 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null;
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    
+
     // Desestructuramos, permitiendo que 'crm' o 'source' vengan o no
     const { name, website, email, crm, source } = body;
 
     console.log(`📝 Recibiendo lead desde [${source || 'desconocido'}]:`, email);
 
-    // 1. Guardar en Supabase (Ahora con los campos nuevos)
+    // 1. Guardar en Supabase (Fix termporal: comentados campos faltantes en DB)
     const { data, error } = await supabaseAdmin
       .from('leads')
       .insert([
-        { 
-          full_name: name, 
-          website_url: website, 
+        {
+          full_name: name,
+          website_url: website,
           email_address: email,
-          crm_system: crm || null,        // Nuevo: Guarda el CRM si existe
-          source: source || 'chatbot',    // Nuevo: Si no trae source, asume que es el chat
+          // crm_system: crm || null,        // Nuevo: Guarda el CRM si existe (Requiere columna en DB)
+          // source: source || 'chatbot',    // Nuevo: Si no trae source, asume que es el chat (Requiere columna en DB)
           created_at: new Date().toISOString()
         },
       ])
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
         subject: 'Auditoría Solicitada',
         html: `<p>Hola ${name}, hemos recibido tu solicitud de auditoría para <strong>${website}</strong>.</p>`
       });
-      
+
       // (Opcional) Email para TI avisando el origen
       // await resend.emails.send({ ... to: tu_email, subject: `Nuevo Lead (${source})` ... })
     }
