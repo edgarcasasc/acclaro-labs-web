@@ -5,6 +5,7 @@ import { GlobalNav } from '@/components/GlobalNav';
 import SchemaOrg from '@/components/SchemaOrg';
 import { Suspense } from 'react';
 import Script from 'next/script'; // <--- 1. IMPORTAMOS SCRIPT
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -140,6 +141,9 @@ export default async function RootLayout({
         <div className="relative pt-16 md:pt-20 min-h-screen">
           {children}
         </div>
+
+        {/* Vercel Speed Insights */}
+        <SpeedInsights />
 
       </body>
     </html>
